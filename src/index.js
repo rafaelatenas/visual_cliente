@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import Home from './componentes/Home/Home';
-import Login from './componentes/login/login';
+import Home from './componentes/Home/home';
+import Login from './componentes/Login/login';
 import './index.css';
 import reportWebVitals from './reportWebVitals';
 
@@ -16,7 +16,7 @@ function Tester(props) {
 }
 
 ReactDOM.render(
-  <Tester isLoggedIn={false} />,
+  <Tester isLoggedIn={true} />,
   document.getElementById('root')
 );
 

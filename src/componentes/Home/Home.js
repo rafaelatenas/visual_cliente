@@ -1,8 +1,12 @@
 import React from "react";
 import angle_down from '../../landing/favicon/angle-down-solid.svg';
+import cerrar from '../../landing/favicon/arrow-right-log-out-solid.svg';
+import user_gear from '../../landing/favicon/user-gear-solid.svg';
+import atenas_logo from '../../landing/Images/ats_logo-blanco-elises-.png';
+import logo_atenas from '../../landing/Images/ats_logo-elise-blanca.png';
 import canales from '../../landing/Images/logo_canales-cadenas.jpg';
-import Header from '../header/header';
-
+import './home.css';
+import './movil';
 
 class Home extends React.Component {
  
@@ -12,7 +16,28 @@ class Home extends React.Component {
 		return(
 
             <>
-            <Header/>
+             <header>
+                <div className='components-header'>
+                    <img className='logo-atenas' src={logo_atenas} alt="Logo Atenas"></img>
+                    <img className='Logo-atenas' src={atenas_logo} alt="Logo Atenas"></img>
+                    <div id="opciones_usuario" className='opciones'>
+                        <button>
+                            <img src={user_gear} alt="Cerrar"></img>
+                        </button>
+                    </div>
+                    <div className="contenedoropciones">
+                        <button>
+                            <a href="../login/login"> <img src={cerrar} alt="Cerrar"></img> Cerrar</a>
+                        </button>
+                        <button>
+                            <a href="../login/login"> <img src={cerrar} alt="Cerrar"></img> Cerrar</a>
+                        </button>
+                    </div>
+                        
+                    <div className='content-user'>
+                    </div>
+                </div>
+            </header>
             <section className="container">
                 <article className="gallery">
                     <div className="gallery-container">
@@ -193,3 +218,4 @@ class Home extends React.Component {
 }
 
 export default Home;
+

@@ -6,9 +6,10 @@ import './login.css';
 
 
 class Login extends React.Component {
- 
-    
+
+
 	render() {
+
   return (
 
     <div className="card">
@@ -17,12 +18,12 @@ class Login extends React.Component {
                 <div className='form'>
                     <div className='form-group'>
                         <input type='email' name="email" className='form-control' id='inputEmail' placeholder='Email'></input>
-                    </div> 
-                    
+                    </div>
+
                     <div className='form-group'>
                         <input type='password' name="password" className='form-control' id="inputPassword" placeholder="Password"></input>
-                        <img id="solid" className='eye-show' src={eye_solid} alt="Mostrar Contraseña"></img>
-                        <img  id="slash" className='eye-show' style={{visibility:'hidden'}} src={eye_slash} alt="Mostrar Contraseña"></img>
+                        <img id="solid" onClick={mostrarPDW} className='eye-show' src={eye_solid} alt="Mostrar Contraseña"></img>
+                        <img  id="slash" onClick={mostrarPDW} className='eye-show' style={{visibility:'hidden'}} src={eye_slash} alt="Mostrar Contraseña"></img>
                     </div>
                 </div>
                 <div className='buttons'>
@@ -31,8 +32,28 @@ class Login extends React.Component {
             </form>
         </div>
     </div>
-    
+
   );
-  } 
+  }
 }
 export default Login;
+
+
+    
+   function mostrarPDW() {
+    var password = document.getElementById("inputPassword");
+    const solid = document.getElementById('solid');
+    const slash = document.getElementById('slash');
+
+    if (password.type === "password") {
+        password.type = "text";
+        slash.style.visibility = "visible";
+        solid.style.visibility = "hidden"
+    }else {
+        password.type = "password";
+        solid.style.visibility = "visible"
+        slash.style.visibility = "hidden"
+    }
+   };
+  
+
