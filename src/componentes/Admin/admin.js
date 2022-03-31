@@ -8,10 +8,11 @@ class Admin extends React.Component {
     render(){
         return(
             <>
+           
                 <div className="cuerpo-modificable">
                     <div className="bottons-menu">
-                        <img style= {{visibility: 'hidden;'}} id="cancel-menu" src="./landing/favicon/times-solid.svg" alt="Cancel Menu Icon"></img>
-                        <img style= {{visibility: 'visible;'}} id="abrir-menu" src="./landing/favicon/bars-solid-movile.svg" alt="Menu Icon"></img>
+                        <img  style= {{visibility: 'hidden;'}} id="cancel-menu" src="./landing/favicon/times-solid.svg" alt="Cancel Menu Icon"></img>
+                        <img  style= {{visibility: 'visible;'}} id="abrir-menu" src="./landing/favicon/bars-solid-movile.svg" alt="Menu Icon"></img>
                     </div>
                     <section  style= {{visibility: 'hidden'}} id='aa' className="contenedor-opciones">
 
@@ -36,7 +37,7 @@ class Admin extends React.Component {
                     <img id="cerrar" src="/landing/favicon/times-solid.svg" alt="Cerrar Modal"></img>
                     <section id="texto_modal"></section>
                 </aside>
-                <section className="menu-completo menu_min menu-des" id="menu-des">
+                <section  className="menu-completo menu_min menu-des" id="menu-des">
                     <div className="usuario-atenas">
                         <img className="logo-atenas" src="./landing/Images/ats_logo.png" alt="Atenas Logo"></img>
                         <p className="texto_desaparece m1 nombre-usuario">Usuario Único</p>

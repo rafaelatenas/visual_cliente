@@ -318,7 +318,7 @@ class Home extends React.Component {
                     <img className='Logo-atenas' src={atenas_logo} alt="Logo Atenas"></img>
                     <div id="opciones_usuario" className='opciones'>
                         <button>
-                            <img src={user_gear} alt="Cerrar"></img>
+                            <img src={user_gear} alt="Opciones de Usuario"></img>
                         </button>
                     </div>
                     <div id="contenedoropciones" className="contenedoropciones">
@@ -326,7 +326,7 @@ class Home extends React.Component {
                             <a href="../login/login"> <img src={cerrar} alt="Cerrar"></img> Salir</a>
                         </button>
                         <button>
-                            <a href="../login/login"> <img src={cerrar} alt="Cerrar"></img>Contraseña</a>
+                            <a href="../CambiarContraseña/CambiarC"> <img src={cerrar} alt="Cambiar Contraseña"></img>Configuraciones</a>
                         </button>
                     </div>
                         
