@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 import angle_down from '../../landing/favicon/angle-down-solid.svg';
 import cerrar from '../../landing/favicon/arrow-right-log-out-solid.svg';
 import user_gear from '../../landing/favicon/user-gear-solid.svg';
@@ -7,6 +7,8 @@ import logo_atenas from '../../landing/Images/ats_logo-elise-blanca.png';
 import canales from '../../landing/Images/logo_canales-cadenas.jpg';
 import './home.css';
 import './movil';
+
+ 
 
 class Home extends React.Component {
  
@@ -292,7 +294,7 @@ class Home extends React.Component {
         
                 modal.style.display = "none"
         
-            })
+            });
         }
 
       //-- -- --carousel de animación footer-- -- -- //
@@ -325,8 +327,8 @@ class Home extends React.Component {
                         <button>
                             <a href="../login/login"> <img src={cerrar} alt="Cerrar"></img> Salir</a>
                         </button>
-                        <button>
-                            <a href="../CambiarContraseña/CambiarC"> <img src={cerrar} alt="Cambiar Contraseña"></img>Configuraciones</a>
+                         <button  > 
+                         <a href="../componentes/CambiarContaseña/CambiarC"> <img src={cerrar} alt="Cambiar Contraseña"></img> Salir</a>
                         </button>
                     </div>
                         

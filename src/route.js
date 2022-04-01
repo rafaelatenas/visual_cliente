@@ -1,25 +1,24 @@
 import React from 'react';
-import { Route, Switch } from 'react-router-dom';
-//Components
-import App from './App';
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import Admin from './componentes/Admin/admin';
 import CambiarC from './componentes/CambiarContaseña/CambiarC';
 import Home from './componentes/Home/home';
-import Pagina404 from './Pagina404/Pagina404';
-
-
-
-
+import Login from './componentes/Login/login';
 
 
 const AppRoutes = () =>
 
-<App>
-    <Switch>
-        <Route exact path="/Home" component = {Home} />
-        <Route exact path="/CambiarC" component = {CambiarC} />
-        <Route exact path="/Opcion3" component = {Opcion3} />
-        <Route component={Pagina404} />
-    </Switch>
-</App>;
+<Login>
+    <BrowserRouter>
+        <Routes>
+            <Route exact path="/" component={Login} />
+            <Route exact path="home" component={Home} />
+            <Route exact path="data/reports" component={Home} />
+            {/* Componentes de Gestión de Usuario */}
+            <Route exact path="change/password" component={CambiarC}/>
+            <Route exact path="management/panel" component={Admin}/>
+        </Routes>
+    </BrowserRouter>
+</Login>;
 
 export default AppRoutes;
