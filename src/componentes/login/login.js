@@ -1,8 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { Link } from 'react-router-dom';
 import eye_slash from '../../landing/favicon/eye-slash-solid.svg';
 import eye_solid from '../../landing/favicon/eye-solid.svg';
-import CambiarC from '../CambiarContaseña/CambiarC';
+import CambiarC from '../CambiarC/CambiarC';
 import Home from '../Home/home';
 import './login.css';
 
@@ -78,7 +79,7 @@ class Login extends React.Component {
      });
     
      }; 
-
+    
 	render() {
 
         return (
@@ -111,13 +112,11 @@ class Login extends React.Component {
                                 </div>
                             </div>
                             <div className='buttons'>
-                                <button 
-                                 onClick={han}
+                                <button
                                 type='button' 
                                 className='interaction log-in'>
-                                    Login
-                                    
-                                    </button>
+                                    <Link to={"/home"}>Login</Link>
+                                </button>
                             </div>
                         </form>
                     </div>
@@ -127,12 +126,7 @@ class Login extends React.Component {
     };
 }
 export default Login;
-function han() {
-    ReactDOM.render(
-         <Home />,
-         document.getElementById('root')
-     );
-}
+
     
    function mostrarPDW() {
     var password = document.getElementById("inputPassword");

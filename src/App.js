@@ -1,23 +1,23 @@
+import React from 'react';
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import './App.css';
+import Admin from './componentes/Admin/admin';
+import CambiarC from './componentes/CambiarC/CambiarC';
+import Home from './componentes/Home/home';
+import Login from './componentes/Login/login';
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+  return (  
+    <BrowserRouter>
+        <Routes>
+            <Route exact path="/" element={<Login/>} />
+            <Route exact path="home" element={<Home/>} />
+            {/* <Route exact path="data/reports" element={Home} /> */}
+            {/* Componentes de Gestión de Usuario */}
+            <Route exact path="home/CambiarC/CambiarC" element={<CambiarC/>}/>
+            <Route exact path="management/panel" element={Admin}/>
+        </Routes>
+    </BrowserRouter>  
   );
 }
-
 export default App;

@@ -1,18 +1,26 @@
 import React from 'react';
+import ReactDOM from 'react-dom';
+import { Link } from 'react-router-dom';
 import angle_down from '../../landing/favicon/angle-down-solid.svg';
 import cerrar from '../../landing/favicon/arrow-right-log-out-solid.svg';
 import user_gear from '../../landing/favicon/user-gear-solid.svg';
 import atenas_logo from '../../landing/Images/ats_logo-blanco-elises-.png';
 import logo_atenas from '../../landing/Images/ats_logo-elise-blanca.png';
 import canales from '../../landing/Images/logo_canales-cadenas.jpg';
+import CambiarC from '../CambiarC/CambiarC';
 import './home.css';
 import './movil';
 
- 
+
+
 
 class Home extends React.Component {
- 
+
+
+
     componentDidMount(){
+        
+
         var elements_menu = [
             0,
             1,
@@ -324,11 +332,13 @@ class Home extends React.Component {
                         </button>
                     </div>
                     <div id="contenedoropciones" className="contenedoropciones">
-                        <button>
-                            <a href="../login/login"> <img src={cerrar} alt="Cerrar"></img> Salir</a>
+                        <button >
+                            <Link to={"/"}><img src={cerrar} alt="Cerrar"></img> Salir</Link>
+
+                           
                         </button>
-                         <button  > 
-                         <a href="../componentes/CambiarContaseña/CambiarC"> <img src={cerrar} alt="Cambiar Contraseña"></img> Salir</a>
+                         <button> 
+                         <Link to={"CambiarC/CambiarC"}><img src={cerrar} alt="Cerrar"></img> Cambiar</Link>
                         </button>
                     </div>
                         
@@ -518,3 +528,9 @@ class Home extends React.Component {
 export default Home;
 
 
+ function handleClick() {
+     ReactDOM.render(
+         <CambiarC/>,
+         document.getElementById('root')
+     );
+ }
