@@ -15,8 +15,14 @@ class Login extends React.Component {
      constructor(props) {
          super(props);
          this.state = {
-           username: '',
-           password: ''};
+            username: '',
+            password: '',
+            formErrors: {Email: '', Password: ''},
+            emailValid: false,
+            passwordValid: false,
+            formValid: false
+        };
+            
        }
     
        handleUsername (e){

@@ -194,7 +194,7 @@ header {
     min-height: 115px;
 }
 
-.content-user {
+.content-usuario {
     display: none;
 }
 
@@ -276,7 +276,7 @@ footer {
 
 
 /* Media query para tablets y desktop pequeño.
-NOTA: Recibirán mista de tablets
+NOTA: Recibirán vista de tablets
 */
 
 @media screen and (max-width: 992px) and (min-height: 750px) {
@@ -325,7 +325,7 @@ NOTA: Recibirán mista de tablets
     .Logo-atenas {
         display: none;
     }
-    .content-user {
+    .content-usuario {
         display: block;
         width: 15%;
         height: 10%;
@@ -346,23 +346,33 @@ NOTA: Recibirán mista de tablets
             left: 86%;
         }
     }
-    .opciones{
+    .opcionesUsuario{
         width:5% ;
         height: 10%;
         position: absolute;
         left: 80%;
+        overflow: visible;
     }
-    .opciones button{
+    
+    .union{
         width: 100%;
         height: 100%;
         border: none;
-        background: none;
+        background: none;  
     }
-    .opciones button img{
+    
+    .union :first-child{
         width: 100%;
-        height: 100%;
+        height: 100%;  
     }
-    .contenedoropciones{
+    .union :last-child{
+        width: 50%;
+        height: 50%;
+        position: absolute;
+        top: 64%;
+        left: 62%;
+    }
+    .contenedoropcionesUsuario{
         width: 10% ;
         height: 10%;
         position: absolute;
@@ -377,20 +387,22 @@ NOTA: Recibirán mista de tablets
         transform: scale(0);
         transform-origin: 100% 0%;
     } 
-    .contenedoropciones button{
+    .contenedoropcionesUsuario button{
         width: 90%;
         height: 40%;
         border: none;
         background: none;
     }
-    .contenedoropciones button a {
+    .contenedoropcionesUsuario button a {
         width: 100%;
         height: 100%;
         display: flex;
         align-items: center;
         justify-content: space-around;
+        text-decoration: none;
+        color: #fff;
     }
-    .contenedoropciones button img{
+    .contenedoropcionesUsuario button img{
        
         width: 50%;
         height: 100%;

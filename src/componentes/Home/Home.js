@@ -1,13 +1,12 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import { Link } from 'react-router-dom';
 import angle_down from '../../landing/favicon/angle-down-solid.svg';
 import cerrar from '../../landing/favicon/arrow-right-log-out-solid.svg';
-import user_gear from '../../landing/favicon/user-gear-solid.svg';
+import gear from '../../landing/favicon/gear-solid.svg';
+import user from '../../landing/favicon/user-solid.svg';
 import atenas_logo from '../../landing/Images/ats_logo-blanco-elises-.png';
 import logo_atenas from '../../landing/Images/ats_logo-elise-blanca.png';
-import canales from '../../landing/Images/logo_canales-cadenas.jpg';
-import CambiarC from '../CambiarC/CambiarC';
+import Carousel from './carrusel';
 import './home.css';
 import './movil';
 
@@ -326,23 +325,23 @@ class Home extends React.Component {
                 <div className='components-header'>
                     <img className='logo-atenas' src={logo_atenas} alt="Logo Atenas"></img>
                     <img className='Logo-atenas' src={atenas_logo} alt="Logo Atenas"></img>
-                    <div id="opciones_usuario" className='opciones'>
-                        <button>
-                            <img src={user_gear} alt="Opciones de Usuario"></img>
+                    <div id="opciones_usuario" className='opcionesUsuario'>
+                        <button className='union'>
+                            <img src={user} alt="Opciones de Usuario"></img>
+                            <img src={gear} alt="Opciones de Usuario"></img>
                         </button>
                     </div>
-                    <div id="contenedoropciones" className="contenedoropciones">
+                    <div id="contenedoropciones" className="contenedoropcionesUsuario">
                         <button >
                             <Link to={"/"}><img src={cerrar} alt="Cerrar"></img> Salir</Link>
-
-                           
                         </button>
+
                          <button> 
                          <Link to={"CambiarC/CambiarC"}><img src={cerrar} alt="Cerrar"></img> Cambiar</Link>
                         </button>
                     </div>
                         
-                    <div className='content-user'>
+                    <div className='content-usuario'>
                     </div>
                 </div>
             </header>
@@ -382,8 +381,10 @@ class Home extends React.Component {
                 <aside style={{display:'none'}} className="deplegable" id="despelgable_1">
                     <div className="container-desplegable">
                         <div className="content-desplegable">
-                            <div id="elementsWOP"></div>
-
+                            <div id="elementsWOP">
+                                <Link to={'/data'}>data</Link>
+                            </div>
+            
                         </div>
                     </div>
                 </aside>
@@ -457,64 +458,7 @@ class Home extends React.Component {
                             0-48.5-21.75-48.5-48.5s21.75-48.5 48.5-48.5c26.75 0 48.5 21.75 48.5 48.5S522.8 400.5 496 400.5z"/></svg> </div>
                 </div>
                 <div className="complementary-buttons">
-
-                    <div className="slider">
-                        <div id="slide-track" className="slide-track">
-                            <div className="slide">
-                                <img src={canales} alt="Canales y Cadenas" data-icon="1" />
-                            </div>
-                            <div className="slide">
-                                <img src="../../landing/Images/logo_NSE.jpg" alt="NSE" data-icon="2" />
-                            </div>
-                            <div className="slide">
-                                <img src="../../landing/Images/logo_SKU`s.png" alt="Top Sku`s" data-icon="3" />
-                            </div>
-                            <div className="slide">
-                                <img src="../../landing/Images/logo_TOP-Proveedores.jpg" alt="Top Proveedores" data-icon="4" />
-                            </div>
-                            <div className="slide">
-                                <img src="../../landing/Images/logo_categorias.png" alt="Categorías" data-icon="5" />
-                            </div>
-                            <div className="slide">
-                                <img src="../../landing/Images/logo_ranking_categoria.png" alt="Ranking Categorías" data-icon="6" />
-                            </div>
-                            <div className="slide">
-                                <img src="../../landing/Images/logo_omnibus.png" alt="Omnibus" data-icon="7"/>                        </div>
-                            <div className="slide">
-                                <img src="../../landing/Images/Icon-Top_Marcas.png" alt="TOP Marcas" data-icon="8" />
-                            </div>
-                            <div className="slide">
-                                <img src="../../landing/Images/Icon-Top_SKU.png" alt="TOP SKU 's" data-icon="9" />
-                            </div>
-                            <div className="slide">
-                                <img src={canales} alt="Canales y Cadenas" data-icon="1" />
-                            </div>
-                            <div className="slide">
-                                <img src="../../landing/Images/logo_NSE.jpg" alt="NSE" data-icon="2" />
-                            </div>
-                            <div className="slide">
-                                <img src="../../landing/Images/logo_SKU`s.png" alt="Top Sku`s" data-icon="3" />
-                            </div>
-                            <div className="slide">
-                                <img src="../../landing/Images/logo_TOP-Proveedores.jpg" alt="Top Proveedores" data-icon="4" />
-                            </div>
-                            <div className="slide">
-                                <img src="../../landing/Images/logo_categorias.png" alt="Categorías" data-icon="5" />
-                            </div>
-                            <div className="slide">
-                                <img src="../../landing/Images/logo_ranking_categoria.png" alt="Ranking Categorías" data-icon="6" />
-                            </div>
-                            <div className="slide">
-                                <img src="../../landing/Images/logo_omnibus.png" alt="Omnibus" data-icon="7"/>
-                            </div>
-                            <div className="slide">
-                                <img src="../../landing/Images/Icon-Top_Marcas.png" alt="TOP Marcas" data-icon="8"/>
-                            </div>
-                            <div className="slide">
-                                <img src="../../landing/Images/Icon-Top_SKU.png" alt="TOP SKU's" data-icon="9"/>
-                            </div>
-                        </div>
-                    </div>
+                    <Carousel/>
                 </div>
             </footer>
             
@@ -527,10 +471,3 @@ class Home extends React.Component {
 
 export default Home;
 
-
- function handleClick() {
-     ReactDOM.render(
-         <CambiarC/>,
-         document.getElementById('root')
-     );
- }

@@ -1,6 +1,5 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import 'rsuite/dist/rsuite.min.css';
 import eye_slash from '../../landing/favicon/eye-slash-solid.svg';
 import eye_solid from '../../landing/favicon/eye-solid.svg';
 import Login from '../Login/login';
