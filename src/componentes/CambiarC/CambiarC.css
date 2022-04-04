@@ -57,7 +57,7 @@
     top: 62%;
     left: 58%;
 }
-#solid{
+#solid_eye{
     left: 58.1%;
 }
 .enviarform{
@@ -65,5 +65,9 @@
     height: 15%;
     border-radius: 1em;
     border: none;
+}
+.enviarform a{
+    font-family: 'Lucida-Sans-Demibold-Roman';
     color: #000;
+    text-decoration: none;
 }

@@ -21,8 +21,8 @@ class CambiarC extends React.Component{
                         </div>
                         <div className='formconfirmar'>
                             <input id='confirmar' type='password' className='contraseña confirmar'></input>
-                            <img id="solid" onClick={mostrarC} className='eye' src={eye_solid} alt="Mostrar Contraseña"></img>
-                            <img  id="slash" onClick={mostrarC} className='eye' style={{visibility:'hidden'}} src={eye_slash} alt="Mostrar Contraseña"></img>    
+                            <img id="solid_eye" onClick={mostrarC} className='eye' src={eye_solid} alt="Mostrar Contraseña"></img>
+                            <img  id="slash_eye" onClick={mostrarC} className='eye' style={{visibility:'hidden'}} src={eye_slash} alt="Mostrar Contraseña"></img>    
                         </div>
                         <button 
                                 className='enviarform' 
@@ -41,8 +41,8 @@ export default CambiarC;
 function mostrarC() {
     var password = document.getElementById("contraseña");
     var confirmarPass = document.getElementById("confirmar");
-    const solid = document.getElementById('solid');
-    const slash = document.getElementById('slash');
+    const solid = document.getElementById('solid_eye');
+    const slash = document.getElementById('slash_eye');
 console.log(password.type)
     if (password.type === "password") {
         password.type = "text";

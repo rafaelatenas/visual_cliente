@@ -16,7 +16,7 @@ function App() {
             <Route exact path="data" element={<DataReport/>} />
             {/* Componentes de Gestión de Usuario */}
             <Route exact path="home/CambiarC/CambiarC" element={<CambiarC/>}/>
-            <Route exact path="management/panel" element={Admin}/>
+            <Route exact path="management/panel" element={<Admin/>}/>
         </Routes>
     </BrowserRouter>  
   );
