@@ -38,9 +38,12 @@
 .formcontraseña, .formconfirmar{
     width: 80%;
     height: 40%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 .formcontraseña input, .formconfirmar input{
-    width: 100%;
+    width: 98%;
     height: 30%;
     border-radius: 1em;
     border: none;
@@ -49,13 +52,13 @@
 }
 .eye{
     width: auto;
-    height: 20%;
-    position: relative;
-    top: -27%;
-    left: 81.5%;
+    height: 3%;
+    position: absolute;
+    top: 62%;
+    left: 58%;
 }
 #solid{
-    left: 85%;
+    left: 58.1%;
 }
 .enviarform{
     width: 40%;

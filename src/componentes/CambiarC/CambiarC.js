@@ -1,8 +1,7 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
+import { Link } from 'react-router-dom';
 import eye_slash from '../../landing/favicon/eye-slash-solid.svg';
 import eye_solid from '../../landing/favicon/eye-solid.svg';
-import Login from '../Login/login';
 import './CambiarC.css';
 
 
@@ -25,9 +24,9 @@ class CambiarC extends React.Component{
                             <img id="solid" onClick={mostrarC} className='eye' src={eye_solid} alt="Mostrar Contraseña"></img>
                             <img  id="slash" onClick={mostrarC} className='eye' style={{visibility:'hidden'}} src={eye_slash} alt="Mostrar Contraseña"></img>    
                         </div>
-                        <button onClick={activado} 
+                        <button 
                                 className='enviarform' 
-                                type='submit'>Confirmar</button>
+                                type='submit'><Link to={'/'}>Confirmar</Link></button>
                     </form>  
                 </div>
                 
@@ -57,9 +56,3 @@ console.log(password.type)
         slash.style.visibility = "hidden"
     }
    };
-function activado() {
-    ReactDOM.render(
-        <Login to='./login'/>,
-        document.getElementById('root')
-    );
-}
