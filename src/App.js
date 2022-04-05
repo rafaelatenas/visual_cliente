@@ -2,10 +2,12 @@ import React from 'react';
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import './App.css';
 import Admin from './componentes/Admin/admin';
+import CrearUsuario from './componentes/Admin/componentesAdmin/crearUsuario';
 import CambiarC from './componentes/CambiarC/CambiarC';
 import DataReport from './componentes/Data/data';
 import Home from './componentes/Home/home';
 import Login from './componentes/Login/login';
+
 
 function App() {
   return (  
@@ -17,6 +19,7 @@ function App() {
             {/* Componentes de Gestión de Usuario */}
             <Route exact path="home/CambiarC/CambiarC" element={<CambiarC/>}/>
             <Route exact path="management/panel" element={<Admin/>}/>
+            <Route exact path='/management/panel/createUser' element={<CrearUsuario/>}/>
         </Routes>
     </BrowserRouter>  
   );

@@ -383,6 +383,7 @@ class Home extends React.Component {
                         <div className="content-desplegable">
                             <div id="elementsWOP">
                                 <Link to={'/data'}>data</Link>
+                                <Link to={'/management/panel'}>admin</Link>
                             </div>
             
                         </div>
