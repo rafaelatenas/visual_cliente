@@ -1,11 +1,12 @@
 import React from "react";
-import './crearUsuario.css';
+import './crearPerfil.css';
 import MenuAdmin from "./menuAdmin";
 
 
-class CrearUsuario extends React.Component{
+class CrearPerfil extends React.Component{
 
     componentDidMount(){
+
         const botones = document.querySelectorAll('.boton');
         const contenedores = document.querySelectorAll('.contenedor')
         
@@ -89,6 +90,13 @@ class CrearUsuario extends React.Component{
                 }
             })
             }
+            
+        
+        
+             
+             
+              
+         
     }
 
     render(){
@@ -144,4 +152,4 @@ class CrearUsuario extends React.Component{
 
 }
 
-export default CrearUsuario;
+export default CrearPerfil;

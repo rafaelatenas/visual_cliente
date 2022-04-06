@@ -50,17 +50,17 @@
 }
 #menu {
     position: relative;
-    top: 0%;
-    left: -25%;
-    width: 90%;
-    height: 90%;
+    top: -92%;
+    left: 7%;
+    width: 85%;
+    height: 85%;
     z-index: 4;
 }
 #cancel-menu {
     z-index: 2;
     position: relative;
-    top: 0%;
-    left: 25%;
+    top: 4%;
+    left: 5%;
     width: 90%;
     height: 90%;
 }

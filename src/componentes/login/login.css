@@ -108,6 +108,8 @@ main {
 }
 
 .log-in a {
+    font-family: 'Lucida Sans Demibold Roman', sans-serif;
+    padding: 5% 30%;
     color: #ffff;
     text-decoration: none;
 }

@@ -4,10 +4,8 @@ import { Link } from 'react-router-dom';
 import eye_slash from '../../landing/favicon/eye-slash-solid.svg';
 import eye_solid from '../../landing/favicon/eye-solid.svg';
 import CambiarC from '../CambiarC/CambiarC';
-import Home from '../Home/home';
+import Home from '../Home/Home';
 import './login.css';
-
-
 
 
 class Login extends React.Component {
