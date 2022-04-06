@@ -21,12 +21,12 @@
     width: 95%;
     height: 10%;
     border-radius: .3em;
-    background-color: #06294e;
+    background-color: #2FAC6A;
     z-index: 5;
 }
 
 .crear{
-    background-color: red;
+    background-color: #F6B232;
     position: relative;
     top: 0%;
     width: 95%;

@@ -109,32 +109,29 @@ class CrearUsuario extends React.Component{
                 <form className="creaUsuario">
                     <div className="formulario form-nombres">
                         <label className="form-label">Nombres</label>
-                            <input type="email" className="form-control" id="inputEmail3" placeholder="Email"></input>
+                            <input type="text" className="form-control" id="inputName" placeholder="Nombres"></input>
                     </div>
                     <div className="formulario form-apellidos">
-                        <label  className="form-label">Password</label>
-                                <input type="password" className="form-control" id="inputPassword3" placeholder="Password"></input>
+                        <label  className="form-label">Apellidos</label>
+                                <input type="text" className="form-control" id="inputApellidos" placeholder="Apellidos"></input>
                     </div>
                     <div className="formulario form-usuario">
-                        <label className="form-label">Apellidos</label>
-                            <input type="email" className="form-control" id="inputEmail3" placeholder="Email"></input>
+                        <label className="form-label">Usuario</label>
+                            <input type="text" className="form-control" id="inputUsuario" placeholder="Usuario"></input>
                     </div>
                     
                     <div className="formulario form-email">
-                        <label className="form-label">Usuario</label>
-                            <input type="email" className="form-control" id="inputEmail3" placeholder="Email"></input>
-                    </div>
-                    <div className="formulario form-Usuario">
                         <label className="form-label">Correo</label>
-                            <input type="email" className="form-control" id="inputEmail3" placeholder="Email"></input>
+                            <input type="email" className="form-control" id="inputEmail3" placeholder="Correo"></input>
                     </div>
+                   
                     <div className="formulario form-password">
                         <label className="form-label">Contraseña</label>
                                 <input type="password" className="form-control" id="inputPassword3" placeholder="Password"></input>
                     </div>
                     <div className="formulario form-idPerfil">
-                        <label className="form-label">Contraseña</label>
-                                <input type="password" className="form-control" id="inputPassword3" placeholder="Password"></input>
+                        <label className="form-label">Id Perfil</label>
+                                <input type="number" className="form-control" value={1} id="inputPassword3" ></input>
                     </div>
                 </form>
                 </aside>

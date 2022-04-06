@@ -25,7 +25,7 @@
     align-items: center;
     justify-content: space-around;
     width: 100%;
-    height: 87vh;
+    height: 90vh;
 }
 .header-logo{
     width: 100%;
@@ -66,10 +66,13 @@
     font-size: 13px;
     letter-spacing: .5px;
     z-index: 20;
+    
 }
+
 .sidebar-navigation ul li .tooltip:before,
  .header-logo .tooltipH:before {
     content: '';
+    
     display: block;
     position: absolute;
     left: -4px;
@@ -82,6 +85,9 @@
 .sidebar-navigation ul li:hover {
     background-color: #575756;
 }
+.sidebar-navigation ul li:hover svg path{
+    fill: #fff;
+}
 .sidebar-navigation ul li:hover .tooltip,
 .header-logo:hover .tooltipH {
     visibility: visible;
@@ -89,14 +95,17 @@
 }
 .sidebar-navigation ul li.active {
     background-color: #575756;
+    fill: #fff;
 }
-
-.sidebar-navigation ul li a img{ 
+.sidebar-navigation ul li.active svg path{
+    fill: #fff;
+}
+.sidebar-navigation ul li a svg{ 
     width: 50%;
     height: 50%;
 }
 
-.sidebar-navigation ul li.active a img {
+.sidebar-navigation ul li.active a svg {
     width: 50%;
     height: 50%;
     color: #98D7EC;
