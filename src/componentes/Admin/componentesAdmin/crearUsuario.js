@@ -1,224 +1,132 @@
 import React from "react";
-import './crearUsuario.css';
-import MenuAdmin from "./menuAdmin";
-import { $ } from "react-jquery-plugin";
+import { FormErrors } from "../FormErrors"
+import Swal from "sweetalert2";
+import withReactContent from 'sweetalert2-react-content';
 
 
-class CrearUsuario extends React.Component{
+export default class crearUsuario extends React.Component{
+    //Validación de Formulario
 
-    componentDidMount(){
+    constructor (props) {
+        super(props);
+        this.state = { 
+            formErrors: {
+                Nombres:'',
+                Apellidos:'',
+                Email: '',
+                Password: '',
+                ConfirmacionPassword:'',
+            },
+            nombresValid: false,
+            apellidosValid: false,
+            emailValid: false,
+            passwordValid: false,
+            confirmacionpasswordValid: false,
+            nivelValid: false,
+            clienteValid: false,
+            formValid: false,
+            Nombres:'',
+            Apellidos:'',
+            Email:'',
+            Password:'',
+            ConfirmacionPassword:''
 
-var current_fs, next_fs, previous_fs;
-var left, opacity, scale;
-var animating; 
+        }    
+     } 
+     
+     validateField(fieldName, value) {
+        let fieldValidationErrors = this.state.formErrors;
+        let nombresValid= this.state.nombresValid;
+        let apellidosValid= this.state.apellidosValid;
+        let emailValid = this.state.emailValid;
+        let passwordValid = this.state.passwordValid;
+       // let confirmacionpasswordValid = this.state.confirmacionpasswordValid;
+        switch(fieldName) {
 
-$(".next").on('click',(function(){
-	if(animating) return false;
-	animating = true;
-	
-	current_fs = $(this).parent();
-	next_fs = $(this).parent().next();
-	
-	$("#progressbar li").eq($("fieldset").index(next_fs)).addClass("active");
-	
-	next_fs.show(); 
-	current_fs.animate({opacity: 0}, {
-		step: function(now, mx) {
-			
-			scale = 1 - (1 - now) * 0.2;
+          case 'Nombres':
+            nombresValid = value.length >= 6;
+            fieldValidationErrors.Nombres = nombresValid ? '' : ' es demasiado corto';
+            console.log(this.state.formErrors.Nombres)
+
+            break;
+            case 'Apellidos':
+                apellidosValid = value.length >= 6;
+                fieldValidationErrors.Apellidos = apellidosValid ? '' : ' es demasiado corto';
+                console.log(this.state.formErrors.Apellidos)
+                
+            break;  
+          case 'Email':
+            emailValid = value.match(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i);
+            fieldValidationErrors.Email = emailValid ? '' : ' es invalido';
+            console.log(this.state.formErrors.Email)
             
-			left = (now * 50)+"%";
-			opacity = 1 - now;
-			current_fs.css({
-        'transform': 'scale('+scale+')',
-        'position': 'absolute',
-        'top': '25%'
-      });
-			next_fs.css({'left': left, 'opacity': opacity});
-		}, 
-		duration: 800, 
-		complete: function(){
-			current_fs.hide();
-			animating = false;
-		}, 
-		easing: 'easeInOutBack'
-	});
-}));
-
-$(".previous").on('click',(function(){
-	if(animating) return false;
-	animating = true;
-	
-	current_fs = $(this).parent();
-	previous_fs = $(this).parent().prev();
-	
-	$("#progressbar li").eq($("fieldset").index(current_fs)).removeClass("active");
-	
-	previous_fs.show(); 
-	current_fs.animate({opacity: 0}, {
-		step: function(now, mx) {
-			scale = 0.8 + (1 - now) * 0.2;
-			left = ((1-now) * 50)+"%";
-			opacity = 1 - now;
-			current_fs.css({'left': left});
-			previous_fs.css({'transform': 'scale('+scale+')', 'opacity': opacity});
-		}, 
-		duration: 800, 
-		complete: function(){
-			current_fs.hide();
-			animating = false;
-		}, 
-		//this comes from the custom easing plugin
-		easing: 'easeInOutBack'
-	});
-}));
-
-$(".submit").on('click',(function(){
-	return false;
-}))
-
-
-
-
-
-
-
-
-        
-
-        const botones = document.querySelectorAll('.boton');
-        const contenedores = document.querySelectorAll('.contenedor')
-        
-            for (let j = 0; j < botones.length; j++) {
-                botones[j].addEventListener('click',()=>{
-
-                const HeightCreacion = contenedores[j].clientHeight === 0
-
-                switch (HeightCreacion) {
-                    case true:
-                        setTimeout(() => {
-                            botones[j].style.borderBottomRightRadius= '0em';
-                            botones[j].style.borderBottomLeftRadius= '0em';
-                        }, 100);
-
-                        contenedores[j].style.borderTopRightRadius= '0em'
-                        contenedores[j].style.borderTopLeftRadius= '0em'
-                        contenedores[j].style.borderBottomRightRadius= '0.3em'
-                        contenedores[j].style.borderBottomLeftRadius= '0.3em'
-                   
-                      contenedores[j].animate([
-                          {height:'75%'},
-                      ],{
-                          fill:'forwards',
-                          duration: 1400
-                      });
-                      break;
-
-                    case false:
-                            setTimeout(() => {
-                                botones[j].style.borderBottomRightRadius= '0.3em';
-                                botones[j].style.borderBottomLeftRadius= '0.3em';
-                            }, 1400);
-                      
-                      contenedores[j].animate([
-                          {height:'0%'},
-                      ],{
-                          fill:'forwards',
-                          duration: 1400
-                      });
-
-                      break;
-                    
-                    default:
-                        break;
-                }
-
-
-                const contenedorConsulta = document.querySelector('.contenedor-consultas')
-                const botonConsulta = document.querySelector('.consultar')
-                const contenedorCreacion = document.querySelector('.contenedor-creacion')
-                const botonCreacion = document.querySelector('.crear')
-
-                if (contenedorCreacion.clientHeight > 0) {
-                    setTimeout(() => {
-                        botonCreacion.style.borderBottomRightRadius= '0.3em';
-                        botonCreacion.style.borderBottomLeftRadius= '0.3em';
-                    }, 1400);
-              
-                    contenedorCreacion.animate([
-                        {height:'0%'},
-                    ],{
-                        fill:'forwards',
-                        duration: 1400
-                    });
-                }
-
-                if (contenedorConsulta.clientHeight > 0) {
-                    console.log(botones[j])
-                    setTimeout(() => {
-                        botonConsulta.style.borderBottomRightRadius= '0.3em';
-                        botonConsulta.style.borderBottomLeftRadius= '0.3em';
-                    }, 1400);
-              
-                    contenedorConsulta.animate([
-                        {height:'0%'},
-                    ],{
-                        fill:'forwards',
-                        duration: 1400
-                    });
-                }
-            })
-            }
-            
+            break;
+          case 'Password':
+            passwordValid = value.length >= 6;
+            fieldValidationErrors.Password = passwordValid ? '': ' es demasiado corto';
+            console.log(this.state.formErrors.Password)
+            break;
+        //   case 'ConfirmacionPassword':
+        //     confirmacionpasswordValid = value.length >= 6;
+        //     fieldValidationErrors.ConfirmacionPassword = confirmacionpasswordValid ? '': ' es demasiado corto';
+        //     break;  
+          default:
+            break;
+                
+    
+        }
+        this.setState(
+          {
+            formErrors: fieldValidationErrors,
+            nombresValid:nombresValid,
+            apellidosValid:apellidosValid,
+            emailValid: emailValid,
+            passwordValid: passwordValid,
+          }, 
+          this.validateForm
+          );
+      }
+      errorClass(error) {
+        return(error.length === 0 ? '' : 'has-error');
+      }
+      validateForm() {
+        this.setState({formValid: this.state.nombresValid && this.state.apellidosValid && this.state.emailValid && this.state.passwordValid });
+      }
+      handleUserInput = (e) => {
+        const name = e.target.name;
+        const value = e.target.value;
+        this.setState({[name]: value},() => { this.validateField(name, value) });
+      }  
+    //   componentDidMount(){
+    //       const prub = document.querySelectorAll('input');
+    //       console.dir(prub[0].onchange)
+    //   }
+    enviarDatos=()=>{
+        console.log(22)
     }
-
     render(){
         return(
-            <>
-            <div className="Contenedorcompleto">
-            <MenuAdmin />
-            <section className="contenedor-opciones">
-                <article className="boton crear"></article>
-                <aside className="contenedor contenedor-creacion">
-                <form id="msform">
-  
-  <ul id="progressbar">
-    <li class="active">Account Setup</li>
-    <li>Social Profiles</li>
-  </ul>
- 
-  <fieldset>
-    <h2 class="fs-title">Datos del Usuario</h2>
-    
-    <input type="text" name="Nombres" placeholder="Nombres" />
-    <input type="text" name="Apellidos" placeholder="Apellidos" />
-    <input type="button" name="next" class="next action-button" value="Next" />
-  </fieldset>
-  <fieldset>
-    <h2 class="fs-title">Creat Usuario</h2>
-    <input type="text" name="Usuario" placeholder="Usuario" />
-    <input type="email" name="correo" placeholder="Correo" />
-    <input type="password" name="contrasena" placeholder="Contraseña" />
-    <input type="button" name="previous" class="previous action-button" value="Previous" />
-    <input type="submit" name="submit" class="submit action-button" value="Submit" />
-  </fieldset>
-
-</form>
-                </aside>
-
-                <article className="boton consultar"></article>
-
-                <aside className="contenedor contenedor-consultas">
-                    {/* <table id="example" className="display" width="100%"></table> */}
-
-                </aside>
-
-            </section>
-            </div>
-            </>
+            <form id="msform">
+            <ul id="progressbar">
+                <li className="active"></li>
+                <li></li>
+            </ul>
+            
+            <fieldset>
+                <h2 className="fs-title">Datos del Usuario</h2>
+                
+                <input type="text" name="Nombres" placeholder="Nombres" value={this.state.Nombres} onChange={this.handleUserInput}/>
+                <input type="text" name="Apellidos" placeholder="Apellidos" value={this.state.Apellidos} onChange={this.handleUserInput}/>
+                <input type="button" name="next" className="next action-button" value="Next" />
+            </fieldset>
+            <fieldset>
+                <h2 className="fs-title">Crear Usuario</h2>
+                <input  type="email" name="Email" placeholder="Correo" value={this.state.Email} onChange={this.handleUserInput}/>
+                <input className={`${this.errorClass(this.state.formErrors.Password)}`} type="password" name="Password" placeholder="Contraseña" value={this.state.Password} onChange={this.handleUserInput}/>
+                <input type="button" name="previous" className="previous action-button" value="Previous" />
+                <input type="submit" name="submit" className="submit action-button" value="Submit" onClick={this.enviarDatos}/>
+            </fieldset>
+        </form> 
         )
     }
-
 }
-
-export default CrearUsuario;
