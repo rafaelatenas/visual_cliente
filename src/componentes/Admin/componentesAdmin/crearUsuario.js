@@ -1,11 +1,91 @@
 import React from "react";
 import './crearUsuario.css';
 import MenuAdmin from "./menuAdmin";
+import { $ } from "react-jquery-plugin";
 
 
 class CrearUsuario extends React.Component{
 
     componentDidMount(){
+
+var current_fs, next_fs, previous_fs;
+var left, opacity, scale;
+var animating; 
+
+$(".next").on('click',(function(){
+	if(animating) return false;
+	animating = true;
+	
+	current_fs = $(this).parent();
+	next_fs = $(this).parent().next();
+	
+	$("#progressbar li").eq($("fieldset").index(next_fs)).addClass("active");
+	
+	next_fs.show(); 
+	current_fs.animate({opacity: 0}, {
+		step: function(now, mx) {
+			
+			scale = 1 - (1 - now) * 0.2;
+            
+			left = (now * 50)+"%";
+			opacity = 1 - now;
+			current_fs.css({
+        'transform': 'scale('+scale+')',
+        'position': 'absolute',
+        'top': '25%'
+      });
+			next_fs.css({'left': left, 'opacity': opacity});
+		}, 
+		duration: 800, 
+		complete: function(){
+			current_fs.hide();
+			animating = false;
+		}, 
+		easing: 'easeInOutBack'
+	});
+}));
+
+$(".previous").on('click',(function(){
+	if(animating) return false;
+	animating = true;
+	
+	current_fs = $(this).parent();
+	previous_fs = $(this).parent().prev();
+	
+	$("#progressbar li").eq($("fieldset").index(current_fs)).removeClass("active");
+	
+	previous_fs.show(); 
+	current_fs.animate({opacity: 0}, {
+		step: function(now, mx) {
+			scale = 0.8 + (1 - now) * 0.2;
+			left = ((1-now) * 50)+"%";
+			opacity = 1 - now;
+			current_fs.css({'left': left});
+			previous_fs.css({'transform': 'scale('+scale+')', 'opacity': opacity});
+		}, 
+		duration: 800, 
+		complete: function(){
+			current_fs.hide();
+			animating = false;
+		}, 
+		//this comes from the custom easing plugin
+		easing: 'easeInOutBack'
+	});
+}));
+
+$(".submit").on('click',(function(){
+	return false;
+}))
+
+
+
+
+
+
+
+
+        
+
         const botones = document.querySelectorAll('.boton');
         const contenedores = document.querySelectorAll('.contenedor')
         
@@ -89,6 +169,7 @@ class CrearUsuario extends React.Component{
                 }
             })
             }
+            
     }
 
     render(){
@@ -99,34 +180,30 @@ class CrearUsuario extends React.Component{
             <section className="contenedor-opciones">
                 <article className="boton crear"></article>
                 <aside className="contenedor contenedor-creacion">
-                <form className="creaUsuario">
-                    <div className="formulario form-nombres">
-                        <label className="form-label">Nombres</label>
-                            <input type="text" className="form-control" id="inputName" placeholder="Nombres"></input>
-                    </div>
-                    <div className="formulario form-apellidos">
-                        <label  className="form-label">Apellidos</label>
-                                <input type="text" className="form-control" id="inputApellidos" placeholder="Apellidos"></input>
-                    </div>
-                    <div className="formulario form-usuario">
-                        <label className="form-label">Usuario</label>
-                            <input type="text" className="form-control" id="inputUsuario" placeholder="Usuario"></input>
-                    </div>
-                    
-                    <div className="formulario form-email">
-                        <label className="form-label">Correo</label>
-                            <input type="email" className="form-control" id="inputEmail3" placeholder="Correo"></input>
-                    </div>
-                   
-                    <div className="formulario form-password">
-                        <label className="form-label">Contraseña</label>
-                                <input type="password" className="form-control" id="inputPassword3" placeholder="Password"></input>
-                    </div>
-                    <div className="formulario form-idPerfil">
-                        <label className="form-label">Id Perfil</label>
-                                <input type="number" className="form-control" value={1} id="inputPassword3" ></input>
-                    </div>
-                </form>
+                <form id="msform">
+  
+  <ul id="progressbar">
+    <li class="active">Account Setup</li>
+    <li>Social Profiles</li>
+  </ul>
+ 
+  <fieldset>
+    <h2 class="fs-title">Datos del Usuario</h2>
+    
+    <input type="text" name="Nombres" placeholder="Nombres" />
+    <input type="text" name="Apellidos" placeholder="Apellidos" />
+    <input type="button" name="next" class="next action-button" value="Next" />
+  </fieldset>
+  <fieldset>
+    <h2 class="fs-title">Creat Usuario</h2>
+    <input type="text" name="Usuario" placeholder="Usuario" />
+    <input type="email" name="correo" placeholder="Correo" />
+    <input type="password" name="contrasena" placeholder="Contraseña" />
+    <input type="button" name="previous" class="previous action-button" value="Previous" />
+    <input type="submit" name="submit" class="submit action-button" value="Submit" />
+  </fieldset>
+
+</form>
                 </aside>
 
                 <article className="boton consultar"></article>

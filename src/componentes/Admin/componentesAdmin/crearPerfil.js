@@ -55,8 +55,8 @@ class CrearPerfil extends React.Component{
                 }
 
 
-                const contenedorConsulta = document.querySelector('.contenedor-consultas')
-                const botonConsulta = document.querySelector('.consultar')
+                const contenedorConsulta = document.querySelector('.contenedor-asociar')
+                const botonConsulta = document.querySelector('.asociar')
                 const contenedorCreacion = document.querySelector('.contenedor-creacion')
                 const botonCreacion = document.querySelector('.crear')
 
@@ -107,39 +107,12 @@ class CrearPerfil extends React.Component{
             <section className="contenedor-opciones">
                 <article className="boton crear"></article>
                 <aside className="contenedor contenedor-creacion">
-                <form className="creaUsuario">
-                    <div className="formulario form-nombres">
-                        <label className="form-label">Nombres</label>
-                            <input type="text" className="form-control" id="inputName" placeholder="Nombres"></input>
-                    </div>
-                    <div className="formulario form-apellidos">
-                        <label  className="form-label">Apellidos</label>
-                                <input type="text" className="form-control" id="inputApellidos" placeholder="Apellidos"></input>
-                    </div>
-                    <div className="formulario form-usuario">
-                        <label className="form-label">Usuario</label>
-                            <input type="text" className="form-control" id="inputUsuario" placeholder="Usuario"></input>
-                    </div>
-                    
-                    <div className="formulario form-email">
-                        <label className="form-label">Correo</label>
-                            <input type="email" className="form-control" id="inputEmail3" placeholder="Correo"></input>
-                    </div>
-                   
-                    <div className="formulario form-password">
-                        <label className="form-label">Contraseña</label>
-                                <input type="password" className="form-control" id="inputPassword3" placeholder="Password"></input>
-                    </div>
-                    <div className="formulario form-idPerfil">
-                        <label className="form-label">Id Perfil</label>
-                                <input type="number" className="form-control" value={1} id="inputPassword3" ></input>
-                    </div>
-                </form>
+                
                 </aside>
 
-                <article className="boton consultar"></article>
+                <article className="boton asociar"></article>
 
-                <aside className="contenedor contenedor-consultas">
+                <aside className="contenedor contenedor-asociar">
                     {/* <table id="example" className="display" width="100%"></table> */}
 
                 </aside>
