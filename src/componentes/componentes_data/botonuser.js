@@ -10,7 +10,7 @@ class botonmenu extends React.Component{
         var cancel_menu = document.getElementById('cancel-menu');
         var menu_desplegable = document.getElementById('menu-des');
         
-        if (menu.style.visibility == 'visible') {
+        if (menu.style.visibility === 'visible') {
             menu.addEventListener('click', () => {
     
                 cancel_menu.style.visibility = "visible";

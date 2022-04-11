@@ -11,9 +11,9 @@ import './data.css';
 class DataReport extends React.Component {
 
     componentDidMount(){
-        const data_of_tittle = "Servicio proporcionado por la API";
+        // const data_of_tittle = "Servicio proporcionado por la API";
 
-        window.document.title = ('|Atenas|' + ' ' + data_of_tittle);
+        // window.document.title = ('|Atenas|' + ' ' + data_of_tittle);
 
         //--- Temporal a ser cambiado con función dinámica que obtenga los valores de la API ---//
         var seleccion_opciones = document.getElementById('select-options'); //-- Card de selección de opciones --//
@@ -75,6 +75,8 @@ class DataReport extends React.Component {
                     provicional_prueba.innerHTML = elementprueba;
                     provicional.appendChild(provicional_prueba);
                     break;
+                default:
+                    break;
             }
 
         })
@@ -92,9 +94,9 @@ class DataReport extends React.Component {
 
     var container_table = document.querySelector('.container-of-table');
 
-    var documentbody = (document.body.className  === 'button_selecciones');
+    // var documentbody = (document.body.className  === 'button_selecciones');
 
-    if (menu.style.visibility == 'visible') {
+    if (menu.style.visibility === 'visible') {
         menu.addEventListener('click', () => {
 
             //-- Cerrar Selecciones si se hace click en abrir menú --//
