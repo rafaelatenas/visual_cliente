@@ -3,8 +3,7 @@ import React from "react";
 import { $ } from "react-jquery-plugin";
 import './listarUsuarios.css'
 import Swal from "sweetalert2";
-import NoIND from "../../landing/favicon/times-solid.svg"
-import SiIND from "../../landing/favicon/bars-solid.svg"
+
 class ListarUsuarios extends React.Component{
 
     constructor(props) {
