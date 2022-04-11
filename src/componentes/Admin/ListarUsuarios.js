@@ -27,16 +27,15 @@ class ListarUsuarios extends React.Component{
             console.log(error.response.data.message);
             console.log(error.response.status);
             console.log(error.response.headers); 
-            const Toast = Swal.mixin({
-                toast: true,
-                icon: 'error',
-                title: ''+error.response.data.message+'',
-                confirmButtonText: `Ok`,
-                position: 'top-right',
-                iconColor: 'white',
-                showConfirmButton: true,
-                confirmButtonText: `Ok`,
-              })                    
+            // const Toast = Swal.mixin({
+            //     toast: true,
+            //     icon: 'error',
+            //     title: ''+error.response.data.message+'',
+            //     confirmButtonText: `Ok`,
+            //     position: 'top-right',
+            //     iconColor: 'white',
+            //     showConfirmButton: true,
+            //   })                    
           })
           //initialize datatable
     $(document).on(function () {
