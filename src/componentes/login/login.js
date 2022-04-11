@@ -35,7 +35,7 @@ class Login extends React.Component {
          e.preventDefault();
 
          const username = this.state.username;
-         const password = this.state.password;
+        //  const password = this.state.password;
          let urlEnvio='http:localhost:3005/VisorCliente_Api/ListarUsuarios';
 
          fetch (urlEnvio, {

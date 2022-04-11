@@ -1,7 +1,7 @@
 import axios from "axios";
 import React from "react";
 import { $ } from "react-jquery-plugin";
-import Swal from "sweetalert2";
+// import Swal from "sweetalert2";
 
 class ListarUsuarios extends React.Component{
 
