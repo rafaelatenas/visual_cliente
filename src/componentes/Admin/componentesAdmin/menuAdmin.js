@@ -1,5 +1,5 @@
 import React from "react";
-import { $ } from "react-jquery-plugin";
+// import { $ } from "react-jquery-plugin";
 import { Link } from "react-router-dom";
 import Logoatenas from "../../../landing/Images/ats_logo.png";
 import '../admin.css';

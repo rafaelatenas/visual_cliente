@@ -1,7 +1,7 @@
 import React from "react";
 import './Usuario.css';
 import MenuAdmin from "./menuAdmin";
-import { $ } from "react-jquery-plugin";
+// import { $ } from "react-jquery-plugin";
 import ListarUsuarios from "../ListarUsuarios";
 import CrearUsuario from "./crearUsuario";
 // import Swal from "sweetalert2";
