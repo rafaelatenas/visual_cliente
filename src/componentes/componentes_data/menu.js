@@ -7,11 +7,11 @@ class menu extends React.Component {
         return(
             <section className="menu" id="menu-des">
                 <ul>
-                    <li> <a href="#">ELEMENTO DE LISTA</a> </li>
-                    <li> <a href="#">ELEMENTO DE LISTA</a> </li>
-                    <li> <a href="#">ELEMENTO DE LISTA</a> </li>
-                    <li> <a href="#">ELEMENTO DE LISTA</a> </li>
-                    <li> <a href="#">ELEMENTO DE LISTA</a> </li>
+                    <li> <Link to={'/'}> Salir </Link></li>
+                    <li> <Link to={'/'}> Salir </Link></li>
+                    <li> <Link to={'/'}> Salir </Link></li>
+                    <li> <Link to={'/'}> Salir </Link></li>
+                    <li> <Link to={'/'}> Salir </Link></li>
                     <li> <Link to={'/'}> Salir </Link></li>
                 </ul>
             </section>
