@@ -31,7 +31,7 @@ class MenuAdmin extends React.Component{
         return(
             <nav className="sidebar-navigation">
                     <div className="header-logo">
-                            <img src={Logoatenas}></img>
+                            <img src={Logoatenas} alt="Logo Atenas"></img>
                             <span className="tooltipH">Panel Administrativo Atenas</span>
                     </div>
                     <ul className="lista">
