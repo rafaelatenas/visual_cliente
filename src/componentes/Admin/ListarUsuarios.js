@@ -3,6 +3,7 @@ import React from "react";
 import { $ } from "react-jquery-plugin";
 import './listarUsuarios.css'
 import Swal from "sweetalert2";
+import imagen from "../../landing/favicon/times-solid.svg"
 
 class ListarUsuarios extends React.Component{
 
@@ -146,7 +147,11 @@ class ListarUsuarios extends React.Component{
                             <td style={{width:'15%'}}>{usuario.apellidos}</td>
                             <td style={{width:'26%'}} >{usuario.correo}</td>
                             <td title={new Date(usuario.fecha_creacion).toLocaleString()}>{new Date(usuario.fecha_creacion).toLocaleDateString()}</td>
-                            <td >a</td>
+                            <td>
+                                <img src={imagen} title="nombres" alt="imagen"></img>
+                                <img src={imagen} title="nombres" alt="imagen"></img>
+                                <img src={imagen} title="nombres" alt="imagen"></img>
+                            </td>
                         </tr>
                     )
                     })}
