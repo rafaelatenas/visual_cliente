@@ -1,0 +1,84 @@
+/* Estilos de Data Table */
+.dataTables_wrapper {
+    position: relative;
+    top: 2%;
+    clear: both;
+    padding: 2% 1%;
+    width: 96%;
+    min-width: 1026px;
+    overflow-y: scroll;
+}
+.dataTables_wrapper::-webkit-scrollbar {
+    -webkit-appearance: none;
+
+}
+.dataTables_wrapper::-webkit-scrollbar:vertical {
+    width: 10px;
+}
+.dataTables_wrapper::-webkit-scrollbar-button:increment,
+.dataTables_wrapper::-webkit-scrollbar-button {
+    display: none;
+}
+.dataTables_wrapper::-webkit-scrollbar:horizontal {
+    height: 10px;
+}
+.dataTables_wrapper::-webkit-scrollbar-thumb {
+    background-color: #575756;
+    border-radius: 20px;
+    border: 2px solid #f1f2f3;
+}
+.dataTables_wrapper::-webkit-scrollbar-track {
+    border-radius: 10px;
+}
+
+.dataTables_info{
+    display: none;
+}
+#TableUsuarios{
+    border-collapse: collapse;
+    height: 90%;
+    width: 95%;
+}
+thead{
+    width: 100%;
+}
+thead tr {
+    display: contents;
+    width: 100%;
+}
+tbody{
+    width: 100%;
+    overflow-y: scroll;
+    height: 80%;
+    position: relative;
+    top: 5%;
+}
+tr{
+    width: 100%;
+}
+th, td{
+    border: 1px solid;
+    text-align: center;
+}
+/* #id, #Usuario{
+    width: 10%;
+}
+#Nombre,#Apellidos{
+    width: 15%;
+} */
+
+
+.text-center{
+    
+    width: 10%;
+    height: 80%;
+    text-align: center;
+}
+.text-center a{
+    width: 10%;
+    height: 20%;
+}
+.text-center img{
+    width: 15%;
+    height: 10%;
+} 

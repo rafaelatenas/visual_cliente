@@ -1,8 +1,10 @@
 import axios from "axios";
 import React from "react";
 import { $ } from "react-jquery-plugin";
-// import Swal from "sweetalert2";
-
+import './listarUsuarios.css'
+import Swal from "sweetalert2";
+import NoIND from "../../landing/favicon/times-solid.svg"
+import SiIND from "../../landing/favicon/bars-solid.svg"
 class ListarUsuarios extends React.Component{
 
     constructor(props) {
@@ -12,31 +14,66 @@ class ListarUsuarios extends React.Component{
     }}
 
     componentDidMount(){
-        var token=localStorage.getItem('token');
-        axios.get(process.env.REACT_APP_API_ENDPOINT+'ListarUsuarios',{
-            headers: {
-              'Authorization': `Bearer ${token}`
-            },
-          })
-          .then((res) => {
-            console.log(res.data.data);  
-            this.setState({Usuarios: res.data.data});
-          })
-          .catch((error) => {
-            console.error(error)
-            console.log(error.response.data.message);
-            console.log(error.response.status);
-            console.log(error.response.headers); 
-            // const Toast = Swal.mixin({
-            //     toast: true,
-            //     icon: 'error',
-            //     title: ''+error.response.data.message+'',
-            //     confirmButtonText: `Ok`,
-            //     position: 'top-right',
-            //     iconColor: 'white',
-            //     showConfirmButton: true,
-            //   })                    
-          })
+        // var token=localStorage.getItem('token');
+        //  axios.get(process.env.REACT_APP_API_ENDPOINT+'ListarUsuarios',{
+        //     //   headers: {
+        //     //     'Authorization': `Bearer ${token}`
+        //     //   },
+        //    })
+        //    .then((res) => {
+        //      console.log(res.data);  
+        //      this.setState({Usuarios: res.data.data});
+        //    })
+        //    .catch((error) => {
+        //      console.error(error)
+        //      console.log(error.response.data.message);
+        //      console.log(error.response.status);
+        //      console.log(error.response.headers); 
+        //     //   const Toast = Swal.mixin({
+        //     //       toast: true,
+        //     //       icon: 'error',
+        //     //       title: ''+error.response.data.message+'',
+        //     //       confirmButtonText: `Ok`,
+        //     //       position: 'top-right',
+        //     //       iconColor: 'white',
+        //     //       showConfirmButton: true,
+        //     //     })                    
+        //    })  }
+
+        const MySwal = Swal
+        const toast = MySwal.mixin({
+        toast: true,
+        position: 'top-end',
+        showConfirmButton: false,
+        timer: 10000,
+        timerProgressBar: true,
+        didOpen: (toast) => {
+            toast.addEventListener('mouseenter', Swal.stopTimer)
+            toast.addEventListener('mouseleave', Swal.resumeTimer)
+        }
+        });
+        axios.get('http://localhost:3005/VisorCliente_Api/ListarUsuarios')
+      .then(res => {
+        
+        this.setState({ Usuarios: res.data.data });
+        
+        
+      })
+      .catch((error) => {
+        console.error(error)
+        console.log(error.response.data.message);
+        console.log(error.response.status);
+        console.log(error.response.headers); 
+           
+        toast.fire({
+            icon: 'error',
+            title: ''+error.response.data.message+'',
+            confirmButtonText: `Ok`,
+          }) 
+
+        })  
+
+
           //initialize datatable
     $(document).on(function () {
         setTimeout(function(){
@@ -64,37 +101,57 @@ class ListarUsuarios extends React.Component{
 
     render() {
         return (             
-              <table id="TableUsuarios" className="table table-hover table-bordered">
-              <thead>
-                <tr>
-                  <th>ID</th>
-                  <th>Email</th>
-                  <th>Nombres</th>
-                  <th>Apellidos</th>
-                  <th>Telefonos</th>
-                  <th>País</th>
-                  <th>Cliente</th>
-                  <th>Nivel</th>
-                </tr>
-              </thead>
-             
-              {/* <tbody>
-              {this.state.Usuarios.map((usuario) => {
-                return (              
-                     <tr>
-                      <td>{usuario.idUser}</td>
-                      <td>{usuario.email}</td>
-                      <td>{usuario.Nombres}</td>
-                      <td>{usuario.Apellidos}</td>
-                      <td>{usuario.telefono}</td>
-                      <td>{usuario.pais}</td>
-                      <td>{usuario.Cliente}</td>
-                      <td>{usuario.nivel}</td>
+            <table id="TableUsuarios" className="table table-hover table-bordered">
+                <thead>
+                    <tr>
+                        <th >ID</th>
+                        <th id="Usuario">Usuario</th>
+                        <th id="Nombres">Nombres</th>
+                        <th id="Apellidos">Apellidos</th>
+                        <th id="Correo">Correo</th>
+                        <th>Fecha Creación</th>
+                        <th>Fecha Modificación</th>
+                        <th>Nivel</th>
                     </tr>
-                  
-                )
-              })}
-              </tbody> */}
+                </thead>
+                <tbody>
+                    {this.state.Usuarios.map((usuario) => {
+                        console.log(usuario)
+                        
+                        switch (usuario.Ind_Activo) {
+                            case true:
+                                console.log(232)
+                                break;
+                            case false:
+                                console.log(123)
+                                break;
+                            default:
+                                break;
+                        }
+                        switch (usuario.Ind_Us_Activo) {
+                            case true:
+                                console.log(789)
+                                break;
+                            case false:
+                                console.log(987)
+                                break;
+                            default:
+                                break;
+                        }
+
+                    return (              
+                        <tr>
+                            <td style={{width:'5%'}}>{usuario.id_usuario}</td>
+                            <td style={{width:'10%'}}>{usuario.usuario}</td>
+                            <td style={{width:'15%'}}>{usuario.nombres}</td>
+                            <td style={{width:'15%'}}>{usuario.apellidos}</td>
+                            <td style={{width:'26%'}} >{usuario.correo}</td>
+                            <td title={new Date(usuario.fecha_creacion).toLocaleString()}>{new Date(usuario.fecha_creacion).toLocaleDateString()}</td>
+                            <td >a</td>
+                        </tr>
+                    )
+                    })}
+                </tbody>
             </table>           
         )
       }
