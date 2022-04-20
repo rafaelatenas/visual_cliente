@@ -11,10 +11,12 @@
     "datatables.net-dt": "^1.11.5",
     "jquery": "^3.6.0",
     "react": "^17.0.2",
+    "react-data-table-component": "^7.5.0",
     "react-dom": "^17.0.2",
     "react-jquery-plugin": "^1.1.7",
     "react-router-dom": "^6.3.0",
     "react-scripts": "5.0.0",
+    "styled-components": "^5.3.5",
     "sweetalert2": "^11.4.8",
     "sweetalert2-react-content": "^4.2.0",
     "web-vitals": "^2.1.4"

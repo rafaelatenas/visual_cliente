@@ -3,6 +3,7 @@ import React from "react";
 import { $ } from "react-jquery-plugin";
 import './listarUsuarios.css'
 import Swal from "sweetalert2";
+import withReactContent from 'sweetalert2-react-content'
 import imagen from "../../landing/favicon/times-solid.svg"
 
 class ListarUsuarios extends React.Component{
@@ -12,35 +13,9 @@ class ListarUsuarios extends React.Component{
           this.state = {
             Usuarios: [],            
     }}
-
-    componentDidMount(){
-        // var token=localStorage.getItem('token');
-        //  axios.get(process.env.REACT_APP_API_ENDPOINT+'ListarUsuarios',{
-        //     //   headers: {
-        //     //     'Authorization': `Bearer ${token}`
-        //     //   },
-        //    })
-        //    .then((res) => {
-        //      console.log(res.data);  
-        //      this.setState({Usuarios: res.data.data});
-        //    })
-        //    .catch((error) => {
-        //      console.error(error)
-        //      console.log(error.response.data.message);
-        //      console.log(error.response.status);
-        //      console.log(error.response.headers); 
-        //     //   const Toast = Swal.mixin({
-        //     //       toast: true,
-        //     //       icon: 'error',
-        //     //       title: ''+error.response.data.message+'',
-        //     //       confirmButtonText: `Ok`,
-        //     //       position: 'top-right',
-        //     //       iconColor: 'white',
-        //     //       showConfirmButton: true,
-        //     //     })                    
-        //    })  }
-
-        const MySwal = Swal
+    
+    componentDidMount() {        
+        const MySwal = withReactContent(Swal)
         const toast = MySwal.mixin({
         toast: true,
         position: 'top-end',
@@ -51,7 +26,7 @@ class ListarUsuarios extends React.Component{
             toast.addEventListener('mouseenter', Swal.stopTimer)
             toast.addEventListener('mouseleave', Swal.resumeTimer)
         }
-        });
+        });    
         axios.get('http://localhost:3005/VisorCliente_Api/ListarUsuarios')
       .then(res => {
         
@@ -59,21 +34,17 @@ class ListarUsuarios extends React.Component{
         
         
       })
-      .catch((error) => {
-        console.error(error)
-        console.log(error.response.data.message);
-        console.log(error.response.status);
-        console.log(error.response.headers); 
-           
-        toast.fire({
-            icon: 'error',
-            title: ''+error.response.data.message+'',
-            confirmButtonText: `Ok`,
-          }) 
-
-        })  
-
-
+        //   .catch((error) => {
+        //     console.error(error)
+        //     console.log(error.response.data.message);
+        //     console.log(error.response.status);
+        //     console.log(error.response.headers);        
+        //     toast.fire({
+        //       icon: 'error',
+        //       title: ''+error.response.data.message+'',
+        //       confirmButtonText: `Ok`,
+        //     })              
+        //   })
           //initialize datatable
     $(document).on(function () {
         setTimeout(function(){
@@ -98,20 +69,19 @@ class ListarUsuarios extends React.Component{
     });
     }
     
-
     render() {
-        return (             
+        return (   
             <table id="TableUsuarios" className="table table-hover table-bordered">
                 <thead>
                     <tr>
-                        <th >ID</th>
-                        <th id="Usuario">Usuario</th>
-                        <th id="Nombres">Nombres</th>
-                        <th id="Apellidos">Apellidos</th>
-                        <th id="Correo">Correo</th>
-                        <th>Fecha Creación</th>
-                        <th>Fecha Modificación</th>
-                        <th>Nivel</th>
+                        <th className="id">ID</th>
+                        <th className="usuarios" >Usuario</th>
+                        <th className="nombres">Nombres</th>
+                        <th className="apellidos">Apellidos</th>
+                        <th className="correos">Correo</th>
+                        <th className="fechas">Fecha Creación</th>
+                        <th className="fechasM">Fecha Modificación</th>
+                        <th className="niveles">Nivel</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -141,12 +111,12 @@ class ListarUsuarios extends React.Component{
 
                     return (              
                         <tr>
-                            <td style={{width:'5%'}}>{usuario.id_usuario}</td>
-                            <td style={{width:'10%'}}>{usuario.usuario}</td>
-                            <td style={{width:'15%'}}>{usuario.nombres}</td>
-                            <td style={{width:'15%'}}>{usuario.apellidos}</td>
-                            <td style={{width:'26%'}} >{usuario.correo}</td>
-                            <td title={new Date(usuario.fecha_creacion).toLocaleString()}>{new Date(usuario.fecha_creacion).toLocaleDateString()}</td>
+                            <td className="id" >{usuario.id_usuario}</td>
+                            <td className="usuarios" title={usuario.usuario}>{usuario.usuario}</td>
+                            <td className="nombres">{usuario.nombres}</td>
+                            <td className="apellidos">{usuario.apellidos}</td>
+                            <td className="correos" title={usuario.correo}>{usuario.correo}</td>
+                            <td className="fechas" title={new Date(usuario.fecha_creacion).toLocaleString()}>{new Date(usuario.fecha_creacion).toLocaleDateString()}</td>
                             <td>
                                 <img src={imagen} title="nombres" alt="imagen"></img>
                                 <img src={imagen} title="nombres" alt="imagen"></img>

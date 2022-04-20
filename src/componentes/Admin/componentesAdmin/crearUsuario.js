@@ -1,6 +1,7 @@
 import React from "react";
 import { $ } from "react-jquery-plugin";
 import Swal from "sweetalert2";
+import axios from "axios";
 import withReactContent from 'sweetalert2-react-content';
 
 
@@ -12,25 +13,26 @@ export default class crearUsuario extends React.Component{
         super(props);
         this.state = { 
             formErrors: {
-                Nombres:'',
-                Apellidos:'',
-                Email: '',
-                Password: '',
-                ConfirmacionPassword:'',
+                nombres:'',
+                apellidos:'',
+                correo: '',
+                password: '',
+                Confirmacionpassword:'',
             },
             nombresValid: false,
             apellidosValid: false,
-            emailValid: false,
+            correoValid: false,
             passwordValid: false,
-            confirmacionpasswordValid: false,
+            id_usuarioValid: false,
             nivelValid: false,
             clienteValid: false,
             formValid: false,
-            Nombres:'',
-            Apellidos:'',
-            Email:'',
-            Password:'',
-            ConfirmacionPassword:''
+            nombres:'',
+            apellidos:'',
+            correo:'',
+            password:'',
+            usuario:'',
+            id_Cliente:''
 
         }    
      } 
@@ -39,9 +41,9 @@ export default class crearUsuario extends React.Component{
         let fieldValidationErrors = this.state.formErrors;
         let nombresValid= this.state.nombresValid;
         let apellidosValid= this.state.apellidosValid;
-        let emailValid = this.state.emailValid;
+        let correoValid = this.state.correoValid;
         let passwordValid = this.state.passwordValid;
-       // let confirmacionpasswordValid = this.state.confirmacionpasswordValid;
+        //let id_usuarioValid = this.state.id_usuarioValid;
 
        const MySwal = withReactContent(Swal)
        const toast = MySwal.mixin({
@@ -58,37 +60,35 @@ export default class crearUsuario extends React.Component{
 
        switch(fieldName) {
 
-            case 'Nombres':
+            case 'nombres':
               nombresValid = value.length >= 6;
-              fieldValidationErrors.Nombres = nombresValid ? '' : ' es demasiado corto';
+              fieldValidationErrors.nombres = nombresValid ? '' : ' es demasiado corto';
               
               break;
-              case 'Apellidos':
+              case 'apellidos':
                   apellidosValid = value.length >= 6;
-                  fieldValidationErrors.Apellidos = apellidosValid ? '' : ' es demasiado corto';
+                  fieldValidationErrors.apellidos = apellidosValid ? '' : ' es demasiado corto';
               break;  
-            case 'Email':
-              emailValid = value.match(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i);
-              fieldValidationErrors.Email = emailValid ? '' : ' es invalido';
+            case 'correo':
+              correoValid = value.match(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i);
+              fieldValidationErrors.correo = correoValid ? '' : ' es invalido';
               toast.fire({
                 icon: 'error',
-                title: ''+fieldValidationErrors.Email+'',
+                title: ''+fieldValidationErrors.correo+'',
                 confirmButtonText: `Ok`,
               })
               break;
-            case 'Password':
+            case 'password':
               passwordValid = value.length >= 6;
-              fieldValidationErrors.Password = passwordValid ? '': ' es demasiado corto';
+              fieldValidationErrors.password = passwordValid ? '': ' es demasiado corto';
               break;
-          //   case 'ConfirmacionPassword':
+          //   case 'Confirmacionpassword':
           //     confirmacionpasswordValid = value.length >= 6;
-          //     fieldValidationErrors.ConfirmacionPassword = confirmacionpasswordValid ? '': ' es demasiado corto';
+          //     fieldValidationErrors.Confirmacionpassword = confirmacionpasswordValid ? '': ' es demasiado corto';
           //     break;  
             default:
               break;
 
-                  
-      
         }
 
         this.setState(
@@ -96,7 +96,7 @@ export default class crearUsuario extends React.Component{
             formErrors: fieldValidationErrors,
             nombresValid:nombresValid,
             apellidosValid:apellidosValid,
-            emailValid: emailValid,
+            correoValid: correoValid,
             passwordValid: passwordValid,
           }, 
           this.validateForm
@@ -110,7 +110,7 @@ export default class crearUsuario extends React.Component{
         this.setState({formValidNext: this.state.nombresValid && this.state.apellidosValid});
 
         //--- Para botón Submit ---//
-        this.setState({formValid: this.state.nombresValid && this.state.apellidosValid && this.state.emailValid && this.state.passwordValid });
+        this.setState({formValid: this.state.nombresValid && this.state.apellidosValid && this.state.correoValid && this.state.passwordValid });
 
       }
       handleUserInput = (e) => {
@@ -119,9 +119,68 @@ export default class crearUsuario extends React.Component{
         this.setState({[name]: value},() => { this.validateField(name, value) });
       }  
        
-    enviarDatos=(e)=>{
-      console.log("Fomulario Enviado....");
-  }
+      
+
+      enviarDatos=(e)=>{ 
+        const MySwal = withReactContent(Swal)
+        const toast = MySwal.mixin({
+          toast: true,
+          position: 'top-end',
+          showConfirmButton: false,
+          timer: 5000,
+          timerProgressBar: true,
+          didOpen: (toast) => {
+              toast.addEventListener('mouseenter', Swal.stopTimer)
+              toast.addEventListener('mouseleave', Swal.resumeTimer)
+           }
+        });
+        e.preventDefault();
+        console.log("Fomulario Enviado....")
+        const {correo,password,nombres,apellidos,id_Cliente}=this.state;
+        
+        var datosEnviar={
+          "usuario":correo,
+          "correo":correo,
+          "password":password,
+          "nombres":nombres,
+          "apellidos":apellidos,
+          "id_perfil": id_Cliente,
+          "id_Cliente": id_Cliente
+        }
+
+        console.log(datosEnviar)       
+        console.log('http:localhost:3005/VisorCliente_Api/NuevoUsuarios',{datosEnviar});
+      
+          let reqOptions = {
+            url: "http://localhost:3005/VisorCliente_Api/NuevoUsuarios",
+            method: "POST",
+            data: datosEnviar,
+          }
+
+          axios.request(reqOptions)
+            .then((result) => {
+            this.setState({status:true})
+            console.log(result)
+            console.log(result.data);  
+
+              toast.fire({
+                icon: 'success',
+                title: ''+result.data.message+'',
+                confirmButtonText: `Ok`,
+              })
+            })
+            .catch((error) => {
+              console.error(error)
+              console.log(error.response.data.message);
+              console.log(error.response.status);
+              console.log(error.response.headers);        
+                toast.fire({
+                  icon: 'error',
+                  title: ''+error.response.message+'',
+                  confirmButtonText: `Ok`,
+                  })              
+            })
+        }
  
 
 componentDidMount(){
@@ -212,14 +271,18 @@ componentDidMount(){
             <fieldset>
                 <h2 className="fs-title">Datos del Usuario</h2>
                 
-                <input type="text" name="Nombres" placeholder="Nombres" value={this.state.Nombres} onChange={this.handleUserInput}/>
-                <input type="text" name="Apellidos" placeholder="Apellidos" value={this.state.Apellidos} onChange={this.handleUserInput}/>
+                <input type="text" name="nombres" placeholder="nombres" value={this.state.nombres} onChange={this.handleUserInput}/>
+                <input type="text" name="apellidos" placeholder="apellidos" value={this.state.apellidos} onChange={this.handleUserInput}/>
+                <input type="number" name="id_Cliente" placeholder="Id Usuario" value={this.state.id_Cliente} onChange={this.handleUserInput}/>
+
                 <input type="button" name="next" disabled={!this.state.formValidNext} className="next action-button" value="Next" />
             </fieldset>
             <fieldset>
                 <h2 className="fs-title">Crear Usuario</h2>
-                <input  type="email" name="Email" placeholder="Correo" value={this.state.Email} onChange={this.handleUserInput}/>
-                <input className={`${this.errorClass(this.state.formErrors.Password)}`} type="password" name="Password" placeholder="Contraseña" value={this.state.Password} onChange={this.handleUserInput}/>
+                <input  type="correo" name="correo" placeholder="Correo" value={this.state.correo} onChange={this.handleUserInput}/>
+                <input  type="text" name="usuario" placeholder="Usuario" value={this.state.correo} onChange={this.handleUserInput}/>
+
+                <input className={`${this.errorClass(this.state.formErrors.password)}`} type="password" name="password" placeholder="Contraseña" value={this.state.password} onChange={this.handleUserInput}/>
                 <input type="button" name="previous" className="previous action-button" value="Previous" />
                 <input type="submit" disabled={!this.state.formValid} name="submit" className="submit action-button" onClick={this.enviarDatos}  value="Submit" />
             </fieldset>
