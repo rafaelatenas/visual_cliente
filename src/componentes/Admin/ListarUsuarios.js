@@ -79,17 +79,20 @@ class ListarUsuarios extends React.Component{
                         <th className="nombres">Nombres</th>
                         <th className="apellidos">Apellidos</th>
                         <th className="correos">Correo</th>
-                        <th className="fechas">Fecha Creación</th>
-                        <th className="fechasM">Fecha Modificación</th>
-                        <th className="niveles">Nivel</th>
+                        <th className="fechas">Creación</th>
+                        <th className="fechasM">Modificación</th>
+                        <th className="Ind_Activo">Ind Activo</th>
+                        <th className="Ind-US-Activo">Ind Usuario Activo</th>
+
                     </tr>
                 </thead>
                 <tbody>
                     {this.state.Usuarios.map((usuario) => {
                         console.log(usuario)
-                        
+                        const Ind_Activo = document.getElementById('Ind_Activo')
                         switch (usuario.Ind_Activo) {
                             case true:
+                                
                                 console.log(232)
                                 break;
                             case false:
@@ -122,6 +125,8 @@ class ListarUsuarios extends React.Component{
                                 <img src={imagen} title="nombres" alt="imagen"></img>
                                 <img src={imagen} title="nombres" alt="imagen"></img>
                             </td>
+                            <td className="Ind_Activo" id="Ind_Activo"></td>
+
                         </tr>
                     )
                     })}
