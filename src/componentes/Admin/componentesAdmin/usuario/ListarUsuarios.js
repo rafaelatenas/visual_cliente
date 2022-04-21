@@ -68,9 +68,10 @@ class ListarUsuarios extends React.Component{
                 confirmButtonText: `Ok`,
                 })
             })
-             document.getElementById('pantalla').addEventListener('click',()=>{
-                 document.getElementById('pantalla').style.display='none'
-             })
+              document.getElementById('pantalla').addEventListener('click',()=>{
+                  document.getElementById('BoxActualizar').style.display='none'
+                  document.getElementById('pantalla').style.opacity='1'
+              })
     }
 
         //Editar Usuario//
@@ -157,7 +158,8 @@ class ListarUsuarios extends React.Component{
           this.setState({[name]: value},() => { this.validateField(name, value) });
         }
         prueba=(e)=>{
-           document.getElementById('pantalla').style.display='block'
+           document.getElementById('BoxActualizar').style.display='block'
+           document.getElementById('pantalla').style.opacity='.3'
         }
         actualizarDatos=(e)=>{
 

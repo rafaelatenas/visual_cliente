@@ -197,13 +197,30 @@
 	background: #2FAC6A;
 	color: white;
 }
-
-
-#pantalla{
-	width: 95%;
-    height: 100%;
-    background: #1f1f1fa6;
-    position: absolute;
+/* Estilos de caja de modificaicones */
+#BoxActualizar {
+    width: 60%;
+    height: 60%;
+    position: fixed;
+    top: 20%;
+    left: 20%;
+    background: papayawhip;
+    border-radius: 1em;
     z-index: 100;
-    margin-left: 5%;
+    animation-name: aparecer;
+    animation-duration: 2s;
+    animation-fill-mode: forwards;
+    z-index: 300;
+}
+
+#texto_Actualizaciones {
+    position: absolute;
+    top: 10%;
+    left: 10%;
+    width: 80%;
+    height: 80%;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    flex-direction: column;
 }
