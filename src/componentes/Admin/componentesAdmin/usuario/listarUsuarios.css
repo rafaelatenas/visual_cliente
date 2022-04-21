@@ -113,17 +113,4 @@ button{
     height: 75%;
 }
 
-#BoxActualizar {
-    width: 50%;
-    height: 60%;
-    position: fixed;
-    top: 20%;
-    left: 25%;
-    background: papayawhip;
-    border-radius: 1em;
-    z-index: 100;
-    animation-name: aparecer;
-    animation-duration: 2s;
-    animation-fill-mode: forwards;
-    z-index: 300;
-}
+
