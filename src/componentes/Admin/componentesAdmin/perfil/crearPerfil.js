@@ -1,6 +1,6 @@
 import React from "react";
 import './crearPerfil.css';
-import MenuAdmin from "./menuAdmin";
+import MenuAdmin from "../menuAdmin";
 
 
 class CrearPerfil extends React.Component{

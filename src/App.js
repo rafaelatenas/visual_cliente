@@ -2,8 +2,8 @@ import React from 'react';
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import './App.css';
 import Admin from './componentes/Admin/admin';
-import CrearPerfil from './componentes/Admin/componentesAdmin/crearPerfil';
-import Usuario from './componentes/Admin/componentesAdmin/Usuario';
+import CrearPerfil from './componentes/Admin/componentesAdmin/perfil/crearPerfil';
+import Usuario from './componentes/Admin/componentesAdmin/usuario/Usuario';
 import CambiarC from './componentes/CambiarC/CambiarC';
 import DataReport from './componentes/Data/data';
 import Home from './componentes/Home/Home'

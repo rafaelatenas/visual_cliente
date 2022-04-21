@@ -197,3 +197,13 @@
 	background: #2FAC6A;
 	color: white;
 }
+
+
+#pantalla{
+	width: 95%;
+    height: 100%;
+    background: #1f1f1fa6;
+    position: absolute;
+    z-index: 100;
+    margin-left: 5%;
+}

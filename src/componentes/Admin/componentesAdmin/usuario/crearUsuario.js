@@ -9,35 +9,34 @@ import withReactContent from 'sweetalert2-react-content';
 export default class crearUsuario extends React.Component{
     //Validación de Formulario
 
-    constructor (props) {
-        super(props);
-        this.state = { 
-            formErrors: {
-                nombres:'',
-                apellidos:'',
-                correo: '',
-                password: '',
-                Confirmacionpassword:'',
-            },
-            nombresValid: false,
-            apellidosValid: false,
-            correoValid: false,
-            passwordValid: false,
-            id_usuarioValid: false,
-            nivelValid: false,
-            clienteValid: false,
-            formValid: false,
-            nombres:'',
-            apellidos:'',
-            correo:'',
-            password:'',
-            usuario:'',
-            id_Cliente:''
+      constructor (props) {
+          super(props);
+          this.state = { 
+              formErrors: {
+                  nombres:'',
+                  apellidos:'',
+                  correo: '',
+                  password: '',
+                  Confirmacionpassword:'',
+              },
+              nombresValid: false,
+              apellidosValid: false,
+              correoValid: false,
+              passwordValid: false,
+              id_usuarioValid: false,
+              nivelValid: false,
+              clienteValid: false,
+              formValid: false,
+              nombres:'',
+              apellidos:'',
+              correo:'',
+              password:'',
+              usuario:'',
+              id_Cliente:''
 
-        }    
-     } 
-     
-     validateField(fieldName, value) {
+          }    
+      } 
+      validateField(fieldName, value) {
         let fieldValidationErrors = this.state.formErrors;
         let nombresValid= this.state.nombresValid;
         let apellidosValid= this.state.apellidosValid;
@@ -118,9 +117,6 @@ export default class crearUsuario extends React.Component{
         const value = e.target.value;
         this.setState({[name]: value},() => { this.validateField(name, value) });
       }  
-       
-      
-
       enviarDatos=(e)=>{ 
         const MySwal = withReactContent(Swal)
         const toast = MySwal.mixin({
@@ -180,7 +176,7 @@ export default class crearUsuario extends React.Component{
                   confirmButtonText: `Ok`,
                   })              
             })
-        }
+      }
  
 
 componentDidMount(){
@@ -279,7 +275,7 @@ componentDidMount(){
             </fieldset>
             <fieldset>
                 <h2 className="fs-title">Crear Usuario</h2>
-                <input  type="correo" name="correo" placeholder="Correo" value={this.state.correo} onChange={this.handleUserInput}/>
+                <input  type="email" name="correo" placeholder="Correo" value={this.state.correo} onChange={this.handleUserInput}/>
                 <input  type="text" name="usuario" placeholder="Usuario" value={this.state.correo} onChange={this.handleUserInput}/>
 
                 <input className={`${this.errorClass(this.state.formErrors.password)}`} type="password" name="password" placeholder="Contraseña" value={this.state.password} onChange={this.handleUserInput}/>

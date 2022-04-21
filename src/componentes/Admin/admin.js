@@ -12,7 +12,7 @@ class Admin extends React.Component {
             </section>
             <MenuAdmin/>
             </>
-                // <script src="https://cdn.datatables.net/v/dt/dt-1.11.5/datatables.min.js"></script>
+            
             
         )
     }
