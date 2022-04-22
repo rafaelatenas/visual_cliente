@@ -12,6 +12,7 @@ class Usuario extends React.Component{
     constructor(props) {
         super(props)
           this.state = {
+            Usuarios: [],
             formErrors: {
                 nombres:'',
                 apellidos:'',
@@ -107,7 +108,7 @@ class Usuario extends React.Component{
       validateForm() {
 
         //--- Para botón Submit ---//
-        this.setState({formValid: this.state.nombresValid && this.state.apellidosValid && this.state.correoValid && this.state.passwordValid });
+        this.setState({formValid: this.state.nombresValid && this.state.apellidosValid && this.state.correoValid});
 
       }
       handleUserInput = (e) => {
@@ -284,6 +285,42 @@ class Usuario extends React.Component{
             })
             }
         // Fin de animación y efecto de despliegue de las opciones de administrador
+
+
+
+
+
+
+
+        const MySwal = withReactContent(Swal)
+        const toast = MySwal.mixin({
+        toast: true,
+        position: 'top-end',
+        showConfirmButton: false,
+        timer: 10000,
+        timerProgressBar: true,
+        didOpen: (toast) => {
+            toast.addEventListener('mouseenter', Swal.stopTimer)
+            toast.addEventListener('mouseleave', Swal.resumeTimer)
+        }
+        });
+        
+        axios.get('http://localhost:3005/VisorCliente_Api/ListarUsuarios')
+            .then(res => {
+                this.setState({ Usuarios: res.data.data });
+
+            })
+            .catch((error) => {
+                console.error(error)
+                console.log(error.response.data.message);
+                console.log(error.response.status);
+                console.log(error.response.headers);
+                toast.fire({
+                icon: 'error',
+                title: ''+error.response.data.message+'',
+                confirmButtonText: `Ok`,
+                })
+            })
     }
 
     render(){
@@ -292,23 +329,47 @@ class Usuario extends React.Component{
             <div className="Contenedorcompleto">
             
                 <aside style={{display:"none"} } id="BoxActualizar">
-                    <section id="texto_Atualizaciones">
+                    <section id="texto_Actualizaciones">
                         <h2>Actualizar Datos de Usuario</h2>
+                        
+                          <>
+                          <form name = "formulario" action="http://localhost:3005/VisorCliente_Api/ListarUsuarios" method="get">
+                            {this.state.Usuarios.map((usuario) => {
+                              
+                              console.log(usuario)
+                              console.log(document.querySelectorAll('.contenedor-herramientas'))
+                              
+                              const contenedor = document.querySelectorAll('.contenedor-herramientas');
+                              for (let i = 0; i < contenedor.length; i++) {
+                                const elementContenedor = contenedor[i];
+                                for (let j = 0; j < elementContenedor.children.length; j++) {
+                                  const element = elementContenedor.children[j];
+                                  console.log(element)
+                                }
+                              }
+                              for (const iterarContenedor of contenedor) {
+                                for (const iterarBotones of iterarContenedor.children) {
+                                var comprobar = (iterarBotones === usuario.id_usuario)
+                                  
+                                  return(
+                                    <input id={usuario.id_usuario} type="text" name="nombres" placeholder="nombres" value={usuario.usuario} onChange={this.handleUserInput} />
+                                  )
+                                }
+                              }
 
-                        <input type="text" name="nombres" placeholder="nombres" value={this.state.nombres} onChange={this.handleUserInput}/>
-                        <input type="text" name="apellidos" placeholder="apellidos" value={this.state.apellidos} onChange={this.handleUserInput}/>
+                                
 
-                        <input  type="email" name="correo" placeholder="Correo" value={this.state.correo} onChange={this.handleUserInput}/>
-                        <input  type="text" name="usuario" placeholder="Usuario" value={this.state.correo} onChange={this.handleUserInput}/>
-
-                        <select name="Ind_Activo" value={"Estado de Usuario"}>
-                            <option>Activo</option>
+                              }
+                            )}
+                          </form>
+                          <input type="text" name="nombres" placeholder="nombres" value={this.state.nombres} onChange={this.handleUserInput} />
+                          <input type="text" name="apellidos" placeholder="apellidos" value={this.state.apellidos} onChange={this.handleUserInput} />
+                          <input type="email" name="correo" placeholder="Correo" value={this.state.correo} onChange={this.handleUserInput} /><input type="text" name="usuario" placeholder="Usuario" value={this.state.correo} onChange={this.handleUserInput} />
+                          <select name="Ind_Activo" value={"Estado de Usuario"}>
+                            <option >Activo</option>
                             <option>Inactivo</option>
-                        </select>
-                        <select name="Ind_Activo" value={"Estado de Usuario"}>
-                            <option>Activo</option>
-                            <option>Inactivo</option>
-                        </select>
+                          </select></>
+                                              
                         <input type="submit" disabled={!this.state.formValid} name="submit" className="submit action-button" onClick={this.enviarDatos}  value="Submit" />
             
                     </section>

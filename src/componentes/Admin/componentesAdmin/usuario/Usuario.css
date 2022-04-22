@@ -199,11 +199,11 @@
 }
 /* Estilos de caja de modificaicones */
 #BoxActualizar {
-    width: 60%;
-    height: 60%;
+    width: 50%;
+    height: 70%;
     position: fixed;
-    top: 20%;
-    left: 20%;
+    top: 15%;
+    left: 25%;
     background: papayawhip;
     border-radius: 1em;
     z-index: 100;
