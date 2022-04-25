@@ -5,6 +5,9 @@ import Swal from "sweetalert2";
 import withReactContent from 'sweetalert2-react-content'
 import editar from "../../../../landing/favicon/editar-user.svg"
 import historial from "../../../../landing/favicon/historial.svg"
+import check from "../../../../landing/favicon/check-solid.svg"
+import eliminar from "../../../../landing/favicon/eliminar-user.svg"
+
 
 class ListarUsuarios extends React.Component{
 
@@ -16,12 +19,12 @@ class ListarUsuarios extends React.Component{
                 nombres:'',
                 apellidos:'',
                 correo: '',
-                password: '',
+                Ind_Activo: '',
+                Ind_Us_Activo:'',
             },
                 nombresValid: false,
                 apellidosValid: false,
                 correoValid: false,
-                passwordValid: false,
                 id_usuarioValid: false,
                 nivelValid: false,
                 clienteValid: false,
@@ -29,9 +32,10 @@ class ListarUsuarios extends React.Component{
                 nombres:'',
                 apellidos:'',
                 correo:'',
-                password:'',
                 usuario:'',
-                id_Cliente:''
+                id_Cliente:'',
+                Ind_Activo: '',
+                Ind_Us_Activo:'',
 
             }
         }
@@ -54,8 +58,10 @@ class ListarUsuarios extends React.Component{
         axios.get('http://localhost:3005/VisorCliente_Api/ListarUsuarios')
           .then(res => {
             this.setState({ Usuarios: res.data.data });
-            
+            resultado(res.data.data)
+            console.log(res.data.data)
           })
+
           .catch((error) => {
                 console.error(error)
                 console.log(error.response.data.message);
@@ -71,126 +77,68 @@ class ListarUsuarios extends React.Component{
                   document.getElementById('BoxActualizar').style.display='none'
                   document.getElementById('pantalla').style.opacity='1'
         });
+        const resultado = data => {
+          const Ind_US_Activo =  document.querySelectorAll('.Ind-US-Activo ')
+          for (let w = 0; w < (Ind_US_Activo.length -1); w++) {
+            const elementoHTML = Ind_US_Activo[w+1];
+            var ActivoUS = data[w].Ind_Us_Activo;
+            let Activo = '';
+            if (ActivoUS === true) {
+              Activo +=`           
+                <img src=${check} class="boton" alt="Usuario Activo"></img>
+              ` 
+              elementoHTML.innerHTML = Activo;
+
+            } else {
+              Activo +=`           
+                <img src=${eliminar} class="boton" alt="Usuario Activo"></img>
+              ` 
+              elementoHTML.innerHTML = Activo;
+            }
+          }
+          
+          const Ind_Activo =  document.querySelectorAll('.Ind_Activo')
+          for (let w = 0; w < (Ind_Activo.length -1); w++) {
+            const elementoHTML = Ind_Activo[w+1];
+            var ActivoIND = data[w].Ind_Activo;
+            let Activo = '';
+            if (ActivoIND === true) {
+              Activo +=`           
+                <img src=${check} class="boton" alt="Usuario Activo"></img>
+              ` 
+              elementoHTML.innerHTML = Activo;
+
+            } else {
+              Activo +=`           
+                <img src=${eliminar} class="boton" alt="Usuario Activo"></img>
+              ` 
+              elementoHTML.innerHTML = Activo;
+            }
+          }
+        }
         
     }
-        //Editar Usuario//
-
-    
-
-        validateField(fieldName, value) {
-          let fieldValidationErrors = this.state.formErrors;
-          let nombresValid= this.state.nombresValid;
-          let apellidosValid= this.state.apellidosValid;
-          let correoValid = this.state.correoValid;
-          let passwordValid = this.state.passwordValid;
-          //let id_usuarioValid = this.state.id_usuarioValid;
-
-         const MySwal = withReactContent(Swal)
-         const toast = MySwal.mixin({
-           toast: true,
-           position: 'top-end',
-           showConfirmButton: false,
-           timer: 10000,
-           timerProgressBar: true,
-           didOpen: (toast) => {
-               toast.addEventListener('mouseenter', Swal.stopTimer)
-               toast.addEventListener('mouseleave', Swal.resumeTimer)
-            }
-         });
-
-         switch(fieldName) {
-
-              case 'nombres':
-                nombresValid = value.length >= 6;
-                fieldValidationErrors.nombres = nombresValid ? '' : ' es demasiado corto';
-
-                break;
-                case 'apellidos':
-                    apellidosValid = value.length >= 6;
-                    fieldValidationErrors.apellidos = apellidosValid ? '' : ' es demasiado corto';
-                break;
-              case 'correo':
-                correoValid = value.match(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i);
-                fieldValidationErrors.correo = correoValid ? '' : ' es invalido';
-                toast.fire({
-                  icon: 'error',
-                  title: ''+fieldValidationErrors.correo+'',
-                  confirmButtonText: `Ok`,
-                })
-                break;
-              case 'password':
-                passwordValid = value.length >= 6;
-                fieldValidationErrors.password = passwordValid ? '': ' es demasiado corto';
-                break;
-            //   case 'Confirmacionpassword':
-            //     confirmacionpasswordValid = value.length >= 6;
-            //     fieldValidationErrors.Confirmacionpassword = confirmacionpasswordValid ? '': ' es demasiado corto';
-            //     break;
-              default:
-                break;
-
-          }
-
-          this.setState(
-            {
-              formErrors: fieldValidationErrors,
-              nombresValid:nombresValid,
-              apellidosValid:apellidosValid,
-              correoValid: correoValid,
-              passwordValid: passwordValid,
-            },
-            this.validateForm
-            );
-        }
-        errorClass(error) {
-          return(error.length === 0 ? '' : 'has-error');
-        }
-        validateForm() {
-
-          //--- Para botón Submit ---//
-          this.setState({formValid: this.state.nombresValid && this.state.apellidosValid && this.state.correoValid && this.state.passwordValid });
-
-        }
-        handleUserInput = (e) => {
-          const name = e.target.name;
-          const value = e.target.value;
-          this.setState({[name]: value},() => { this.validateField(name, value) });
-        }
+        
         editarElementos=(e)=>{
           document.getElementById('BoxActualizar').style.display='block'
           document.getElementById('pantalla').style.opacity='.3'
 
           var editando = false;
           if (editando === false) {
-           // var nodoContenedorForm = document.getElementById('contenedorForm'); //Nodo DIV
-            var nodosTr = document.getElementsByTagName('tr')
             var herramientas = document.querySelectorAll('.herramientas');
             var tag;
-            var algo = document.getElementById('BoxActualizar')
-            let nuevoHtml = '';
+            var contenedorActualizar = document.getElementById('BoxActualizar')
+           
 
             for (let i = 1; i < herramientas.length; i++) {
-              const padre = herramientas[i].parentNode;
               const idPadre = herramientas[i].parentNode.id;
               const hijo = document.getElementById(idPadre).children;
 
                 if (e.target){
                   tag = e.target.getAttribute("id");
                   if (idPadre === tag) {
-                  console.log(hijo[0].textContent)
-
-                  nuevoHtml += 
-                       ` 
-                       <input type="text" name="nombres" placeholder="nombres" value=${hijo[1].textContent} onChange={this.handleUserInput} />
-                       <input type="text" name="apellidos" placeholder="apellidos" value=${hijo[2].textContent} onChange={this.handleUserInput} />
-                       <input type="email" name="correo" placeholder="Correo" value=${hijo[3].textContent} onChange={this.handleUserInput} />
-                       <input type="text" name="usuario" placeholder="Usuario" value=${hijo[4].textContent} onChange={this.handleUserInput} />
-                       <select name="Ind_Activo" value={"Estado de Usuario"}>
-                         <option >Activo</option>
-                         <option>Inactivo</option>
-                       </select>
-                       `
-                 algo.innerHTML= nuevoHtml
+                  
+                   
                   }
                 }
             }
@@ -199,12 +147,13 @@ class ListarUsuarios extends React.Component{
         }
         
         
+        
 
     render() {
-
+      
         return (
             <>
-
+             
                 <table id="TableUsuarios" className="table table-hover table-bordered">
                         <thead>
                             <tr>
@@ -217,11 +166,11 @@ class ListarUsuarios extends React.Component{
                                 <th className="Ind_Activo">Activo</th>
                                 <th className="Ind-US-Activo">Usuario Activo</th>
                                 <th className="herramientas">Herramientas</th>
+                                
                             </tr>
                         </thead>
                         <tbody>
                             {this.state.Usuarios.map((usuario) => {
-                                console.log(usuario);
                                 
                                 return (
                                     <tr id={usuario.id_usuario}>
@@ -232,30 +181,8 @@ class ListarUsuarios extends React.Component{
                                         <td className="correos" title={usuario.correo}>{usuario.correo}</td>
                                         <td className="fechas" title={new Date(usuario.fecha_creacion).toLocaleString()}>{new Date(usuario.fecha_creacion).toLocaleDateString()}</td>
                                         <td id="indicador" className="Ind_Activo">
-                                          {this.state.Usuarios.map((usuario) => {
-                                            if (usuario.Ind_Activo === true) {
-                                              return(
-                                                <img src={editar}></img>
-                                              )
-                                            }else{
-                                              return(
-                                                <img src={historial}></img>
-                                              )
-                                            }
-                                          })}
                                         </td>
                                         <td id="check-2" className="Ind-US-Activo ">
-                                          {this.state.Usuarios.map((usuario) => {
-                                            if (usuario.Ind_Us_Activo === true) {
-                                              return(
-                                                <img src={editar}></img>
-                                              )
-                                            }else{
-                                              return(
-                                                <img src={historial}></img>
-                                              )
-                                            }
-                                          })}
                                         </td>
                                         <td className="herramientas">
                                           <div id={usuario.id_usuario} className="contenedor-herramientas">

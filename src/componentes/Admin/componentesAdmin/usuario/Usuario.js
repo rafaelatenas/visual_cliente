@@ -8,196 +8,7 @@ import withReactContent from "sweetalert2-react-content";
 import axios from "axios";
 
 class Usuario extends React.Component{
-
-    constructor(props) {
-        super(props)
-          this.state = {
-            Usuarios: [],
-            formErrors: {
-                nombres:'',
-                apellidos:'',
-                correo: '',
-                password: '',
-            },
-                nombresValid: false,
-                apellidosValid: false,
-                correoValid: false,
-                passwordValid: false,
-                id_usuarioValid: false,
-                nivelValid: false,
-                clienteValid: false,
-                formValid: false,
-                nombres:'',
-                apellidos:'',
-                correo:'',
-                password:'',
-                usuario:'',
-                id_Cliente:''
-
-            }
-        }
-
-    validateField(fieldName, value) {
-        let fieldValidationErrors = this.state.formErrors;
-        let nombresValid= this.state.nombresValid;
-        let apellidosValid= this.state.apellidosValid;
-        let correoValid = this.state.correoValid;
-        let passwordValid = this.state.passwordValid;
-        //let id_usuarioValid = this.state.id_usuarioValid;
-
-       const MySwal = withReactContent(Swal)
-       const toast = MySwal.mixin({
-         toast: true,
-         position: 'top-end',
-         showConfirmButton: false,
-         timer: 10000,
-         timerProgressBar: true,
-         didOpen: (toast) => {
-             toast.addEventListener('mouseenter', Swal.stopTimer)
-             toast.addEventListener('mouseleave', Swal.resumeTimer)
-          }
-       });
-
-       switch(fieldName) {
-
-            case 'nombres':
-              nombresValid = value.length >= 6;
-              fieldValidationErrors.nombres = nombresValid ? '' : ' es demasiado corto';
-
-              break;
-              case 'apellidos':
-                  apellidosValid = value.length >= 6;
-                  fieldValidationErrors.apellidos = apellidosValid ? '' : ' es demasiado corto';
-              break;
-            case 'correo':
-              correoValid = value.match(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i);
-              fieldValidationErrors.correo = correoValid ? '' : ' es invalido';
-              toast.fire({
-                icon: 'error',
-                title: ''+fieldValidationErrors.correo+'',
-                confirmButtonText: `Ok`,
-              })
-              break;
-            case 'password':
-              passwordValid = value.length >= 6;
-              fieldValidationErrors.password = passwordValid ? '': ' es demasiado corto';
-              break;
-          //   case 'Confirmacionpassword':
-          //     confirmacionpasswordValid = value.length >= 6;
-          //     fieldValidationErrors.Confirmacionpassword = confirmacionpasswordValid ? '': ' es demasiado corto';
-          //     break;
-            default:
-              break;
-
-        }
-
-        this.setState(
-          {
-            formErrors: fieldValidationErrors,
-            nombresValid:nombresValid,
-            apellidosValid:apellidosValid,
-            correoValid: correoValid,
-            passwordValid: passwordValid,
-          },
-          this.validateForm
-          );
-      }
-      errorClass(error) {
-        return(error.length === 0 ? '' : 'has-error');
-      }
-      validateForm() {
-
-        //--- Para botón Submit ---//
-        this.setState({formValid: this.state.nombresValid && this.state.apellidosValid && this.state.correoValid});
-
-      }
-      handleUserInput = (e) => {
-        const name = e.target.name;
-        const value = e.target.value;
-        this.setState({[name]: value},() => { this.validateField(name, value) });
-      }
-      actualizarDatos=(e)=>{
-
-        // (async () => {
-
-        //     const { value: password } = await Swal.fire({
-        //       title: 'Enter your password',
-        //       input: 'password',
-        //       inputLabel: 'Password',
-        //       inputPlaceholder: 'Enter your password',
-        //       inputAttributes: {
-        //         autocapitalize: 'off',
-        //         autocorrect: 'off'
-        //       }
-        //     })
-
-        //     if (password) {
-        //       Swal.fire(`Entered password: ${password}`)
-        //     }
-
-        //     })()
-
-
-      const MySwal = withReactContent(Swal)
-      const toast = MySwal.mixin({
-        toast: true,
-        position: 'top-end',
-        showConfirmButton: false,
-        timer: 5000,
-        timerProgressBar: true,
-        didOpen: (toast) => {
-            toast.addEventListener('mouseenter', Swal.stopTimer)
-            toast.addEventListener('mouseleave', Swal.resumeTimer)
-         }
-      });
-      e.preventDefault();
-      console.log("Fomulario Enviado....")
-      const {correo,password,nombres,apellidos,id_Cliente}=this.state;
-
-      var datosActualizar={
-        "usuario":correo,
-        "correo":correo,
-        "password":password,
-        "nombres":nombres,
-        "apellidos":apellidos,
-        "id_perfil": id_Cliente,
-        "id_Cliente": id_Cliente
-      }
-
-      console.log(datosActualizar)
-      console.log('http:localhost:3005/VisorCliente_Api/UpdateUsuarios',{datosActualizar});
-
-        let reqOptions = {
-          url: "http://localhost:3005/VisorCliente_Api/UpdateUsuarios",
-          method: "POST",
-          data: datosActualizar,
-        }
-
-        axios.request(reqOptions)
-          .then((result) => {
-          this.setState({status:true})
-          console.log(result)
-          console.log(result.data);
-
-            toast.fire({
-              icon: 'success',
-              title: ''+result.data.message+'',
-              confirmButtonText: `Ok`,
-            })
-          })
-          .catch((error) => {
-            console.error(error)
-            console.log(error.response.data.message);
-            console.log(error.response.status);
-            console.log(error.response.headers);
-              toast.fire({
-                icon: 'error',
-                title: ''+error.response.message+'',
-                confirmButtonText: `Ok`,
-                })
-          })
-    }
-
+    
     componentDidMount(){
 
         // Inicio de animación y efecto de despliegue de las opciones de administrador
@@ -285,33 +96,196 @@ class Usuario extends React.Component{
             })
             }
         // Fin de animación y efecto de despliegue de las opciones de administrador
+    }
+
+    constructor (props) {
+        super(props);
+        this.state = { 
+            formErrors: {
+                nombres:'',
+                apellidos:'',
+                correo: '',
+                password: '',
+                Confirmacionpassword:'',
+            },
+            nombresValid: false,
+            apellidosValid: false,
+            correoValid: false,
+            passwordValid: false,
+            id_usuarioValid: false,
+            nivelValid: false,
+            clienteValid: false,
+            formValid: false,
+            nombres:'',
+            apellidos:'',
+            correo:'',
+            password:'',
+            usuario:'',
+            id_Cliente:''
+
+        }    
+    } 
+    validateField(fieldName, value) {
+      let fieldValidationErrors = this.state.formErrors;
+      let nombresValid= this.state.nombresValid;
+      let apellidosValid= this.state.apellidosValid;
+      let correoValid = this.state.correoValid;
+      let passwordValid = this.state.passwordValid;
+      //let id_usuarioValid = this.state.id_usuarioValid;
+
+     const MySwal = withReactContent(Swal)
+     const toast = MySwal.mixin({
+       toast: true,
+       position: 'top-end',
+       showConfirmButton: false,
+       timer: 10000,
+       timerProgressBar: true,
+       didOpen: (toast) => {
+           toast.addEventListener('mouseenter', Swal.stopTimer)
+           toast.addEventListener('mouseleave', Swal.resumeTimer)
+        }
+     });  
+
+     switch(fieldName) {
+
+          case 'nombres':
+            nombresValid = value.length >= 6;
+            fieldValidationErrors.nombres = nombresValid ? '' : ' es demasiado corto';
+            
+            break;
+            case 'apellidos':
+                apellidosValid = value.length >= 6;
+                fieldValidationErrors.apellidos = apellidosValid ? '' : ' es demasiado corto';
+            break;  
+          case 'correo':
+            correoValid = value.match(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i);
+            fieldValidationErrors.correo = correoValid ? '' : ' es invalido';
+            toast.fire({
+              icon: 'error',
+              title: ''+fieldValidationErrors.correo+'',
+              confirmButtonText: `Ok`,
+            })
+            break;
+          case 'password':
+            passwordValid = value.length >= 6;
+            fieldValidationErrors.password = passwordValid ? '': ' es demasiado corto';
+            break;
+        //   case 'Confirmacionpassword':
+        //     confirmacionpasswordValid = value.length >= 6;
+        //     fieldValidationErrors.Confirmacionpassword = confirmacionpasswordValid ? '': ' es demasiado corto';
+        //     break;  
+          default:
+            break;
+
+      }
+
+      this.setState(
+        {
+          formErrors: fieldValidationErrors,
+          nombresValid:nombresValid,
+          apellidosValid:apellidosValid,
+          correoValid: correoValid,
+          passwordValid: passwordValid,
+        }, 
+        this.validateForm
+        );
+    }
+    errorClass(error) {
+      return(error.length === 0 ? '' : 'has-error');
+    }
+    validateForm() {
+      //--- Para botón Next ---//
+      this.setState({formValidNext: this.state.nombresValid && this.state.apellidosValid});
+
+      //--- Para botón Submit ---//
+      this.setState({formValid: this.state.nombresValid && this.state.apellidosValid && this.state.correoValid && this.state.passwordValid });
 
     }
+    handleUserInput = (e) => {
+      const name = e.target.name;
+      const value = e.target.value;
+      this.setState({[name]: value},() => { this.validateField(name, value) });
+    }  
+    enviarDatos=(e)=>{ 
+      const MySwal = withReactContent(Swal)
+      const toast = MySwal.mixin({
+        toast: true,
+        position: 'top-end',
+        showConfirmButton: false,
+        timer: 5000,
+        timerProgressBar: true,
+        didOpen: (toast) => {
+            toast.addEventListener('mouseenter', Swal.stopTimer)
+            toast.addEventListener('mouseleave', Swal.resumeTimer)
+         }
+      });
+      e.preventDefault();
+      console.log("Fomulario Enviado....")
+      const {correo,password,nombres,apellidos,id_Cliente}=this.state;
+      
+      var datosEnviar={
+        "usuario":correo,
+        "correo":correo,
+        "password":password,
+        "nombres":nombres,
+        "apellidos":apellidos,
+        "id_perfil": id_Cliente,
+        "id_Cliente": id_Cliente
+      }
+
+      console.log(datosEnviar)       
+      console.log('http:localhost:3005/VisorCliente_Api/NuevoUsuarios',{datosEnviar});
+    
+        let reqOptions = {
+          url: "http://localhost:3005/VisorCliente_Api/NuevoUsuarios",
+          method: "POST",
+          data: datosEnviar,
+        }
+
+        axios.request(reqOptions)
+          .then((result) => {
+          this.setState({status:true})
+          console.log(result)
+          console.log(result.data);  
+
+            toast.fire({
+              icon: 'success',
+              title: ''+result.data.message+'',
+              confirmButtonText: `Ok`,
+            })
+          })
+          .catch((error) => {
+            console.error(error)
+            console.log(error.response.data.message);
+            console.log(error.response.status);
+            console.log(error.response.headers);        
+              toast.fire({
+                icon: 'error',
+                title: ''+error.response.message+'',
+                confirmButtonText: `Ok`,
+                })              
+          })
+    }
+
 
     render(){
         return(
             <>
             <div className="Contenedorcompleto">
             
-                <aside style={{display:"none"} } id="BoxActualizar">
-                    <section id="texto_Actualizaciones">
+            <aside style={{display:"none"} } id="BoxActualizar">
+                <section id="texto_Actualizaciones">
+                    
                         <h2>Actualizar Datos de Usuario</h2>
-                        
-                          {/* <>
-                          <form name = "formulario" action="http://localhost:3005/VisorCliente_Api/ListarUsuarios" method="get">
- 
-                          </form>
-                          <input type="text" name="nombres" placeholder="nombres" value={this.state.nombres} onChange={this.handleUserInput} />
-                          <input type="text" name="apellidos" placeholder="apellidos" value={this.state.apellidos} onChange={this.handleUserInput} />
-                          <input type="email" name="correo" placeholder="Correo" value={this.state.correo} onChange={this.handleUserInput} /><input type="text" name="usuario" placeholder="Usuario" value={this.state.correo} onChange={this.handleUserInput} /><select name="Ind_Activo" value={"Estado de Usuario"}>
-                            <option >Activo</option>
-                            <option>Inactivo</option>
-                          </select></> */}
-                                              
+                        <input type="text" name="nombres" placeholder="nombres" value='' onChange={this.handleUserInput} />
+                        <input type="text" name="apellidos" placeholder="apellidos" value='' onChange={this.handleUserInput} />
+                        <input type="email" name="correo" placeholder="Correo" value='' onChange={this.handleUserInput} />
+                        <input type="text" name="usuario" placeholder="Usuario" value='' onChange={this.handleUserInput} />
                         <input type="submit" disabled={!this.state.formValid} name="submit" className="submit action-button" onClick={this.enviarDatos}  value="Submit" />
-            
-                    </section>
-                </aside>
+                        
+                     
+                </section>
+            </aside>
             
              
             <MenuAdmin />

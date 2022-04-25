@@ -112,5 +112,8 @@ button{
     width: 75%;
     height: 75%;
 }
-
+img.boton {
+    width: 25%;
+    height: 45%;
+}
 
