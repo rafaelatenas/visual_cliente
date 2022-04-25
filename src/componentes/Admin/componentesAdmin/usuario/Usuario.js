@@ -277,7 +277,7 @@ class Usuario extends React.Component{
                 <section id="texto_Actualizaciones">
                     
                         <h2>Actualizar Datos de Usuario</h2>
-                        <input type="text" name="nombres" placeholder="nombres" value='' onChange={this.handleUserInput} />
+                        <input type="text" name="nombres" placeholder="nombres" value={this.state.nombres} onChange={this.handleUserInput} />
                         <input type="text" name="apellidos" placeholder="apellidos" value='' onChange={this.handleUserInput} />
                         <input type="email" name="correo" placeholder="Correo" value='' onChange={this.handleUserInput} />
                         <input type="text" name="usuario" placeholder="Usuario" value='' onChange={this.handleUserInput} />
