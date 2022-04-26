@@ -274,17 +274,7 @@ class Usuario extends React.Component{
             <div className="Contenedorcompleto">
             
             <aside style={{display:"none"} } id="BoxActualizar">
-                <section id="texto_Actualizaciones">
-                    
-                        <h2>Actualizar Datos de Usuario</h2>
-                        <input type="text" name="nombres" placeholder="nombres" value={this.state.nombres} onChange={this.handleUserInput} />
-                        <input type="text" name="apellidos" placeholder="apellidos" value='' onChange={this.handleUserInput} />
-                        <input type="email" name="correo" placeholder="Correo" value='' onChange={this.handleUserInput} />
-                        <input type="text" name="usuario" placeholder="Usuario" value='' onChange={this.handleUserInput} />
-                        <input type="submit" disabled={!this.state.formValid} name="submit" className="submit action-button" onClick={this.enviarDatos}  value="Submit" />
-                        
-                     
-                </section>
+                
             </aside>
             
              
