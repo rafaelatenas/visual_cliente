@@ -2,13 +2,16 @@ import axios from "axios";
 import React from "react";
 import './listarUsuarios.css'
 import Swal from "sweetalert2";
+import "datatables.net-dt/css/jquery.dataTables.min.css"
 import withReactContent from 'sweetalert2-react-content'
 import editar from "../../../../landing/favicon/editar-user.svg"
 import historial from "../../../../landing/favicon/historial.svg"
 import check from "../../../../landing/favicon/check-solid.svg"
 import eliminar from "../../../../landing/favicon/eliminar-user.svg"
 import ReactDOM from 'react-dom';
-
+import { $ } from "react-jquery-plugin";
+// const $ = require("jquery");
+// require("datatables.net")(window, $);
 class ListarUsuarios extends React.Component{
 
     constructor(props) {
@@ -39,8 +42,35 @@ class ListarUsuarios extends React.Component{
             } 
         }
 
+        // async getUsersData() {
+        //   const res = await axios.get("https://jsonplaceholder.typicode.com/users");
+        //   this.setState({ Usuarios: res.data.data })
+        // }
+
+        // sync() {
+        //   this.$el = $(this.el);
+        //   this.$el.DataTable({
+        //     data: this.state.Usuarios.map(usuario), //option 1
+        //     // data: this.getUsersData1(), //option 2
+        //     columns: [
+        //       { title: "Name", data: da },
+        //       { title: "Username", data: "username" },
+        //       { title: "Email", data: "email" },
+        //       { title: "Phone", data: "phone" },
+        //       { title: "Website", data: "website" }
+        //     ]
+        //   });
+        // }
+
+
 
     componentDidMount() {
+
+      this.getUsersData().then(() => this.sync());
+
+
+
+
         //Listar Usuario//
         const MySwal = withReactContent(Swal)
         const toast = MySwal.mixin({
@@ -115,7 +145,65 @@ class ListarUsuarios extends React.Component{
             }
           }
         }
-        
+        $(document).on(function () {
+          {this.Usuarios.map((usuario)=>{
+            console.log(usuario)
+
+            $('#TableUsuarios').DataTable(
+              {
+                  "order": [[ 0, "asc" ]],
+                  "lengthMenu": [
+                      [10, 25, 50, 100, -1],
+                      [10, 25, 50, 100, "All"]
+                  ],
+                  "language": {
+                      "url": "//cdn.datatables.net/plug-ins/1.10.15/i18n/Spanish.json"
+                  },
+                  "bDestroy":     true,
+                  "autoWidth":    true,
+                  "searching":    false,
+                  "bPaginate":    false,
+                  "dom": '<"top"lBf>rt<"bottom"ip>',
+                  "responsive":   true,
+
+                  "buttons": [
+                    {
+                        extend: 'excelHtml5',
+                        title: 'Reporte NSE'
+                    }
+                  ],
+                  "fixedHeader":  true,
+                  "scrollY":      300,
+                  "deferRender":  true,
+                  "scroller":     true,
+                  "buttons": [
+                      'copy', 'csv', 'excel', 'pdf', 'print'
+                  ],
+                  "aoColumns": [{
+                    mData: usuario.id_usuario,
+                    //className: "text-center"
+                },
+                {
+                    mData: usuario.nombres,
+                    className: "text-center"
+                },
+                {
+                    mData: usuario.apellidos,
+                    className: "text-center"
+                },
+                {
+                    mData: usuario.usuario,
+                    className: "text-center"
+                },
+            ],
+              }
+          );
+
+          })}
+          
+          
+      });
+      
     }
     validateField(fieldName, value) {
       let fieldValidationErrors = this.state.formErrors;
@@ -328,7 +416,7 @@ class ListarUsuarios extends React.Component{
                                 
                             </tr>
                         </thead>
-                        <tbody>
+                        {/* <tbody>
                             {this.state.Usuarios.map((usuario) => {
                                 
                                 return (
@@ -359,7 +447,7 @@ class ListarUsuarios extends React.Component{
                                     </tr>
                                 );
                             })}
-                        </tbody>
+                        </tbody> */}
                 </table>
             </>
         )

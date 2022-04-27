@@ -5,7 +5,6 @@ import './login.css';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content'
-import { useNavigate } from 'react-router-dom';
 
 class Login extends React.Component {
     constructor (props) {
@@ -63,13 +62,13 @@ class Login extends React.Component {
         const value = e.target.value;
         this.setState({[name]: value},() => { this.validateField(name, value) });
        }  
-      enviarDatos=(e)=>{ 
+       enviarDatos=(e)=>{ 
         const MySwal = withReactContent(Swal)
         const toast = MySwal.mixin({
           toast: true,
           position: 'top-end',
           showConfirmButton: false,
-          timer: 5000,
+          timer: 10000,
           timerProgressBar: true,
           didOpen: (toast) => {
               toast.addEventListener('mouseenter', Swal.stopTimer)
@@ -77,39 +76,36 @@ class Login extends React.Component {
            }
         });
         e.preventDefault();
-        console.log('http:localhost:3005/VisorCliente_Api/NuevoUsuarios');
+        console.log(process.env.REACT_APP_API_ENDPOINT);
         console.log("Fomulario Enviado....")
         const {Email,Password}=this.state;
         var datosEnviar={email:Email,password:Password}
-
-        axios.post('http:localhost:3005/VisorCliente_Api/NuevoUsuarios',datosEnviar).then(res => {
-          console.log(res)
-          var nombres=res.data.nombres;
-          var apellidos=res.data.apellidos;  
-          localStorage.setItem('token', res.data.token);
-          localStorage.setItem('Login', res.data.Login);    
-          toast.fire({
-            icon: 'success',
-            title: ''+res.data.message+' '+nombres+' '+apellidos+'',
-            confirmButtonText: `Ok`,
-        })    
         
-        let navigate = useNavigate();
-        navigate('/home');    
+        axios.post(process.env.REACT_APP_API_ENDPOINT+"login",datosEnviar).then(result => {
+        var nombre=result.data.NombresUsuarios;
+        var apellidos=result.data.ApellidosUsuarios;  
+        localStorage.setItem('token', result.data.token);
+        localStorage.setItem('Login', result.data.Login);    
+        toast.fire({
+          icon: 'success',
+          title: ''+result.data.message+' '+nombre+' '+apellidos+'',
+          confirmButtonText: `Ok`,
+        })    
+        setTimeout(window.location = '/home', 98222222200)   
         }).catch(err => {
-          if (err.response) {
-            console.log(err.response.data.message);
-            console.log(err.response.status);
-            console.log(err.response.headers);        
-          }       
-          toast.fire({
-            icon: 'error',
-            title: ''+err.response.data.message+'',
-            confirmButtonText: `Ok`,
-          })    
+          console.log(err)
+           if (err.response) {
+             console.log(err.response.data.message);
+             console.log(err.response.status);
+             console.log(err.response.headers);        
+           }       
+           toast.fire({
+             icon: 'error',
+             title: ''+err.response.data.message+'',
+             confirmButtonText: `Ok`,
+           })    
         })
-      }
-
+    }
 
 	render() {
 

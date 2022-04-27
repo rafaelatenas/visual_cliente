@@ -17,7 +17,7 @@ export default class crearUsuario extends React.Component{
                   apellidos:'',
                   correo: '',
                   password: '',
-                  Confirmacionpassword:'',
+                  imagen:'',
               },
               nombresValid: false,
               apellidosValid: false,
@@ -27,6 +27,7 @@ export default class crearUsuario extends React.Component{
               nivelValid: false,
               clienteValid: false,
               formValid: false,
+              imagenValid: false,
               nombres:'',
               apellidos:'',
               correo:'',
@@ -42,6 +43,7 @@ export default class crearUsuario extends React.Component{
         let apellidosValid= this.state.apellidosValid;
         let correoValid = this.state.correoValid;
         let passwordValid = this.state.passwordValid;
+        let imagenValid = this.state.imagenValid;
         //let id_usuarioValid = this.state.id_usuarioValid;
 
        const MySwal = withReactContent(Swal)
@@ -80,6 +82,10 @@ export default class crearUsuario extends React.Component{
             case 'password':
               passwordValid = value.length >= 6;
               fieldValidationErrors.password = passwordValid ? '': ' es demasiado corto';
+              break;
+            case'imagen':
+            passwordValid = value.length >= 6;
+              fieldValidationErrors.imagen = passwordValid ? '': ' es demasiado corto';
               break;
           //   case 'Confirmacionpassword':
           //     confirmacionpasswordValid = value.length >= 6;
@@ -267,14 +273,14 @@ componentDidMount(){
             <fieldset>
                 <h2 className="fs-title">Datos del Usuario</h2>
                 
-                <input type="text" name="nombres" placeholder="nombres" value={this.state.nombres} onChange={this.handleUserInput}/>
-                <input type="text" name="apellidos" placeholder="apellidos" value={this.state.apellidos} onChange={this.handleUserInput}/>
-                <input type="number" name="id_Cliente" placeholder="Id Usuario" value={this.state.id_Cliente} onChange={this.handleUserInput}/>
-
+                <input type="text" name="nombres" placeholder="Nombres" value={this.state.nombres} onChange={this.handleUserInput}/>
+                <input type="text" name="apellidos" placeholder="Apellidos" value={this.state.apellidos} onChange={this.handleUserInput}/>
+                <input type='file' accept="image/png, image/jpg" id="imagenUsuario"/>
                 <input type="button" name="next" disabled={!this.state.formValidNext} className="next action-button" value="Next" />
             </fieldset>
             <fieldset>
                 <h2 className="fs-title">Crear Usuario</h2>
+                <input type="number" name="id_Cliente" placeholder="Id Usuario" value={this.state.id_Cliente} onChange={this.handleUserInput}/>
                 <input  type="email" name="correo" placeholder="Correo" value={this.state.correo} onChange={this.handleUserInput}/>
                 <input  type="text" name="usuario" placeholder="Usuario" value={this.state.correo} onChange={this.handleUserInput}/>
 
