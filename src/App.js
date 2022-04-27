@@ -8,7 +8,7 @@ import CambiarC from './componentes/CambiarC/CambiarC';
 import DataReport from './componentes/Data/data';
 import Home from './componentes/Home/Home'
 import Login from './componentes/login/login'
-
+import ActivarUsuario from './componentes/ActivarUsuario/activarUsuario';
 
 function App() {
   return (  
@@ -17,6 +17,7 @@ function App() {
             <Route exact path="/" element={<Login/>} />
             <Route exact path="home" element={<Home/>} />
             <Route exact path="data" element={<DataReport/>} />
+            <Route exact path="/activar/usuario" element={<ActivarUsuario/>}  />
             {/* Componentes de Gestión de Usuario */}
             <Route exact path="home/CambiarC/CambiarC" element={<CambiarC/>}/>
             <Route exact path="management/panel" element={<Admin/>}/>
