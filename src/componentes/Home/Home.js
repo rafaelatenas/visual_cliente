@@ -9,7 +9,6 @@ import logo_atenas from '../../landing/Images/ats_logo-elise-blanca.png';
 import Carousel from './carrusel';
 import './home.css';
 import './movil';
-import { $ } from 'react-jquery-plugin';
 
 
 
@@ -19,7 +18,7 @@ class Home extends React.Component {
 
 
     componentDidMount(){
-        
+   
         var elements_menu = [
             0,
             1,
@@ -316,6 +315,25 @@ class Home extends React.Component {
         });  
 
     }
+
+    PowerBi=(e)=>{
+        console.log(e.target.id)
+        var modal = document.getElementById('modal');
+        modal.style.display='block'
+        let iframe = '';
+        switch (e.target.id) {
+            case 'wopBi':
+                iframe +='<iframe id="iframeWOP" title="Inline Frame Example" width="300"height="200"src="https://app.powerbi.com/reportEmbed?reportId=593bcb73-4e32-4982-9a0e-ece34c4bcca6&autoAuth=true&ctid=60d43e61-27f8-4543-b6ff-2b0d08f50018&config=eyJjbHVzdGVyVXJsIjoiaHR0cHM6Ly93YWJpLXBhYXMtMS1zY3VzLXJlZGlyZWN0LmFuYWx5c2lzLndpbmRvd3MubmV0LyJ9"> </iframe>'
+                break;
+            case 'manejadorBi':
+                iframe +='<iframe id="iframeWOP" title="Inline Frame Example" width="300"height="200"src="https://app.powerbi.com/reportEmbed?reportId=593bcb73-4e32-4982-9a0e-ece34c4bcca6&autoAuth=true&ctid=60d43e61-27f8-4543-b6ff-2b0d08f50018&config=eyJjbHVzdGVyVXJsIjoiaHR0cHM6Ly93YWJpLXBhYXMtMS1zY3VzLXJlZGlyZWN0LmFuYWx5c2lzLndpbmRvd3MubmV0LyJ9"> </iframe>'
+                break
+            default:
+                break;
+        }
+        
+        modal.innerHTML = iframe;
+    }
 	render() {
  
 		return(
@@ -384,8 +402,9 @@ class Home extends React.Component {
                             <div id="elementsWOP">
                                 <Link to={'/data'}>data</Link>
                                 <Link to={'/management/panel'}>admin</Link>
-                                <a id='wopBI' href='https://app.powerbi.com/reportEmbed?reportId=593bcb73-4e32-4982-9a0e-ece34c4bcca6&autoAuth=true&ctid=60d43e61-27f8-4543-b6ff-2b0d08f50018&config=eyJjbHVzdGVyVXJsIjoiaHR0cHM6Ly93YWJpLXBhYXMtMS1zY3VzLXJlZGlyZWN0LmFuYWx5c2lzLndpbmRvd3MubmV0LyJ9'>WOP</a>
-                                <a id='manejadorBI' href='https://app.powerbi.com/reportEmbed?reportId=593bcb73-4e32-4982-9a0e-ece34c4bcca6&autoAuth=true&ctid=60d43e61-27f8-4543-b6ff-2b0d08f50018&config=eyJjbHVzdGVyVXJsIjoiaHR0cHM6Ly93YWJpLXBhYXMtMS1zY3VzLXJlZGlyZWN0LmFuYWx5c2lzLndpbmRvd3MubmV0LyJ9'></a>
+                                <button id='wopBi' onClick={this.PowerBi}>WOP</button>
+                                <button id='manejadorBi' onClick={this.PowerBi}>WOP</button>
+
                             </div>
             
                         </div>
