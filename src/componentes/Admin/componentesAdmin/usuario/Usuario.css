@@ -81,7 +81,7 @@
 
 #msform {
 	width: 35%;
-    height: 90%;
+    height: 95%;
     text-align: center;
     position: relative;
     display: flex;
@@ -89,7 +89,7 @@
 	align-items: center;
 }
 #msform fieldset {
-    top: 10%;
+    top: 5%;
 	background: white;
 	border: 0 none;
 	border-radius: 3px;

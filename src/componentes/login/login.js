@@ -91,7 +91,12 @@ class Login extends React.Component {
           title: ''+result.data.message+' '+nombre+' '+apellidos+'',
           confirmButtonText: `Ok`,
         })    
-        setTimeout(window.location = '/home', 98222222200)   
+        var cliente = result.data.Cliente;
+        if (cliente === 'ATENAS') {
+          window.location.href = 'management/panel'
+        } else {
+          console.log('no')
+        }  
         }).catch(err => {
           console.log(err)
            if (err.response) {
