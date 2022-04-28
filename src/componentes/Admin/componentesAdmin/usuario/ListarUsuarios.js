@@ -17,13 +17,31 @@ class ListarUsuarios extends React.Component{
   constructor(props) {
     super(props)            
       this.state = {
-        Usuarios:[]
+        Usuarios:[],
+        num:''
       }
     }
 
-
+    editEmployee(id){
+      console.log(id);
+      var token=localStorage.getItem('token');
+      axios.get(process.env.REACT_APP_API_ENDPOINT+"ListarUsuariosId/"+id+"",{
+        headers: {
+          'Authorization': `Bearer ${token}`
+          },
+        }).then(result => {
+         console.log(result.data.data);        
+        console.log(result.data.data[0].id_usuario);        
+        //console.log(result.data.usuario);        
+      }).catch(err => {
+        if (err.response) {
+          console.log(err.response.data.message);
+          console.log(err.response.status);
+          console.log(err.response.headers);        
+        }
+      })
+    }
     componentDidMount() {
-
         //Listar Usuario//
         const MySwal = withReactContent(Swal)
         const toast = MySwal.mixin({
@@ -129,10 +147,9 @@ class ListarUsuarios extends React.Component{
     }
 
   
-    editarElementos=(e)=>{ 
-
-      document.getElementById('BoxActualizar').style.display = 'block';
-      document.getElementById('pantalla').style.opacity = '.3';
+    editarElementos(id) {
+      console.log(id);
+      var token=localStorage.getItem('token');
     }
         
     render() {
@@ -173,10 +190,7 @@ class ListarUsuarios extends React.Component{
                                         </td>
                                         <td className="herramientas">
                                           <div id={usuario.id_usuario} className="contenedor-herramientas">
-                                            <button className="editar"  onClick={this.editarElementos}>
-                                              <img src={historial} title="nombres" alt="imagen"></img>
-                                            </button>
-
+                                          <button onClick={ () => this.editEmployee(usuario.id_usuario)} className="btn btn-info">Update </button>
                                             <button onClick={this.editarElementos}>
                                               <img id={usuario.id_usuario} src={editar} alt="imagen"></img>
                                             </button>

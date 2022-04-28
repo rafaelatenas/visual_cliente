@@ -5,7 +5,6 @@ import './login.css';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content'
-
 class Login extends React.Component {
     constructor (props) {
         super(props);
@@ -79,8 +78,7 @@ class Login extends React.Component {
         console.log(process.env.REACT_APP_API_ENDPOINT);
         console.log("Fomulario Enviado....")
         const {Email,Password}=this.state;
-        var datosEnviar={email:Email,password:Password}
-        
+        var datosEnviar={email:Email,password:Password}        
         axios.post(process.env.REACT_APP_API_ENDPOINT+"login",datosEnviar).then(result => {
         var nombre=result.data.NombresUsuarios;
         var apellidos=result.data.ApellidosUsuarios;  

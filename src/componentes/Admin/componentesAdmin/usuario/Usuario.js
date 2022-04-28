@@ -8,7 +8,33 @@ import withReactContent from "sweetalert2-react-content";
 import axios from "axios";
 
 class Usuario extends React.Component{
-    
+  constructor (props) {
+    super(props);
+    this.state = { 
+      Usuarios:[],
+        formErrors: {
+            Nombres:'',
+            Apellidos:'',
+            Email: '',
+            Password: '',
+            ConfirmacionPassword:'',
+            
+        },
+        nombresValid: false,
+        apellidosValid: false,
+        emailValid: false,
+        passwordValid: false,
+        confirmacionpasswordValid: false,
+        
+        formValid: false,
+        Nombres:'',
+        Apellidos:'',
+        Email:'',
+        Password:'',
+        ConfirmacionPassword:'',
+                                   
+    }    
+}   
     componentDidMount(){
 
         // Inicio de animación y efecto de despliegue de las opciones de administrador
@@ -97,10 +123,6 @@ class Usuario extends React.Component{
             }
         // Fin de animación y efecto de despliegue de las opciones de administrador
 
-
-
-
-
         const MySwal = withReactContent(Swal)
         const toast = MySwal.mixin({
         toast: true,
@@ -136,36 +158,7 @@ class Usuario extends React.Component{
                 confirmButtonText: `Ok`,
                 })
           })
-    }
-
-    
-    constructor (props) {
-          super(props);
-          this.state = { 
-            Usuarios:[],
-              formErrors: {
-                  Nombres:'',
-                  Apellidos:'',
-                  Email: '',
-                  Password: '',
-                  ConfirmacionPassword:'',
-                  
-              },
-              nombresValid: false,
-              apellidosValid: false,
-              emailValid: false,
-              passwordValid: false,
-              confirmacionpasswordValid: false,
-              
-              formValid: false,
-              Nombres:'',
-              Apellidos:'',
-              Email:'',
-              Password:'',
-              ConfirmacionPassword:'',
-                                         
-          }    
-    } 
+    }    
     validateField(fieldName, value) {
       let fieldValidationErrors = this.state.formErrors;
       let nombresValid= this.state.nombresValid;
