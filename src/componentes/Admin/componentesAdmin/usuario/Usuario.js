@@ -98,33 +98,33 @@ class Usuario extends React.Component{
         // Fin de animación y efecto de despliegue de las opciones de administrador
     }
 
-    constructor (props) {
-        super(props);
-        this.state = { 
-            formErrors: {
-                nombres:'',
-                apellidos:'',
-                correo: '',
-                password: '',
-                Confirmacionpassword:'',
-            },
-            nombresValid: false,
-            apellidosValid: false,
-            correoValid: false,
-            passwordValid: false,
-            id_usuarioValid: false,
-            nivelValid: false,
-            clienteValid: false,
-            formValid: false,
-            nombres:'',
-            apellidos:'',
-            correo:'',
-            password:'',
-            usuario:'',
-            id_Cliente:''
-
-        }    
-    } 
+    
+        constructor (props) {
+          super(props);
+          this.state = { 
+              formErrors: {
+                  Nombres:'',
+                  Apellidos:'',
+                  Email: '',
+                  Password: '',
+                  ConfirmacionPassword:'',
+                  
+              },
+              nombresValid: false,
+              apellidosValid: false,
+              emailValid: false,
+              passwordValid: false,
+              confirmacionpasswordValid: false,
+              
+              formValid: false,
+              Nombres:'',
+              Apellidos:'',
+              Email:'',
+              Password:'',
+              ConfirmacionPassword:'',
+                                         
+          }    
+       } 
     validateField(fieldName, value) {
       let fieldValidationErrors = this.state.formErrors;
       let nombresValid= this.state.nombresValid;
@@ -274,7 +274,7 @@ class Usuario extends React.Component{
             <div className="Contenedorcompleto">
             
             <aside style={{display:"none"} } id="BoxActualizar">
-                
+                <input value={this.state.Nombres} onChange={this.handleUserInput}></input>
             </aside>
             
              

@@ -17,7 +17,6 @@ export default class crearUsuario extends React.Component{
                   apellidos:'',
                   correo: '',
                   password: '',
-                  imagen:'',
               },
               nombresValid: false,
               apellidosValid: false,
@@ -27,13 +26,13 @@ export default class crearUsuario extends React.Component{
               nivelValid: false,
               clienteValid: false,
               formValid: false,
-              imagenValid: false,
               nombres:'',
               apellidos:'',
               correo:'',
               password:'',
               usuario:'',
-              id_Cliente:''
+              id_Cliente:'',
+              id_perfil:'',
 
           }    
       } 
@@ -43,7 +42,6 @@ export default class crearUsuario extends React.Component{
         let apellidosValid= this.state.apellidosValid;
         let correoValid = this.state.correoValid;
         let passwordValid = this.state.passwordValid;
-        let imagenValid = this.state.imagenValid;
         //let id_usuarioValid = this.state.id_usuarioValid;
 
        const MySwal = withReactContent(Swal)
@@ -83,19 +81,12 @@ export default class crearUsuario extends React.Component{
               passwordValid = value.length >= 6;
               fieldValidationErrors.password = passwordValid ? '': ' es demasiado corto';
               break;
-            case'imagen':
-            passwordValid = value.length >= 6;
-              fieldValidationErrors.imagen = passwordValid ? '': ' es demasiado corto';
-              break;
-          //   case 'Confirmacionpassword':
-          //     confirmacionpasswordValid = value.length >= 6;
-          //     fieldValidationErrors.Confirmacionpassword = confirmacionpasswordValid ? '': ' es demasiado corto';
-          //     break;  
+             
             default:
               break;
 
         }
-
+        
         this.setState(
           {
             formErrors: fieldValidationErrors,
@@ -112,10 +103,11 @@ export default class crearUsuario extends React.Component{
       }
       validateForm() {
         //--- Para botón Next ---//
+        
         this.setState({formValidNext: this.state.nombresValid && this.state.apellidosValid});
 
         //--- Para botón Submit ---//
-        this.setState({formValid: this.state.nombresValid && this.state.apellidosValid && this.state.correoValid && this.state.passwordValid });
+        this.setState({formValid: this.state.nombresValid && this.state.apellidosValid && this.state.correoValid && this.state.passwordValid});
 
       }
       handleUserInput = (e) => {
@@ -138,29 +130,39 @@ export default class crearUsuario extends React.Component{
         });
         e.preventDefault();
         console.log("Fomulario Enviado....")
-        const {correo,password,nombres,apellidos,id_Cliente}=this.state;
+        const {correo,password,nombres,apellidos,id_Cliente,id_perfil}=this.state;
         
         var datosEnviar={
           "usuario":correo,
           "correo":correo,
-          "password":password,
+          "clave":password,
           "nombres":nombres,
           "apellidos":apellidos,
-          "id_perfil": id_Cliente,
-          "id_Cliente": id_Cliente
+          "id_perfil": id_perfil,
+          "id_cliente": id_Cliente
         }
 
+        
         console.log(datosEnviar)       
         console.log('http:localhost:3005/VisorCliente_Api/NuevoUsuarios',{datosEnviar});
       
-          let reqOptions = {
-            url: "http://localhost:3005/VisorCliente_Api/NuevoUsuarios",
-            method: "POST",
-            data: datosEnviar,
-          }
-
-          axios.request(reqOptions)
-            .then((result) => {
+        var token=localStorage.getItem('token');
+        console.log(token)
+        
+        axios.post(process.env.REACT_APP_API_ENDPOINT+'NuevoUsuarios',{
+          usuario:correo,
+          correo:correo,
+          clave:password,
+          nombres:nombres,
+          apellidos:apellidos,
+          id_perfil: id_perfil,
+          id_cliente: id_Cliente
+        },{
+          
+          headers: {
+            'Authorization': `Bearer ${token}`
+          },
+        }).then((result) => {
             this.setState({status:true})
             console.log(result)
             console.log(result.data);  
@@ -187,6 +189,8 @@ export default class crearUsuario extends React.Component{
 
 componentDidMount(){
 
+ 
+
    // Inicio de animación del formulario
    var current_fs, next_fs, previous_fs;
    var left, opacity, scale;
@@ -212,7 +216,7 @@ componentDidMount(){
                current_fs.css({
            'transform': 'scale('+scale+')',
            'position': 'absolute',
-           'top': '15%'
+           'top': '10%'
        });
                next_fs.css({'left': left, 'opacity': opacity});
            },
@@ -259,6 +263,67 @@ componentDidMount(){
    
 
    // Fin de la animación del formulario
+   const MySwal = withReactContent(Swal)
+   const toast = MySwal.mixin({
+     toast: true,
+     position: 'top-end',
+     showConfirmButton: false,
+     timer: 7000,
+     timerProgressBar: true,
+     didOpen: (toast) => {
+         toast.addEventListener('mouseenter', Swal.stopTimer)
+         toast.addEventListener('mouseleave', Swal.resumeTimer)
+      }
+   });
+
+
+                  
+   $(document).ready(function () {
+    $('#imagenes').change(async function () {
+        var imagen = document.getElementById("imagenes").files;
+        for (let x = 0; x < imagen.length; x++) {
+            loadImage(imagen[x]);
+            console.log(imagen)
+        }
+    });
+});
+function loadImage(imagen) {
+    var _URL = window.URL || window.webkitURL;
+    var img = new Image();
+    img.src = _URL.createObjectURL(imagen);
+    img.alt = imagen.name;
+    img.onload = function () {
+        var ancho = img.width;
+        var alto = img.height
+        
+        
+        let medida =  parseInt(ancho*alto);
+        
+        var imagenValid = 8100;
+        let Errors = medida <= imagenValid
+        console.log(img)
+        
+        switch (Errors) {
+          case false:
+            toast.fire({
+              icon: 'error',
+              title: 'La imagen insertada es muy Grande',
+              confirmButtonText: `Ok`,
+            })
+            break;
+        
+          default:
+            break;
+        }
+        
+        
+    }
+}              
+
+
+
+
+
 
 }
 
@@ -275,14 +340,15 @@ componentDidMount(){
                 
                 <input type="text" name="nombres" placeholder="Nombres" value={this.state.nombres} onChange={this.handleUserInput}/>
                 <input type="text" name="apellidos" placeholder="Apellidos" value={this.state.apellidos} onChange={this.handleUserInput}/>
-                <input type='file' accept="image/png, image/jpg" id="imagenUsuario"/>
-                <input type="button" name="next" disabled={!this.state.formValidNext} className="next action-button" value="Next" />
+                <input type="number" name="id_perfil" placeholder="Id Usuario" value={this.state.id_perfil} onChange={this.handleUserInput}/>
+                <input type="file" accept=".jpg,.jpeg, .png" name="imagenes[]" id="imagenes" multiple/>    
+                <input type="button" name="next"  disabled={!this.state.formValidNext} className="next action-button" value="Next" />
             </fieldset>
             <fieldset>
                 <h2 className="fs-title">Crear Usuario</h2>
                 <input type="number" name="id_Cliente" placeholder="Id Usuario" value={this.state.id_Cliente} onChange={this.handleUserInput}/>
                 <input  type="email" name="correo" placeholder="Correo" value={this.state.correo} onChange={this.handleUserInput}/>
-                <input  type="text" name="usuario" placeholder="Usuario" value={this.state.correo} onChange={this.handleUserInput}/>
+                <input  type="text" name="usuario" placeholder="Usuario" value={this.state.usuario} onChange={this.handleUserInput}/>
 
                 <input className={`${this.errorClass(this.state.formErrors.password)}`} type="password" name="password" placeholder="Contraseña" value={this.state.password} onChange={this.handleUserInput}/>
                 <input type="button" name="previous" className="previous action-button" value="Previous" />

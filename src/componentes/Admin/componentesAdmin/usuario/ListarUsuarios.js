@@ -2,6 +2,7 @@ import axios from "axios";
 import React from "react";
 import './listarUsuarios.css'
 import Swal from "sweetalert2";
+import "datatables.net-dt/js/dataTables.dataTables"
 import "datatables.net-dt/css/jquery.dataTables.min.css"
 import withReactContent from 'sweetalert2-react-content'
 import editar from "../../../../landing/favicon/editar-user.svg"
@@ -10,8 +11,7 @@ import check from "../../../../landing/favicon/check-solid.svg"
 import eliminar from "../../../../landing/favicon/eliminar-user.svg"
 import ReactDOM from 'react-dom';
 import { $ } from "react-jquery-plugin";
-// const $ = require("jquery");
-// require("datatables.net")(window, $);
+
 class ListarUsuarios extends React.Component{
 
     constructor(props) {
@@ -42,34 +42,8 @@ class ListarUsuarios extends React.Component{
             } 
         }
 
-        // async getUsersData() {
-        //   const res = await axios.get("https://jsonplaceholder.typicode.com/users");
-        //   this.setState({ Usuarios: res.data.data })
-        // }
-
-        // sync() {
-        //   this.$el = $(this.el);
-        //   this.$el.DataTable({
-        //     data: this.state.Usuarios.map(usuario), //option 1
-        //     // data: this.getUsersData1(), //option 2
-        //     columns: [
-        //       { title: "Name", data: da },
-        //       { title: "Username", data: "username" },
-        //       { title: "Email", data: "email" },
-        //       { title: "Phone", data: "phone" },
-        //       { title: "Website", data: "website" }
-        //     ]
-        //   });
-        // }
-
-
 
     componentDidMount() {
-
-      this.getUsersData().then(() => this.sync());
-
-
-
 
         //Listar Usuario//
         const MySwal = withReactContent(Swal)
@@ -84,7 +58,13 @@ class ListarUsuarios extends React.Component{
             toast.addEventListener('mouseleave', Swal.resumeTimer)
         }
         });
-        axios.get('http://localhost:3005/VisorCliente_Api/ListarUsuarios')
+        
+        var token=localStorage.getItem('token');
+        axios.get(process.env.REACT_APP_API_ENDPOINT+'ListarUsuarios',{
+          headers: {
+            'Authorization': `Bearer ${token}`
+          },
+        })
           .then(res => {
             this.setState({ Usuarios: res.data.data });
             resultado(res.data.data)
@@ -145,11 +125,9 @@ class ListarUsuarios extends React.Component{
             }
           }
         }
-        $(document).on(function () {
-          {this.Usuarios.map((usuario)=>{
-            console.log(usuario)
-
-            $('#TableUsuarios').DataTable(
+        $(document).ready(function () {
+          setTimeout(function(){
+          $('#TableUsuarios').DataTable(
               {
                   "order": [[ 0, "asc" ]],
                   "lengthMenu": [
@@ -159,52 +137,17 @@ class ListarUsuarios extends React.Component{
                   "language": {
                       "url": "//cdn.datatables.net/plug-ins/1.10.15/i18n/Spanish.json"
                   },
-                  "bDestroy":     true,
-                  "autoWidth":    true,
-                  "searching":    false,
-                  "bPaginate":    false,
+                  "bDestroy": true,                        
+                  "autoWidth": true,
+                  "responsive": true,
                   "dom": '<"top"lBf>rt<"bottom"ip>',
-                  "responsive":   true,
-
-                  "buttons": [
-                    {
-                        extend: 'excelHtml5',
-                        title: 'Reporte NSE'
-                    }
-                  ],
-                  "fixedHeader":  true,
-                  "scrollY":      300,
-                  "deferRender":  true,
-                  "scroller":     true,
-                  "buttons": [
-                      'copy', 'csv', 'excel', 'pdf', 'print'
-                  ],
-                  "aoColumns": [{
-                    mData: usuario.id_usuario,
-                    //className: "text-center"
-                },
-                {
-                    mData: usuario.nombres,
-                    className: "text-center"
-                },
-                {
-                    mData: usuario.apellidos,
-                    className: "text-center"
-                },
-                {
-                    mData: usuario.usuario,
-                    className: "text-center"
-                },
-            ],
+                  "buttons": ['excelHtml5','csvHtml5','print'],
               }
           );
-
-          })}
-          
-          
+           } ,1000);
       });
-      
     }
+
     validateField(fieldName, value) {
       let fieldValidationErrors = this.state.formErrors;
       let nombresValid= this.state.nombresValid;
@@ -286,6 +229,7 @@ class ListarUsuarios extends React.Component{
     }  
     
     enviarDatos=(e)=>{ 
+      
       const MySwal = withReactContent(Swal)
       const toast = MySwal.mixin({
         toast: true,
@@ -352,46 +296,46 @@ class ListarUsuarios extends React.Component{
       document.getElementById('pantalla').style.opacity = '.3';
   
       
-      var editando = false;
-      if (editando === false) {
-        var herramientas = document.querySelectorAll('.herramientas');
-        var tag;
+      // var editando = false;
+      // if (editando === false) {
+      //   var herramientas = document.querySelectorAll('.herramientas');
+      //   var tag;
   
   
-        for (let i = 1; i < herramientas.length; i++) {
-          const idPadre = herramientas[i].parentNode.id;
-          const hijo = document.getElementById(idPadre).children;
-          if (e.target) {
-            tag = e.target.getAttribute("id");
-            if (idPadre === tag) {
+      //   for (let i = 1; i < herramientas.length; i++) {
+      //     const idPadre = herramientas[i].parentNode.id;
+      //     const hijo = document.getElementById(idPadre).children;
+      //     if (e.target) {
+      //       tag = e.target.getAttribute("id");
+      //       if (idPadre === tag) {
               
-              const section = React.createElement('section', { id: 'texto_Actualizaciones' }, [
-                React.createElement('h2', {}, 'Actualizar Datos de Usuario'),
+      //          const section = React.createElement('section', { id: 'texto_Actualizaciones' }, [
+      //            React.createElement('h2', {}, 'Actualizar Datos de Usuario'),
                 
-                  React.createElement('input', { type: 'text', name: 'id', placeholder: 'Id Usuario', defaultValue:parseInt(hijo[0].textContent)}),
+      //              React.createElement('input', { type: 'text', name: 'id', placeholder: 'Id Usuario', defaultValue:parseInt(hijo[0].textContent)}),
 
-                  React.createElement('input', { type: 'text',id:'nombre' , name: 'nombres', placeholder: 'Nombres', value:this.state.nombres, onChange:(this.handleUserInput)}),
+      //              React.createElement('input', { type: 'text',id:'nombre' , name: 'nombres', placeholder: 'Nombres', value:this.state.nombres, onChange:(this.handleUserInput)}),
 
-                  React.createElement('input', { type: 'text', name: 'apellidos', placeholder: 'Apellidos', value:(hijo[3].textContent), onChange:(this.handleUserInput)}),
-                  React.createElement('input', { type: 'email', name: 'correo', placeholder: 'Correo', value:(hijo[4].textContent), onChange:(this.handleUserInput)}),
-                  React.createElement('input', { type: 'text', name: 'usuario', placeholder: 'Usuario', value:(hijo[4].textContent), onChange:(this.handleUserInput)}),
-                  React.createElement('input', { type: 'submit', name:'submit', disabled:(!this.validateForm), onClick:this.enviarDatos}),
-              ]);
+      //              React.createElement('input', { type: 'text', name: 'apellidos', placeholder: 'Apellidos', value:(hijo[3].textContent), onChange:(this.handleUserInput)}),
+      //              React.createElement('input', { type: 'email', name: 'correo', placeholder: 'Correo', value:(hijo[4].textContent), onChange:(this.handleUserInput)}),
+      //              React.createElement('input', { type: 'text', name: 'usuario', placeholder: 'Usuario', value:(hijo[4].textContent), onChange:(this.handleUserInput)}),
+      //              React.createElement('input', { type: 'submit', name:'submit', disabled:(!this.validateForm), onClick:this.enviarDatos}),
+      //          ]);
               
-              ReactDOM.render(
-                section,
-                document.getElementById('BoxActualizar')
-              );
+      //         ReactDOM.render(
+      //           section,
+      //           document.getElementById('BoxActualizar')
+      //         );
                 
               
-            }
+      //       }
               
   
             
-          }
-        }
+      //     }
+      //   }
   
-      }
+      // }
   }      
         
         
@@ -416,7 +360,7 @@ class ListarUsuarios extends React.Component{
                                 
                             </tr>
                         </thead>
-                        {/* <tbody>
+                         <tbody>
                             {this.state.Usuarios.map((usuario) => {
                                 
                                 return (
@@ -447,7 +391,7 @@ class ListarUsuarios extends React.Component{
                                     </tr>
                                 );
                             })}
-                        </tbody> */}
+                        </tbody>
                 </table>
             </>
         )
@@ -455,104 +399,4 @@ class ListarUsuarios extends React.Component{
 }
 export default ListarUsuarios;
 
-
-
-// function enviarDatos(e){ 
-//   const MySwal = withReactContent(Swal)
-//   const toast = MySwal.mixin({
-//     toast: true,
-//     position: 'top-end',
-//     showConfirmButton: false,
-//     timer: 5000,
-//     timerProgressBar: true,
-//     didOpen: (toast) => {
-//         toast.addEventListener('mouseenter', Swal.stopTimer)
-//         toast.addEventListener('mouseleave', Swal.resumeTimer)
-//      }
-//   });
-//   e.preventDefault();
-//   console.log("Fomulario Enviado....")
-//   const {correo,password,nombres,apellidos,id_Cliente}=this.state;
-  
-//   var datosEnviar={
-//     "usuario":correo,
-//     "correo":correo,
-//     "password":password,
-//     "nombres":nombres,
-//     "apellidos":apellidos,
-//     "id_perfil": id_Cliente,
-//     "id_Cliente": id_Cliente
-//   }
-
-//   console.log(datosEnviar)       
-//   console.log('http:localhost:3005/VisorCliente_Api/NuevoUsuarios',{datosEnviar});
-
-//     let reqOptions = {
-//       url: "http://localhost:3005/VisorCliente_Api/NuevoUsuarios",
-//       method: "POST",
-//       data: datosEnviar,
-//     }
-
-//     axios.request(reqOptions)
-//       .then((result) => {
-//       this.setState({status:true})
-//       console.log(result)
-//       console.log(result.data);  
-
-//         toast.fire({
-//           icon: 'success',
-//           title: ''+result.data.message+'',
-//           confirmButtonText: `Ok`,
-//         })
-//       })
-//       .catch((error) => {
-//         console.error(error)
-//         console.log(error.response.data.message);
-//         console.log(error.response.status);
-//         console.log(error.response.headers);        
-//           toast.fire({
-//             icon: 'error',
-//             title: ''+error.response.message+'',
-//             confirmButtonText: `Ok`,
-//             })              
-//       })
-// }
-// function editarElementos(e){
-
-//     document.getElementById('BoxActualizar').style.display = 'block';
-//     document.getElementById('pantalla').style.opacity = '.3';
-
-//     var editando = false;
-//     if (editando === false) {
-//       var herramientas = document.querySelectorAll('.herramientas');
-//       var tag;
-
-
-//       for (let i = 1; i < herramientas.length; i++) {
-//         const idPadre = herramientas[i].parentNode.id;
-//         const hijo = document.getElementById(idPadre).children;
-
-//         if (e.target) {
-//           tag = e.target.getAttribute("id");
-//           if (idPadre === tag) {
-//             const section = React.createElement('section', { id: 'texto_Actualizaciones' }, [
-//               React.createElement('h2', {}, 'Actualizar Datos de Usuario'),
-//               React.createElement('input', { type: 'text', name: 'nombres', placeholder: 'Nombres', value: hijo[2].textContent, onChange: '{this.handleUserInput}' }),
-//               React.createElement('input', { type: 'text', name: 'apellidos', placeholder: 'Apellidos', value: hijo[3].textContent, onChange: '{this.handleUserInput}' }),
-//               React.createElement('input', { type: 'email', name: 'correo', placeholder: 'Correo', value: hijo[4].textContent, onChange: '{this.handleUserInput}' }),
-//               React.createElement('input', { type: 'text', name: 'usuario', placeholder: 'Usuario', value: hijo[4].textContent, onChange: '{this.handleUserInput}' }),
-//               React.createElement('input', { type: 'submit', name: 'submit', onClick:(enviarDatos)})
-//             ]);
-
-//             ReactDOM.render(
-//               section,
-//               document.getElementById('BoxActualizar')
-//             );
-
-//           }
-//         }
-//       }
-
-//     }
-// }
 
