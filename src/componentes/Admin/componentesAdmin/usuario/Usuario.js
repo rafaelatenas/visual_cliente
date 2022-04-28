@@ -311,15 +311,6 @@ class Usuario extends React.Component{
             
             <aside style={{display:"none"} } id="BoxActualizar">
               
-                  <section>
-                    <h2>Actualizar Datos de Usuario</h2>
-                    <form id="formActualizar">
-                    
-                    <input type='submit'></input>
-                    </form>
-                    
-                    
-                </section>
               
             </aside>
             

@@ -18,11 +18,15 @@ class ListarUsuarios extends React.Component{
     super(props)            
       this.state = {
         Usuarios:[],
-        num:''
+        idUsuario:''
       }
     }
 
     editEmployee(id){
+
+      document.getElementById('BoxActualizar').style.display = 'block';
+      document.getElementById('pantalla').style.opacity = '.3';
+
       console.log(id);
       var token=localStorage.getItem('token');
       axios.get(process.env.REACT_APP_API_ENDPOINT+"ListarUsuariosId/"+id+"",{
@@ -31,8 +35,9 @@ class ListarUsuarios extends React.Component{
           },
         }).then(result => {
          console.log(result.data.data);        
-        console.log(result.data.data[0].id_usuario);        
-        //console.log(result.data.usuario);        
+        console.log(result.data.data[0].id_usuario);
+        
+       
       }).catch(err => {
         if (err.response) {
           console.log(err.response.data.message);
@@ -40,7 +45,9 @@ class ListarUsuarios extends React.Component{
           console.log(err.response.headers);        
         }
       })
-    }
+         
+    };
+
     componentDidMount() {
         //Listar Usuario//
         const MySwal = withReactContent(Swal)
@@ -50,10 +57,10 @@ class ListarUsuarios extends React.Component{
         showConfirmButton: false,
         timer: 10000,
         timerProgressBar: true,
-        didOpen: (toast) => {
+          didOpen: (toast) => {
             toast.addEventListener('mouseenter', Swal.stopTimer)
             toast.addEventListener('mouseleave', Swal.resumeTimer)
-        }
+          }
         });
         
         var token=localStorage.getItem('token');
@@ -65,7 +72,6 @@ class ListarUsuarios extends React.Component{
           .then(res => {
             this.setState({ Usuarios: res.data.data });
             resultado(res.data.data)
-            console.log(res.data.data)
           })
 
           .catch((error) => {
@@ -80,8 +86,8 @@ class ListarUsuarios extends React.Component{
                 })
           })
         document.getElementById('pantalla').addEventListener('click',()=>{
-                  document.getElementById('BoxActualizar').style.display='none'
-                  document.getElementById('pantalla').style.opacity='1'
+          document.getElementById('BoxActualizar').style.display='none'
+          document.getElementById('pantalla').style.opacity='1'
         });
         const resultado = data => {
           const Ind_US_Activo =  document.querySelectorAll('.Ind-US-Activo ')
@@ -146,17 +152,100 @@ class ListarUsuarios extends React.Component{
       });
     }
 
-  
     editarElementos(id) {
       console.log(id);
-      var token=localStorage.getItem('token');
+      //var token=localStorage.getItem('token');
+    }
+    validateField(fieldName, value) {
+      let fieldValidationErrors = this.state.formErrors;
+      let nombresValid= this.state.nombresValid;
+      let apellidosValid= this.state.apellidosValid;
+      let correoValid = this.state.correoValid;
+      let passwordValid = this.state.passwordValid;
+      //let id_usuarioValid = this.state.id_usuarioValid;
+
+     const MySwal = withReactContent(Swal)
+     const toast = MySwal.mixin({
+       toast: true,
+       position: 'top-end',
+       showConfirmButton: false,
+       timer: 10000,
+       timerProgressBar: true,
+       didOpen: (toast) => {
+           toast.addEventListener('mouseenter', Swal.stopTimer)
+           toast.addEventListener('mouseleave', Swal.resumeTimer)
+        }
+     });  
+
+     switch(fieldName) {
+
+          case 'nombres':
+            nombresValid = value.length >= 6;
+            fieldValidationErrors.Nombres = nombresValid ? '' : ' es demasiado corto';
+            
+            break;
+            case 'apellidos':
+                apellidosValid = value.length >= 6;
+                fieldValidationErrors.Apellidos = apellidosValid ? '' : ' es demasiado corto';
+            break;  
+          case 'correo':
+            correoValid = value.match(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i);
+            fieldValidationErrors.correo = correoValid ? '' : ' es invalido';
+            toast.fire({
+              icon: 'error',
+              title: ''+fieldValidationErrors.correo+'',
+              confirmButtonText: `Ok`,
+            })
+            break;
+          case 'password':
+            passwordValid = value.length >= 6;
+            fieldValidationErrors.Password = passwordValid ? '': ' es demasiado corto';
+            break;
+        //   case 'Confirmacionpassword':
+        //     confirmacionpasswordValid = value.length >= 6;
+        //     fieldValidationErrors.Confirmacionpassword = confirmacionpasswordValid ? '': ' es demasiado corto';
+        //     break;  
+          default:
+            break;
+
+      }
+
+      this.setState(
+        {
+          formErrors: fieldValidationErrors,
+          nombresValid:nombresValid,
+          apellidosValid:apellidosValid,
+          correoValid: correoValid,
+          passwordValid: passwordValid,
+        }, 
+        this.validateForm
+        );
+    }
+
+    errorClass(error) {
+      return(error.length === 0 ? '' : 'has-error');
+    }
+
+    validateForm() {
+      //--- Para botón Next ---//
+      this.setState({formValidNext: this.state.nombresValid && this.state.apellidosValid});
+
+      //--- Para botón Submit ---//
+      this.setState({formValid: this.state.nombresValid && this.state.apellidosValid && this.state.correoValid && this.state.passwordValid });
+
+    }
+     
+    handleUserInput = (e) => {
+      const name = e.target.name;
+      const value = e.target.value;
+      this.setState({[name]: value});
+      console.log(value)
     }
         
     render() {
       
         return (
             <>
-             
                 <table id="TableUsuarios" className="table table-hover table-bordered">
                         <thead>
                             <tr>
@@ -169,13 +258,10 @@ class ListarUsuarios extends React.Component{
                                 <th className="Ind_Activo">Activo</th>
                                 <th className="Ind-US-Activo">Usuario Activo</th>
                                 <th className="herramientas">Herramientas</th>
-                                
                             </tr>
                         </thead>
                          <tbody>
                             {this.state.Usuarios.map((usuario) => {
-                                
-                                
                                 return (
                                     <tr id={usuario.id_usuario}>
                                         <td className="id">{usuario.id_usuario}</td>
@@ -194,7 +280,6 @@ class ListarUsuarios extends React.Component{
                                             <button onClick={this.editarElementos}>
                                               <img id={usuario.id_usuario} src={editar} alt="imagen"></img>
                                             </button>
-                                            
                                           </div>
                                         </td>
 
