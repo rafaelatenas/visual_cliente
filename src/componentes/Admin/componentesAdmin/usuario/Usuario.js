@@ -96,12 +96,53 @@ class Usuario extends React.Component{
             })
             }
         // Fin de animación y efecto de despliegue de las opciones de administrador
+
+
+
+
+
+        const MySwal = withReactContent(Swal)
+        const toast = MySwal.mixin({
+        toast: true,
+        position: 'top-end',
+        showConfirmButton: false,
+        timer: 10000,
+        timerProgressBar: true,
+        didOpen: (toast) => {
+            toast.addEventListener('mouseenter', Swal.stopTimer)
+            toast.addEventListener('mouseleave', Swal.resumeTimer)
+        }
+        });
+        
+        var token=localStorage.getItem('token');
+        axios.get(process.env.REACT_APP_API_ENDPOINT+'ListarUsuarios',{
+          headers: {
+            'Authorization': `Bearer ${token}`
+          },
+        })
+          .then(res => {
+            this.setState({ Usuarios: res.data.data });
+            
+          })
+
+          .catch((error) => {
+                console.error(error)
+                console.log(error.response.data.message);
+                console.log(error.response.status);
+                console.log(error.response.headers);
+                toast.fire({
+                icon: 'error',
+                title: ''+error.response.data.message+'',
+                confirmButtonText: `Ok`,
+                })
+          })
     }
 
     
-        constructor (props) {
+    constructor (props) {
           super(props);
           this.state = { 
+            Usuarios:[],
               formErrors: {
                   Nombres:'',
                   Apellidos:'',
@@ -124,7 +165,7 @@ class Usuario extends React.Component{
               ConfirmacionPassword:'',
                                          
           }    
-       } 
+    } 
     validateField(fieldName, value) {
       let fieldValidationErrors = this.state.formErrors;
       let nombresValid= this.state.nombresValid;
@@ -150,12 +191,12 @@ class Usuario extends React.Component{
 
           case 'nombres':
             nombresValid = value.length >= 6;
-            fieldValidationErrors.nombres = nombresValid ? '' : ' es demasiado corto';
+            fieldValidationErrors.Nombres = nombresValid ? '' : ' es demasiado corto';
             
             break;
             case 'apellidos':
                 apellidosValid = value.length >= 6;
-                fieldValidationErrors.apellidos = apellidosValid ? '' : ' es demasiado corto';
+                fieldValidationErrors.Apellidos = apellidosValid ? '' : ' es demasiado corto';
             break;  
           case 'correo':
             correoValid = value.match(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i);
@@ -168,7 +209,7 @@ class Usuario extends React.Component{
             break;
           case 'password':
             passwordValid = value.length >= 6;
-            fieldValidationErrors.password = passwordValid ? '': ' es demasiado corto';
+            fieldValidationErrors.Password = passwordValid ? '': ' es demasiado corto';
             break;
         //   case 'Confirmacionpassword':
         //     confirmacionpasswordValid = value.length >= 6;
@@ -205,7 +246,9 @@ class Usuario extends React.Component{
       const name = e.target.name;
       const value = e.target.value;
       this.setState({[name]: value},() => { this.validateField(name, value) });
+      console.log(value)
     }  
+    
     enviarDatos=(e)=>{ 
       const MySwal = withReactContent(Swal)
       const toast = MySwal.mixin({
@@ -274,7 +317,17 @@ class Usuario extends React.Component{
             <div className="Contenedorcompleto">
             
             <aside style={{display:"none"} } id="BoxActualizar">
-                <input value={this.state.Nombres} onChange={this.handleUserInput}></input>
+              
+                  <section>
+                    <h2>Actualizar Datos de Usuario</h2>
+                    <form id="formActualizar">
+                    
+                    <input type='submit'></input>
+                    </form>
+                    
+                    
+                </section>
+              
             </aside>
             
              
