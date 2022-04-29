@@ -14,7 +14,20 @@ import { $ } from "react-jquery-plugin";
 import DataTable from "react-data-table-component";
 
 
-const columns = [
+
+
+class ListarUsuarios extends React.Component{
+
+  constructor(props) {
+    super(props)            
+      this.state = {
+        Usuarios:[],
+        idUsuario:'',
+        Nombres:{}
+      }
+    }
+
+ columns = [
   {
     name: 'ID',
     selector: row => row.id_usuario,
@@ -47,31 +60,30 @@ const columns = [
   },
   {
     name: 'Creacion',
-    selector: row => row.fecha_creacion,
+    title: row => new Date(row.fecha_creacion).toLocaleDateString() ,
+    selector: row => new Date(row.fecha_creacion).toLocaleDateString(),
     sortable: true,
     grow: 2,
+    
+  },
+  {
+    cell: () => {if ( row =>row.Ind_Activo  === true){
+      <button><img src={check} alt="Usuario Confirmado"/></button>
+    }},
+      
+    ignoreRowClick: true,
+    allowOverflow: true,
+    button: true,
   },
   
   ]
-  const MyComponent = () => (
+  
+   MyComponent = () => (
     <DataTable
       title="Arnold Movies"
-      columns={columns}
+      columns={this.columns}
     />
   );
-
-class ListarUsuarios extends React.Component{
-
-  constructor(props) {
-    super(props)            
-      this.state = {
-        Usuarios:[],
-        idUsuario:'',
-        Nombres:{}
-      }
-    }
-
-
     
     editEmployee(id){
 
@@ -312,7 +324,7 @@ class ListarUsuarios extends React.Component{
         return (
             <>
              <DataTable 
-              columns={columns}
+              columns={this.columns}
               data={this.state.Usuarios}
               dense
               direction="auto"
@@ -324,7 +336,6 @@ class ListarUsuarios extends React.Component{
               striped
               subHeader
               subHeaderAlign="right"
-
             />
                 {/* <table id="TableUsuarios" className="table table-hover table-bordered">
                         <thead>
