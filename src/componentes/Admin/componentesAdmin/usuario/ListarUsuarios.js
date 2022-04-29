@@ -11,6 +11,54 @@ import check from "../../../../landing/favicon/check-solid.svg"
 import eliminar from "../../../../landing/favicon/eliminar-user.svg"
 import ReactDOM from 'react-dom';
 import { $ } from "react-jquery-plugin";
+import DataTable from "react-data-table-component";
+
+
+const columns = [
+  {
+    name: 'ID',
+    selector: row => row.id_usuario,
+    sortable: true,
+    grow: 2,
+  },
+  {
+    name: 'Usuario',
+    selector: row => row.usuario,
+    sortable: true,
+    grow: 2,
+  },
+  {
+    name: 'Nombres',
+    selector: row => row.nombres,
+    sortable: true,
+    grow: 2,
+  },
+  {
+    name: 'Apellidos',
+    selector: row => row.apellidos,
+    sortable: true,
+    grow: 2,
+  },
+  {
+    name: 'Correo',
+    selector: row => row.correo,
+    sortable: true,
+    grow: 2,
+  },
+  {
+    name: 'Creacion',
+    selector: row => row.fecha_creacion,
+    sortable: true,
+    grow: 2,
+  },
+  
+  ]
+  const MyComponent = () => (
+    <DataTable
+      title="Arnold Movies"
+      columns={columns}
+    />
+  );
 
 class ListarUsuarios extends React.Component{
 
@@ -18,10 +66,13 @@ class ListarUsuarios extends React.Component{
     super(props)            
       this.state = {
         Usuarios:[],
-        idUsuario:''
+        idUsuario:'',
+        Nombres:{}
       }
     }
 
+
+    
     editEmployee(id){
 
       document.getElementById('BoxActualizar').style.display = 'block';
@@ -34,9 +85,8 @@ class ListarUsuarios extends React.Component{
           'Authorization': `Bearer ${token}`
           },
         }).then(result => {
-         console.log(result.data.data);        
-        console.log(result.data.data[0].id_usuario);
-        
+          
+          this.setState({ Nombres: result.data.data[0]});
        
       }).catch(err => {
         if (err.response) {
@@ -45,7 +95,16 @@ class ListarUsuarios extends React.Component{
           console.log(err.response.headers);        
         }
       })
-         
+      console.log(this.state.Nombres)
+
+      const elementoHTML = (<input name="Nombres" value={this.state.Nombres} onChange={this.handleUserInput} placeholder="Nombres"></input>)
+       
+      
+      ReactDOM.render(
+        elementoHTML,
+        document.getElementById('BoxActualizar')
+      );
+      
     };
 
     componentDidMount() {
@@ -128,7 +187,7 @@ class ListarUsuarios extends React.Component{
             }
           }
         }
-        $(document).ready(function () {
+        $(document).on(function () {
           setTimeout(function(){
           $('#TableUsuarios').DataTable(
               {
@@ -150,6 +209,12 @@ class ListarUsuarios extends React.Component{
           );
            } ,1000);
       });
+
+
+
+      function editEmployee(id) {
+        
+      }
     }
 
     editarElementos(id) {
@@ -246,7 +311,22 @@ class ListarUsuarios extends React.Component{
       
         return (
             <>
-                <table id="TableUsuarios" className="table table-hover table-bordered">
+             <DataTable 
+              columns={columns}
+              data={this.state.Usuarios}
+              dense
+              direction="auto"
+              fixedHeader
+              fixedHeaderScrollHeight="300px"
+              highlightOnHover
+              pagination
+              responsive
+              striped
+              subHeader
+              subHeaderAlign="right"
+
+            />
+                {/* <table id="TableUsuarios" className="table table-hover table-bordered">
                         <thead>
                             <tr>
                                 <th className="id">ID</th>
@@ -287,7 +367,7 @@ class ListarUsuarios extends React.Component{
                                 );
                             })}
                         </tbody>
-                </table>
+                </table> */}
             </>
         )
       }

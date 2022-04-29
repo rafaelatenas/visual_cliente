@@ -278,7 +278,7 @@ componentDidMount(){
 
 
                   
-   $(document).ready(function () {
+  $(document).ready(function () {
     $('#imagenes').change(async function () {
         var imagen = document.getElementById("imagenes").files;
         for (let x = 0; x < imagen.length; x++) {
@@ -286,45 +286,39 @@ componentDidMount(){
             console.log(imagen)
         }
     });
-});
-function loadImage(imagen) {
-    var _URL = window.URL || window.webkitURL;
-    var img = new Image();
-    img.src = _URL.createObjectURL(imagen);
-    img.alt = imagen.name;
-    img.onload = function () {
-        var ancho = img.width;
-        var alto = img.height
-        
-        
-        let medida =  parseInt(ancho*alto);
-        
-        var imagenValid = 8100;
-        let Errors = medida <= imagenValid
-        console.log(img)
-        
-        switch (Errors) {
-          case false:
-            toast.fire({
-              icon: 'error',
-              title: 'La imagen insertada es muy Grande',
-              confirmButtonText: `Ok`,
-            })
-            break;
-        
-          default:
-            break;
-        }
-        
-        
-    }
-}              
-
-
-
-
-
-
+  });
+  function loadImage(imagen) {
+      var _URL = window.URL || window.webkitURL;
+      var img = new Image();
+      img.src = _URL.createObjectURL(imagen);
+      img.alt = imagen.name;
+      img.onload = function () {
+          var ancho = img.width;
+          var alto = img.height
+          
+          
+          let medida =  parseInt(ancho*alto);
+          
+          var imagenValid = 8100;
+          let Errors = medida <= imagenValid
+          console.log(img)
+          
+          switch (Errors) {
+            case false:
+              toast.fire({
+                icon: 'error',
+                title: 'La imagen insertada es muy Grande',
+                confirmButtonText: `Ok`,
+              })
+              break;
+          
+            default:
+              break;
+          }
+          
+          
+      }
+  }              
 }
 
     render(){
