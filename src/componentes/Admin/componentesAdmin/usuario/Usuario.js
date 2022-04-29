@@ -319,8 +319,8 @@ class Usuario extends React.Component{
             <section id="pantalla" className="contenedor-opciones">
                 <article className="boton crear"></article>
 
-                <aside className="contenedor contenedor-creacion">
-                    <CrearUsuario/>
+                <aside id="boxCrear" className="contenedor contenedor-creacion">
+                    
                 </aside>
 
                 <article id="consulta" className="boton consultar"></article>

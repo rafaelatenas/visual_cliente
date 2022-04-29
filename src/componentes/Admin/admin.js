@@ -1,6 +1,7 @@
 import React from "react";
 import './admin.css';
 import MenuAdmin from "./componentesAdmin/menuAdmin";
+import ListarUsuarios from "./componentesAdmin/usuario/ListarUsuarios";
 
 class Admin extends React.Component {
         

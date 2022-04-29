@@ -1,34 +1,34 @@
 /* Estilos de Data Table */
-#TableUsuarios {
+.iuJhzw {
     overflow-y: scroll;
 }
-#TableUsuarios::-webkit-scrollbar {
+.iuJhzw::-webkit-scrollbar {
     -webkit-appearance: none;
 }
-#TableUsuarios::-webkit-scrollbar:vertical {
-    width: 12px;
+.iuJhzw::-webkit-scrollbar:vertical {
+    width: 15px;
     padding-left: 2px;
 }
-#TableUsuarios::-webkit-scrollbar-button:increment,
-#TableUsuarios::-webkit-scrollbar-button {
+.iuJhzw::-webkit-scrollbar-button:increment,
+.iuJhzw::-webkit-scrollbar-button {
     display: none;
 }
-#TableUsuarios::-webkit-scrollbar:horizontal {
+.iuJhzw::-webkit-scrollbar:horizontal {
     height: 10px;
 }
-#TableUsuarios::-webkit-scrollbar-thumb {
+.iuJhzw::-webkit-scrollbar-thumb {
     background-color: #575756;
     border-radius: 20px;
     border: 2px solid #f1f2f3;
 }
-#TableUsuarios::-webkit-scrollbar-track {
+.iuJhzw::-webkit-scrollbar-track {
     border-radius: 10px;
 }
 
 .dataTables_info{
     display: none;
 }
-#TableUsuarios{
+.iuJhzw{
     border-collapse: collapse;
     height: 95%;
     width: 97%;
