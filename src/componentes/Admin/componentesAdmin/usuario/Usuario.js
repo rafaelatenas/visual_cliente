@@ -320,7 +320,7 @@ class Usuario extends React.Component{
                 <article className="boton crear"></article>
 
                 <aside id="boxCrear" className="contenedor contenedor-creacion">
-                    
+                    <CrearUsuario></CrearUsuario>
                 </aside>
 
                 <article id="consulta" className="boton consultar"></article>

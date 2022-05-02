@@ -1,12 +1,12 @@
 import React, {useEffect, useState} from 'react';
-//import './App.css';
 import axios from 'axios';
 import './listarUsuarios.css'
 import { makeStyles } from '@material-ui/core/styles';
-import {Table, TableContainer, TableHead, TableCell, TableBody, TableRow, Modal, Button, TextField} from '@material-ui/core';
+import { Modal, Button, TextField, InputLabel} from '@material-ui/core';
 import { Edit , Delete, Check, Close} from '@material-ui/icons';
-import ReactDOM from 'react-dom';
+import { DataGrid, GridToolbarExport } from '@mui/x-data-grid';
 
+//* Componentes de Estilos *//
 const useStyles = makeStyles((theme) => ({
   modal: {
     position: 'absolute',
@@ -25,91 +25,89 @@ const useStyles = makeStyles((theme) => ({
   }, 
   inputMaterial:{
     width: '95%'
+  },
+  backButton: {
+    marginRight: theme.spacing(1),
+  },
+  instructions: {
+    marginTop: theme.spacing(1),
+    marginBottom: theme.spacing(1),
   }
-  
 }));
 
-function ListarUsuarios() {
+//* Funcion Pricipal del Componente*//
+function ListarUsuarios(props) {
 const styles= useStyles();
   const [data, setData]=useState([]);
-  const [modalInsertar, setModalInsertar]=useState(false);
   const [modalEditar, setModalEditar]=useState(false);
   const [modalEliminar, setModalEliminar]=useState(false);
-
   const [consolaSeleccionada, setConsolaSeleccionada]=useState({
     
-    nombre: '',
+    nombres: '',
     apellidos:'',
     correo: '',
     usuario: '',
     id_usuario:'',
+    id_perfil:'',
+    Ind_Us_Activo:'',
+    Ind_Activo:'',
+
 
   })
 
+/* Funcion para el cambio de valores en tabla*/
   const handleChange=e=>{
     const {name, value}=e.target;
     setConsolaSeleccionada(prevState=>({
       ...prevState,
       [name]: value
     }))
-    console.log(consolaSeleccionada);
   }
-
+/*Petición a la API LISTAR USUARIOS*/
   var token=localStorage.getItem('token');
-
   const peticionGet=async()=>{
     await axios.get( process.env.REACT_APP_API_ENDPOINT+'ListarUsuarios',{
-      headers: {
-        'Authorization': `Bearer ${token}`
-      },
-    })
-    .then(response=>{
-      setData(response.data.data);
-      console.log(response.data.data)
-    })
-  }
-
-   const peticionPost=async()=>{
-     await axios.get(process.env.REACT_APP_API_ENDPOINT+'ListarUsuarios',{
        headers: {
          'Authorization': `Bearer ${token}`
        },
-     })
-     .then(response=>{
-       setData(data.concat(response.data))
-       abrirCerrarModalInsertar()
-     })
-   }
-
-  // const peticionPut=async()=>{
-  //   await axios.put(baseUrl+consolaSeleccionada.id, consolaSeleccionada)
-  //   .then(response=>{
-  //     var dataNueva=data;
-  //     dataNueva.map(consola=>{
-  //       if(consolaSeleccionada.id===consola.id){
-  //         consola.nombre=consolaSeleccionada.nombre;
-  //         consola.lanzamiento=consolaSeleccionada.lanzamiento;
-  //         consola.empresa=consolaSeleccionada.empresa;
-  //         consola.unidades_vendidas=consolaSeleccionada.unidades_vendidas;
-  //       }
-  //     })
-  //     setData(dataNueva);
-  //     abrirCerrarModalEditar();
-  //   })
-  // }
-
-  // const peticionDelete=async()=>{
-  //   await axios.delete(baseUrl+consolaSeleccionada.id)
-  //   .then(response=>{
-  //     setData(data.filter(consola=>consola.id!==consolaSeleccionada.id));
-  //     abrirCerrarModalEliminar();
-  //   })
-  // }
-
-  const abrirCerrarModalInsertar=()=>{
-    setModalInsertar(!modalInsertar);
+    })
+    .then(response=>{
+      setData(response.data.data);
+    }).catch(error=>{
+      console.log(error.response.data.message);
+      console.log(error.response.status);
+      console.log(error.response.headers);   
+    })
   }
 
+
+/*Petición POST a la API UPDATE USUARIOS para cumplir la funcion de actualizar*/
+
+  var datosEnviar={correo:consolaSeleccionada.correo, 
+    nombres:consolaSeleccionada.nombres,
+    apellidos:consolaSeleccionada.apellidos,
+    id_usuario:consolaSeleccionada.id_usuario,
+    id_perfil:consolaSeleccionada.id_perfil,
+    usuario:consolaSeleccionada.usuario,} 
+    const peticionPost=()=>{
+       axios.post(process.env.REACT_APP_API_ENDPOINT+'UpdateUsuarios',{
+         headers: {
+           'Authorization': `Bearer ${token}`
+         },
+        datosEnviar
+      })
+      .then(response=>{
+        console.log(response)
+      })
+    }
+
+/*Selecctor de modales y de rellenado de tabla de edición*/
+  const seleccionarConsola=(thisRow, caso)=>{
+    setConsolaSeleccionada(thisRow);
+    (caso==='Editar')?abrirCerrarModalEditar():abrirCerrarModalEliminar()
+  }
+
+  /*Funciones para abrir y cerrar modales*/
   const abrirCerrarModalEditar=()=>{
     setModalEditar(!modalEditar);
   }
@@ -118,82 +116,17 @@ const styles= useStyles();
     setModalEliminar(!modalEliminar);
   }
 
-  const seleccionarConsola=(consola, caso)=>{
-    setConsolaSeleccionada(consola);
-    (caso==='Editar')?abrirCerrarModalEditar():abrirCerrarModalEliminar()
-  }
-
-  // const downloadExcel=()=>{
-  //   const newData = studentData.map(row =>{
-  //      delete row.tableData
-  //     return row
-  //   })
-  //   const worksheet=XLSX.utils.json_to_sheet(newData)
-  //   const workBook=XLSX.utils.book_new()
-  //   XLSX.utils.book_append_sheet(workBook, worksheet,"DataUsuarios")
-  //   //Buffer
-  //   let buf=XLSX.write(workBook, {bookType:"xlsx" , type:"buffer"})
-  //   //Binary string
-  //   XLSX.write(workBook,{bookType:"xlsx", type: "binary"})
-  //   //Download
-  //   XLSX.writeFile(workBook, "StudentsData.xlsx")
-  // }
   useEffect(async()=>{
     await peticionGet();
   },[])
-  
-
-  const bodyInsertar=(
-    <div className={styles.modal}>
-      <ul id="progressbar">
-        <li className="active"></li>
-        <li></li>
-      </ul>
-
-      <h3>Agregar Nueva Consola</h3>
-      
-      <fieldset>
-        <TextField type='text' name="nombres" className={styles.inputMaterial} label="Nombres" onChange={handleChange}/>
-        <br />
-        <TextField type='text' name="apellidos" className={styles.inputMaterial} label="Apellidos" onChange={handleChange}/>
-        <br />
-        <TextField type='number' name="idUsuario" className={styles.inputMaterial} label="Id Usuario" onChange={handleChange}/>
-        <br />
-        <TextField type='email' name="correo" className={styles.inputMaterial} label="Correo Electrónico" onChange={handleChange}/>
-        <br />
-
-        <Button color="primary" onClick={()=>peticionPost()}>Insertar</Button>
-        <div align="right">
-        <Button onClick={()=>abrirCerrarModalInsertar()}>Cancelar</Button>
-      </div>
-      </fieldset>
-
-      <fieldset>
-        <TextField type='email' name="usuario" className={styles.inputMaterial} label="Usuario" onChange={handleChange}/>
-        <br />
-        <TextField type='password' name="contraseña" className={styles.inputMaterial} label="Contraseña" onChange={handleChange}/>
-        <br />
-        <TextField name="lanzamiento" className={styles.inputMaterial} label="Lanzamiento" onChange={handleChange}/>
-        <br />
-        <TextField name="idPerfil" className={styles.inputMaterial} label="Id Perfil" onChange={handleChange}/>
-        <br /><br />
-        
-        <Button color="primary" onClick={()=>peticionPost()}>Insertar</Button>
-        <div align="right">
-          <Button onClick={()=>abrirCerrarModalInsertar()}>Cancelar</Button>
-        </div>
-      </fieldset>
-    </div>
-  );
-  
-
+/*Cuerpo del Modal de Edición*/
   const bodyEditar=(
     <div className={styles.modal}>
       <h3>Editar Consola</h3>
       <div className='agruparEdit'>
         <TextField name="id_usuario" className={styles.inputMaterial} label="ID Usuario" onChange={handleChange} value={consolaSeleccionada && consolaSeleccionada.id_usuario}/>
         <br />
-        <TextField name="nombre" className={styles.inputMaterial} label="Nombre" onChange={handleChange} value={consolaSeleccionada && consolaSeleccionada.nombre}/>
+        <TextField name="nombres" className={styles.inputMaterial} label="Nombres" onChange={handleChange} value={consolaSeleccionada && consolaSeleccionada.Ind_Us_Activo}/>
         <br />
         <TextField name="apellidos" className={styles.inputMaterial} label="Apellidos" onChange={handleChange} value={consolaSeleccionada && consolaSeleccionada.apellidos}/>
         <br />
@@ -202,91 +135,155 @@ const styles= useStyles();
         <TextField name="usuario" className={styles.inputMaterial} label="Usuario" onChange={handleChange} value={consolaSeleccionada && consolaSeleccionada.correo}/>
         <br /><br />
       </div>
+      <div className='agruparEdit'>
+        <TextField name="id_perfil" className={styles.inputMaterial} label="ID Perfil" onChange={handleChange} value={consolaSeleccionada && consolaSeleccionada.id_perfil}/>
+        <br />
+        <TextField name="Ind_Us_Activo" className={styles.inputMaterial} select value={currency} onChange={handleChangeselect}/>
+        <br />
+        <TextField name="Ind_Activo" className={styles.inputMaterial} label="Usuario Activo" onChange={handleChange} value={consolaSeleccionada && consolaSeleccionada.Ind_Activo}/>
+        <br />
+        <TextField name="correo" className={styles.inputMaterial} label="Correo"  onChange={handleChange} value={consolaSeleccionada && consolaSeleccionada.correo}/>
+        <br />
+        <TextField name="usuario" className={styles.inputMaterial} label="Usuario" onChange={handleChange} value={consolaSeleccionada && consolaSeleccionada.correo}/>
+        <br /><br />
+      </div>
       <div align="right">
-        {/* <Button color="primary" onClick={()=>peticionPut()}>Editar</Button> */}
+        <Button color="primary" onClick={()=>peticionPost()}>Guardar</Button>
         <Button onClick={()=>abrirCerrarModalEditar()}>Cancelar</Button>
       </div>
     </div>
   )
-
+/*Cuerpo del Modal de Borrado*/
   const bodyEliminar=(
     <div className={styles.modal}>
-      <p>Estás seguro que deseas eliminar la consola <b>{consolaSeleccionada && consolaSeleccionada.nombre}</b> ? </p>
+      <p>Estás seguro que deseas eliminar la consola <b>{consolaSeleccionada && consolaSeleccionada.usuario}</b> ? </p>
       <div align="right">
         {/* <Button color="secondary" onClick={()=>peticionDelete()} >Sí</Button> */}
         <Button onClick={()=>abrirCerrarModalEliminar()}>No</Button>
-
       </div>
-
     </div>
   )
+ /*Columnas del Datatable*/ 
+const colums = [
+  { field: 'id_usuario', headerName: 'ID Usuario'},
+  { field: 'id_perfil', headerName: 'ID Perfil'},
+  { field: 'usuario', headerName: 'Usuario'},
+  { field: 'nombres', headerName: 'Nombres'},
+  { field: 'apellidos', headerName: 'Apellidos'},
+  { field: 'correo', headerName: 'Correo'},
+  { field: 'fecha_creacion' , headerName: 'Fecha  de Creación'},
+  {
+    field: 'Ind_Us_Activo',
+    headerName: 'Usuario Confirmado',
+    sortable: false,
+    renderCell: (params) => {
+      var api = params.api;
+      var thisRow = {};
+        api
+        .getAllColumns()
+        .filter((c) => c.field !== '__check__' && !!c)
+        .forEach(
+          (c) => (thisRow[c.field] = params.getValue(params.id, c.field)));
+          if (thisRow.Ind_Us_Activo === true) {
+            return<Check></Check>
+          }else{
+            return<Close></Close>
+          }
+    }     
+  },
+  {
+    field: 'Ind_Activo',
+    headerName: 'Usuario Activo',
+    sortable: false,
+    renderCell: (params) => {
+      var api = params.api;
+      var thisRow = {};
+        api
+        .getAllColumns()
+        .filter((c) => c.field !== '__check__' && !!c)
+        .forEach(
+          (c) => (thisRow[c.field] = params.getValue(params.id, c.field)));
+          if (thisRow.Ind_Activo === true) {
+            return<Check></Check>
+          }else{
+            return<Close></Close>
+          }
+  }
+  },
+  {
+    field: 'action',
+    headerName: 'Action',
+    sortable: false,
+    renderCell: (params) => {
+      return[
+      <Edit style={{cursor:'pointer'}} onClick={(e)=>{
+        var api = params.api;
+        var thisRow = {};
+        api
+          .getAllColumns()
+          .filter((c) => c.field !== '__check__' && !!c)
+          .forEach(
+            (c) => (thisRow[c.field] = params.getValue(params.id, c.field)),
+          );
+          seleccionarConsola(thisRow, 'Editar')
+      }}/>,
+      // <Delete style={{cursor:'pointer'}} onClick={(e)=>{
+      //   var api = params.api;
+      //   var thisRow = {};
+      //   console.log(thisRow)
+      //   api
+      //     .getAllColumns()
+      //     .filter((c) => c.field !== '__check__' && !!c)
+      //     .forEach(
+      //       (c) => (thisRow[c.field] = params.getValue(params.id, c.field)),
+      //     );
+      //     seleccionarConsola(thisRow, 'Eliminar')
+      //     console.log(thisRow)
+      //       axios.post(process.env.REACT_APP_API_ENDPOINT+'UpdateUsuarios',{
+      //         headers: {
+      //           'Authorization': `Bearer ${token}`
+      //         }
+      //       })
+      //       .then(response=>{
+      //         setData(data.concat(response.data))
+      //         abrirCerrarModalEditar()
+      //       }).catch(error=>{
+      //         console.log(error.response.data.message);
+      //         console.log(error.response.status);
+      //         console.log(error.response.headers);   
+      //       })
+      // }}/>
+      ]
+    },
+    
+  },
+  
+]
 
-
+/*HTML de React para el Datatable y los Modales*/ 
   return (
     <div className="App">
-      <br />
-    <Button onClick={()=>abrirCerrarModalInsertar()}>Insertar</Button>
-      <br /><br />
-     <TableContainer  style={{display: 'flex',flexDirection:'column' , tableLayout:'fixed', width:'100%', height:'370px', fontFamily:'Lucida Sans Demibold Roman'}}>
-       <Table style={{display: 'flex',flexDirection:'column'}}>
-         <TableHead>
-           <TableRow>
-             <TableCell style={{textAlign:'center'}}>ID Usuario</TableCell>
-             <TableCell>Usuario</TableCell>
-             <TableCell>Nombres</TableCell>
-             <TableCell>Apellidos</TableCell>
-             <TableCell>Correo</TableCell>
-             <TableCell>Fecha de Creacion</TableCell>
-             <TableCell>Usuario Confirmado</TableCell>
-             <TableCell>Usuario Activo</TableCell>
-             <TableCell>Fechad de Modificacion</TableCell>
+      <div style={{ display: 'flex', height: '100%' }}>
+        <div style={{ flexGrow: 1 }}>
+          <DataGrid
+            columns={colums}
+            rows={data}
+            getRowId={(row) => row.id_usuario}
+            editMode='row'
+          ></DataGrid>
+        </div>
+      </div>
+      <Modal
+        open={modalEditar}
+        onClose={abrirCerrarModalEditar}
+        >{bodyEditar}
+      </Modal>
 
-           </TableRow>
-         </TableHead>
-
-         <TableBody className='tableContainer' style={{overflowY:'scroll'}}>
-           {data.map(consola=>(
-             <TableRow style={{overflowY:'scroll', width:'100%'}} key={consola.id_usuario}>
-               <TableCell>{consola.id_usuario}</TableCell>
-               <TableCell>{consola.usuario}</TableCell>
-               <TableCell>{consola.nombres}</TableCell>
-               <TableCell>{consola.apellidos}</TableCell>
-               <TableCell>{consola.correo}</TableCell>
-               <TableCell>{new Date(consola.fecha_creacion).toLocaleDateString()}</TableCell>
-               <TableCell>{consola.Ind_Activo ? <Check></Check> : <Close></Close> }</TableCell>
-               <TableCell>{consola.Ind_Us_Activo ? <Check></Check> : <Close></Close> }</TableCell>
-               <TableCell>{new Date(consola.fecha_creacion).toLocaleDateString()}</TableCell>
-               
-               {/* <TableCell>{consola.nombres}</TableCell>
-               <TableCell>{consola.apellidos}</TableCell>
-               <TableCell>{consola.correo}</TableCell> */}
-               <TableCell>
-                <Edit className={styles.iconos} onClick={()=>seleccionarConsola(consola, 'Editar')}/>
-                <Delete  className={styles.iconos} onClick={()=>seleccionarConsola(consola, 'Eliminar')}/>
-               </TableCell> 
-             </TableRow>
-           ))}
-         </TableBody>
-       </Table>
-     </TableContainer>
-     
-     <Modal
-     open={modalInsertar}
-     onClose={abrirCerrarModalInsertar}>
-        {bodyInsertar}
-     </Modal>
-
-     <Modal
-     open={modalEditar}
-     onClose={abrirCerrarModalEditar}>
-        {bodyEditar}
-     </Modal>
-
-     <Modal
-     open={modalEliminar}
-     onClose={abrirCerrarModalEliminar}>
-        {bodyEliminar}
-     </Modal>
+      <Modal
+        open={modalEliminar}
+        onClose={abrirCerrarModalEliminar}
+        >{bodyEliminar}
+      </Modal>
     </div>
   );
 }
