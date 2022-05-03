@@ -31,7 +31,7 @@ export default class crearUsuario extends React.Component{
               correo:'',
               password:'',
               usuario:'',
-              id_cliente:'',
+              id_Cliente:'',
               id_perfil:'',
               id_usuario:'',
           }    
@@ -129,35 +129,25 @@ export default class crearUsuario extends React.Component{
            }
         });
         e.preventDefault();
-        console.log("Fomulario Enviado....")
-        const {correo,password,nombres,apellidos,id_cliente,id_usuario,id_perfil}=this.state;
-        
-        var datosEnviar={
+        var datos={
           usuario: this.state.correo,
           correo: this.state.correo,
           clave:this.state.password,
           correo:this.state.correo,
           nombres:this.state.nombres,
           apellidos:this.state.apellidos,
-          id_cliente: this.state.id_cliente,
+          id_Cliente: this.state.id_cliente,
           id_perfil: this.state.id_perfil,
         }
 
-        
-        console.log(datosEnviar)       
-        console.log('http:localhost:3005/VisorCliente_Api/NuevoUsuarios',{datosEnviar});
-      
         var token=localStorage.getItem('token');
         console.log(token)
         
-        axios.post(process.env.REACT_APP_API_ENDPOINT+'NuevoUsuarios',
-          datosEnviar,{
-          
+        axios.post(process.env.REACT_APP_API_ENDPOINT+'NuevoUsuarios',datos,{
           headers: {
             'Authorization': `Bearer ${token}`
           },
         }).then((result) => {
-            this.setState({status:true})
             console.log(result)
             console.log(result.data);  
 

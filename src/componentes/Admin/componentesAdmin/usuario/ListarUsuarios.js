@@ -49,18 +49,23 @@ const styles= useStyles();
   const [data, setData]=useState([]);
   const [modalEditar, setModalEditar]=useState(false);
   const [modalEliminar, setModalEliminar]=useState(false);
+  const [currency, setCurrency] = useState({
+    Ind_Activo:'',
+});
   const [consolaSeleccionada, setConsolaSeleccionada]=useState({
-    
     nombres: '',
     apellidos:'',
     correo: '',
     usuario: '',
     id_usuario:'',
     id_perfil:'',
-    Ind_Activo:'',
     Ind_Us_Activo:'',
     id_cliente:'',
     clave:''
+  })
+  const [consolaDelete, setConsolaDelete]=useState({
+    usuario: '',
+    id_usuario:'',
   })
 
 /* Funcion para el cambio de valores en tabla*/
@@ -94,8 +99,26 @@ const styles= useStyles();
     })
     .then(response=>{
       setData(response.data.data);
-      console.log(response.data.data)
-      
+    }).catch(error=>{
+      console.log(error.response.data.message);
+      console.log(error.response.status);
+      console.log(error.response.headers); 
+      toast.fire({
+        icon: 'error',
+        title: ''+error.response.data.message+'',
+        confirmButtonText: `Ok`,
+      }) 
+    })
+  }
+  /*Muestra los usuarios por ID*/
+  const peticionGetID=async(ID)=>{
+    await axios.get( process.env.REACT_APP_API_ENDPOINT+'ListarUsuariosId/'+ID,{
+       headers: {
+         'Authorization': `Bearer ${token}`
+       },
+    })
+    .then(response=>{
+      setConsolaSeleccionada(response.data.data[0]);
     }).catch(error=>{
       console.log(error.response.data.message);
       console.log(error.response.status);
@@ -108,22 +131,24 @@ const styles= useStyles();
     })
   }
 
-
 /*Petición POST a la API UPDATE USUARIOS para cumplir la funcion de actualizar*/
 
-  var datosEnviar={correo:consolaSeleccionada.correo, 
+  var datosEnviar={
+    id_usuario:consolaSeleccionada.id_usuario,
+    Ind_Activo:currency.Ind_Activo,
+    usuario:consolaSeleccionada.usuario,
+    correo:consolaSeleccionada.correo, 
     nombres:consolaSeleccionada.nombres,
     apellidos:consolaSeleccionada.apellidos,
-    id_usuario:consolaSeleccionada.id_usuario,
     id_perfil:consolaSeleccionada.id_perfil,
-    usuario:consolaSeleccionada.usuario,
-    clave:consolaSeleccionada.clave} 
-    const peticionPost=()=>{
-       axios.post(process.env.REACT_APP_API_ENDPOINT+'UpdateUsuarios',{
+    id_cliente:consolaSeleccionada.id_cliente,
+  } 
+  console.log(datosEnviar)
+  const peticionPost=()=>{
+       axios.post(process.env.REACT_APP_API_ENDPOINT+'UpdateUsuarios',datosEnviar,{
          headers: {
            'Authorization': `Bearer ${token}`
-         },
-        datosEnviar
+         }
       })
       .then(response=>{
         console.log(response.data)
@@ -133,55 +158,62 @@ const styles= useStyles();
           confirmButtonText: `Ok`,
         })
       })
-    }
+  }
 /*Petición POST a la API INACTIVAR USUARIOS para cumplir la funcion de "Eliminar"*/
+
   const peticionDelete=async()=>{
-      await axios.post(process.env.REACT_APP_API_ENDPOINT+'InactivarUsuario/'+consolaSeleccionada.id_usuario,{
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      })
-      .then(response=>{
-        console.log(response)
-        setData(response.data.data.filter(consola=>consola.id_usuario!==consolaSeleccionada.id_usuario));
+    const ID = consolaDelete.id_usuario
+       await axios.get(process.env.REACT_APP_API_ENDPOINT+'InactivarUsuario/'+ID)
+       .then(response=>{
         abrirCerrarModalEliminar();
-      }).catch(error=>{
-        console.log(error);
-      })
+         toast.fire({
+           icon: 'success',
+           title: ''+response.data.message+'',
+           confirmButtonText: `Ok`,
+         })  
+         console.log(response.data.message);
+         setTimeout(() => {
+           window.location.href = '/management/panel/createUser'
+         }, 11000);
+        
+       }).catch(error=>{
+         console.log(error);
+       })
   }
 /*Selecctor de modales y de rellenado de tabla de edición*/
-  const seleccionarConsola=(thisRow, caso)=>{
-    setConsolaSeleccionada(thisRow);
+  const seleccionarConsola=(caso)=>{
     (caso==='Editar')?abrirCerrarModalEditar():abrirCerrarModalEliminar()
   }
-
+  const seleccionarDelete=(thisRow,caso)=>{
+    setConsolaDelete(thisRow);
+    (caso==='Editar')?abrirCerrarModalEditar():abrirCerrarModalEliminar()
+  }
   /*Funciones para abrir y cerrar modales*/
   const abrirCerrarModalEditar=()=>{
     setModalEditar(!modalEditar);
   }
-
   const abrirCerrarModalEliminar=()=>{
     setModalEliminar(!modalEliminar);
   }
-
   useEffect(async()=>{
     await peticionGet();
   },[])
-
+  /*Función Select*/
   const currencies = [
-    {value: 'true',
+    {value: 0,
      label: 'Activo',
     },
-    {value: 'false',
+    {value: 1,
      label: 'Inactivo',
   }]
 
-  const [currency, setCurrency] = React.useState({
-      Ind_Activo:'',
-  });
-
-  const handleChangeselect = (event) => {
-      setCurrency(event.target.value);
+  const handleChangeselect = (e) => {
+    const {name, value}=e.target;
+    setCurrency(prevState=>({
+      ...prevState,
+      [name]: value
+    }))
+    console.log(value)
   };
 /*Cuerpo del Modal de Edición*/
   const bodyEditar=(
@@ -189,7 +221,7 @@ const styles= useStyles();
       <h3 style={{textAlign:'center'}}>Editar Datos de Usuario</h3>
       <div style={{display: 'flex', width: '100%', alignItems: 'center', justifyContent: 'space-around'}} className='agruparEdit'>
         <div style={{width:'40%'}} className='grupoEdit'>
-        <TextField name="id_usuario" className={styles.inputMaterial} label="ID Usuario" onChange={handleChange} value={consolaSeleccionada && consolaSeleccionada.id_usuario}/>
+        <TextField name="id_usuario" className={styles.inputMaterial} type='number' label="ID Usuario" onChange={handleChange} value={consolaSeleccionada && consolaSeleccionada.id_usuario}/>
         <br />
         <TextField name="usuario" className={styles.inputMaterial} label="Usuario" onChange={handleChange} value={consolaSeleccionada && consolaSeleccionada.usuario}/>
         <br />
@@ -201,7 +233,7 @@ const styles= useStyles();
         <br /><br />
         </div>
         <div style={{width:'40%'}} className='grupoEdit'>
-        <TextField name="id_perfil" className={styles.inputMaterial} label="ID Perfil" onChange={handleChange} value={consolaSeleccionada && consolaSeleccionada.id_perfil}/>
+        <TextField name="id_perfil" className={styles.inputMaterial} type='number' label="ID Perfil" onChange={handleChange} value={consolaSeleccionada && consolaSeleccionada.id_perfil}/>
         <br />
         <TextField name="Ind_Activo" 
         className={styles.inputMaterial}
@@ -209,9 +241,7 @@ const styles= useStyles();
         label="Usuario Activo"
         value={currency.Ind_Activo}
         onChange={handleChangeselect}
-        SelectProps={{
-          native: consolaSeleccionada.Ind_Activo,
-        }}
+        
         >
         {currencies.map((option) => (
             <option key={option.value} value={option.value}>
@@ -220,10 +250,8 @@ const styles= useStyles();
         ))}</TextField>
         <br />
         <br />
-        <TextField name="id_cliente" className={styles.inputMaterial} label="ID Cliente"  onChange={handleChange} value={consolaSeleccionada && consolaSeleccionada.id_cliente}/>
+        <TextField name="id_cliente" className={styles.inputMaterial} type='number' label="ID Cliente"  onChange={handleChange} value={consolaSeleccionada && consolaSeleccionada.id_cliente}/>
         <br />
-        <TextField name="clave" type='password' className={styles.inputMaterial} label="Clave" onChange={handleChange} value={consolaSeleccionada && consolaSeleccionada.clave}/>
-        <br /><br />
       
       <div align="right">
         <Button color="primary" onClick={()=>peticionPost()}>Guardar</Button>
@@ -236,9 +264,9 @@ const styles= useStyles();
 /*Cuerpo del Modal de Borrado*/
   const bodyEliminar=(
     <div style={{textAlign:'center', display:'flex', justifyContent:'center', flexDirection:'column'}} className={styles.modal}>
-      <p>¿Estás seguro que deseas eliminar al Usuario: <b>{consolaSeleccionada && consolaSeleccionada.usuario}</b>?</p>
+      <p>¿Estás seguro que deseas eliminar al Usuario: <b>{consolaDelete && consolaDelete.usuario}</b>?</p>
       <div align="right">
-        <Button color="secondary" onClick={()=>peticionDelete()} >Sí</Button>
+        <Button id={consolaDelete.id_usuario} color="secondary" onClick={()=>peticionDelete(consolaDelete.id_usuario)}>Sí</Button>
         <Button onClick={()=>abrirCerrarModalEliminar()}>No</Button>
       </div>
     </div>
@@ -246,8 +274,6 @@ const styles= useStyles();
  /*Columnas del Datatable*/ 
 const colums = [
   { field: 'id_usuario', headerName: 'ID Usuario'},
-  { field: 'id_perfil', headerName: 'ID Perfil'},
-  { field: 'id_cliente', headerName: 'ID Cliente'},
   { field: 'usuario', headerName: 'Usuario'},
   { field: 'nombres', headerName: 'Nombres'},
   { field: 'apellidos', headerName: 'Apellidos'},
@@ -298,15 +324,9 @@ const colums = [
     renderCell: (params) => {
       return[
       <Edit style={{cursor:'pointer'}} onClick={(e)=>{
-        var api = params.api;
-        var thisRow = {};
-        api
-          .getAllColumns()
-          .filter((c) => c.field !== '__check__' && !!c)
-          .forEach(
-            (c) => (thisRow[c.field] = params.getValue(params.id, c.field)),
-          );
-          seleccionarConsola(thisRow, 'Editar')
+        var ID = params.id
+          seleccionarConsola('Editar')
+          peticionGetID(ID)
       }}/>,
        <Delete style={{cursor:'pointer'}} onClick={(e)=>{
          var api = params.api;
@@ -318,7 +338,7 @@ const colums = [
            .forEach(
              (c) => (thisRow[c.field] = params.getValue(params.id, c.field)),
            );
-           seleccionarConsola(thisRow, 'Eliminar')             
+           seleccionarDelete(thisRow, 'Eliminar')             
        }}/>
       ]
     },

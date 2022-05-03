@@ -75,10 +75,10 @@ class Login extends React.Component {
            }
         });
         e.preventDefault();
-        console.log(process.env.REACT_APP_API_ENDPOINT);
-        console.log("Fomulario Enviado....")
+       
         const {Email,Password}=this.state;
-        var datosEnviar={email:Email,password:Password}        
+        var datosEnviar={email:Email,password:Password} 
+               
         axios.post(process.env.REACT_APP_API_ENDPOINT+"login",datosEnviar).then(result => {
         var nombre=result.data.NombresUsuarios;
         var apellidos=result.data.ApellidosUsuarios;  
