@@ -31,9 +31,9 @@ export default class crearUsuario extends React.Component{
               correo:'',
               password:'',
               usuario:'',
-              id_Cliente:'',
+              id_cliente:'',
               id_perfil:'',
-
+              id_usuario:'',
           }    
       } 
       validateField(fieldName, value) {
@@ -130,16 +130,17 @@ export default class crearUsuario extends React.Component{
         });
         e.preventDefault();
         console.log("Fomulario Enviado....")
-        const {correo,password,nombres,apellidos,id_Cliente,id_perfil}=this.state;
+        const {correo,password,nombres,apellidos,id_cliente,id_usuario,id_perfil}=this.state;
         
         var datosEnviar={
-          "usuario":correo,
-          "correo":correo,
-          "clave":password,
-          "nombres":nombres,
-          "apellidos":apellidos,
-          "id_perfil": id_perfil,
-          "id_cliente": id_Cliente
+          usuario: this.state.correo,
+          correo: this.state.correo,
+          clave:this.state.password,
+          correo:this.state.correo,
+          nombres:this.state.nombres,
+          apellidos:this.state.apellidos,
+          id_cliente: this.state.id_cliente,
+          id_perfil: this.state.id_perfil,
         }
 
         
@@ -149,15 +150,8 @@ export default class crearUsuario extends React.Component{
         var token=localStorage.getItem('token');
         console.log(token)
         
-        axios.post(process.env.REACT_APP_API_ENDPOINT+'NuevoUsuarios',{
-          usuario:correo,
-          correo:correo,
-          clave:password,
-          nombres:nombres,
-          apellidos:apellidos,
-          id_perfil: id_perfil,
-          id_cliente: id_Cliente
-        },{
+        axios.post(process.env.REACT_APP_API_ENDPOINT+'NuevoUsuarios',
+          datosEnviar,{
           
           headers: {
             'Authorization': `Bearer ${token}`
@@ -331,16 +325,15 @@ componentDidMount(){
             
             <fieldset>
                 <h2 className="fs-title">Datos del Usuario</h2>
-                
                 <input type="text" name="nombres" placeholder="Nombres" value={this.state.nombres} onChange={this.handleUserInput}/>
                 <input type="text" name="apellidos" placeholder="Apellidos" value={this.state.apellidos} onChange={this.handleUserInput}/>
-                <input type="number" name="id_perfil" placeholder="Id Usuario" value={this.state.id_perfil} onChange={this.handleUserInput}/>
+                <input type="number" name="id_perfil" placeholder="Id Perfil" value={this.state.id_perfil} onChange={this.handleUserInput}/>
                 <input type="file" accept=".jpg,.jpeg, .png" name="imagenes[]" id="imagenes" multiple/>    
                 <input type="button" name="next"  disabled={!this.state.formValidNext} className="next action-button" value="Next" />
             </fieldset>
             <fieldset>
                 <h2 className="fs-title">Crear Usuario</h2>
-                <input type="number" name="id_Cliente" placeholder="Id Usuario" value={this.state.id_Cliente} onChange={this.handleUserInput}/>
+                <input type="number" name="id_cliente" placeholder="Id Cliente" value={this.state.id_cliente} onChange={this.handleUserInput}/>
                 <input  type="email" name="correo" placeholder="Correo" value={this.state.correo} onChange={this.handleUserInput}/>
                 <input  type="text" name="usuario" placeholder="Usuario" value={this.state.usuario} onChange={this.handleUserInput}/>
 

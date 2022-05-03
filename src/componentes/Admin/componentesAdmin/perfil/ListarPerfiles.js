@@ -1,8 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import axios from 'axios';
-import './listarUsuarios.css'
-import Swal from 'sweetalert2';
-import withReactContent from 'sweetalert2-react-content'
+import '../usuario/listarUsuarios.css'
 import { makeStyles } from '@material-ui/core/styles';
 import { Modal, Button, TextField} from '@material-ui/core';
 import { Edit , Delete, Check, Close} from '@material-ui/icons';
@@ -44,7 +42,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 //* Funcion Pricipal del Componente*//
-function ListarUsuarios() {
+function ListarPerfiles() {
 const styles= useStyles();
   const [data, setData]=useState([]);
   const [modalEditar, setModalEditar]=useState(false);
@@ -60,7 +58,7 @@ const styles= useStyles();
     Ind_Activo:'',
     Ind_Us_Activo:'',
     id_cliente:'',
-    clave:''
+    clave:'',
   })
 
 /* Funcion para el cambio de valores en tabla*/
@@ -73,20 +71,7 @@ const styles= useStyles();
   }
 /*Petición a la API LISTAR USUARIOS*/
   var token=localStorage.getItem('token');
-  const MySwal = withReactContent(Swal)
-  const toast = MySwal.mixin({
-    toast: true,
-    position: 'top-end',
-    showConfirmButton: false,
-    timer: 10000,
-    timerProgressBar: true,
-    didOpen: (toast) => {
-      toast.addEventListener('mouseenter', Swal.stopTimer)
-      toast.addEventListener('mouseleave', Swal.resumeTimer)
-     }
-  });
   const peticionGet=async()=>{
-
     await axios.get( process.env.REACT_APP_API_ENDPOINT+'ListarUsuarios',{
        headers: {
          'Authorization': `Bearer ${token}`
@@ -95,16 +80,10 @@ const styles= useStyles();
     .then(response=>{
       setData(response.data.data);
       console.log(response.data.data)
-      
     }).catch(error=>{
       console.log(error.response.data.message);
       console.log(error.response.status);
-      console.log(error.response.headers); 
-      toast.fire({
-        icon: 'error',
-        title: ''+error.response.data.message+'',
-        confirmButtonText: `Ok`,
-      }) 
+      console.log(error.response.headers);   
     })
   }
 
@@ -117,7 +96,8 @@ const styles= useStyles();
     id_usuario:consolaSeleccionada.id_usuario,
     id_perfil:consolaSeleccionada.id_perfil,
     usuario:consolaSeleccionada.usuario,
-    clave:consolaSeleccionada.clave} 
+    clave:consolaSeleccionada.clave,
+  } 
     const peticionPost=()=>{
        axios.post(process.env.REACT_APP_API_ENDPOINT+'UpdateUsuarios',{
          headers: {
@@ -126,12 +106,7 @@ const styles= useStyles();
         datosEnviar
       })
       .then(response=>{
-        console.log(response.data)
-        toast.fire({
-          icon: 'success',
-          title: ''+response.data.message+'',
-          confirmButtonText: `Ok`,
-        })
+        console.log(response)
       })
     }
 /*Petición POST a la API INACTIVAR USUARIOS para cumplir la funcion de "Eliminar"*/
@@ -189,41 +164,40 @@ const styles= useStyles();
       <h3 style={{textAlign:'center'}}>Editar Datos de Usuario</h3>
       <div style={{display: 'flex', width: '100%', alignItems: 'center', justifyContent: 'space-around'}} className='agruparEdit'>
         <div style={{width:'40%'}} className='grupoEdit'>
-        <TextField name="id_usuario" className={styles.inputMaterial} label="ID Usuario" onChange={handleChange} value={consolaSeleccionada && consolaSeleccionada.id_usuario}/>
-        <br />
-        <TextField name="usuario" className={styles.inputMaterial} label="Usuario" onChange={handleChange} value={consolaSeleccionada && consolaSeleccionada.usuario}/>
-        <br />
-        <TextField name="nombres" className={styles.inputMaterial} label="Nombres" onChange={handleChange} value={consolaSeleccionada && consolaSeleccionada.nombres}/>
-        <br />
-        <TextField name="apellidos" className={styles.inputMaterial} label="Apellidos" onChange={handleChange} value={consolaSeleccionada && consolaSeleccionada.apellidos}/>
-        <br />
-        <TextField name="correo" className={styles.inputMaterial} label="Correo" onChange={handleChange} value={consolaSeleccionada && consolaSeleccionada.correo}/>
-        <br /><br />
+          <TextField name="id_usuario" className={styles.inputMaterial} label="ID Usuario" onChange={handleChange} value={consolaSeleccionada && consolaSeleccionada.id_usuario}/>
+          <br />
+          <TextField name="usuario" className={styles.inputMaterial} label="Usuario" onChange={handleChange} value={consolaSeleccionada && consolaSeleccionada.usuario}/>
+          <br />
+          <TextField name="nombres" className={styles.inputMaterial} label="Nombres" onChange={handleChange} value={consolaSeleccionada && consolaSeleccionada.nombres}/>
+          <br />
+          <TextField name="apellidos" className={styles.inputMaterial} label="Apellidos" onChange={handleChange} value={consolaSeleccionada && consolaSeleccionada.apellidos}/>
+          <br />
+          <TextField name="correo" className={styles.inputMaterial} label="Correo" onChange={handleChange} value={consolaSeleccionada && consolaSeleccionada.correo}/>
+          <br /><br />
         </div>
         <div style={{width:'40%'}} className='grupoEdit'>
-        <TextField name="id_perfil" className={styles.inputMaterial} label="ID Perfil" onChange={handleChange} value={consolaSeleccionada && consolaSeleccionada.id_perfil}/>
-        <br />
-        <TextField name="Ind_Activo" 
-        className={styles.inputMaterial}
-        select 
-        label="Usuario Activo"
-        value={currency.Ind_Activo}
-        onChange={handleChangeselect}
-        SelectProps={{
-          native: consolaSeleccionada.Ind_Activo,
-        }}
-        >
-        {currencies.map((option) => (
-            <option key={option.value} value={option.value}>
-              {option.label}
-            </option>
-        ))}</TextField>
-        <br />
-        <br />
-        <TextField name="id_cliente" className={styles.inputMaterial} label="ID Cliente"  onChange={handleChange} value={consolaSeleccionada && consolaSeleccionada.id_cliente}/>
-        <br />
-        <TextField name="clave" type='password' className={styles.inputMaterial} label="Clave" onChange={handleChange} value={consolaSeleccionada && consolaSeleccionada.clave}/>
-        <br /><br />
+          <TextField name="id_perfil" className={styles.inputMaterial} label="ID Perfil" onChange={handleChange} value={consolaSeleccionada && consolaSeleccionada.id_perfil}/>
+          <br />
+          <TextField name="Ind_Activo" 
+          className={styles.inputMaterial}
+          select 
+          label="Usuario Activo"
+          value={currency.Ind_Activo}
+          onChange={handleChangeselect}
+          SelectProps={{
+            native: consolaSeleccionada.Ind_Activo,
+          }}
+          >
+          {currencies.map((option) => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+          ))}</TextField>
+          <br />
+          <TextField name="id_cliente" className={styles.inputMaterial} label="ID Cliente"  onChange={handleChange} value={consolaSeleccionada && consolaSeleccionada.id_cliente}/>
+          <br />
+          <TextField name="clave" className={styles.inputMaterial} label="Clave" onChange={handleChange} value={consolaSeleccionada && consolaSeleccionada.clave}/>
+          <br /><br />
       
       <div align="right">
         <Button color="primary" onClick={()=>peticionPost()}>Guardar</Button>
@@ -327,11 +301,11 @@ const colums = [
   
 ]
 
-/*HTML de React para el Datatable y los Modals*/ 
+/*HTML de React para el Datatable y los Modales*/ 
   return (
     <div className="App">
-      <div style={{ display:'flex', height:'100%'}}>
-        <div style={{flexGrow:1}}>
+      <div style={{ display: 'flex', height: '100%' }}>
+        <div style={{ flexGrow: 1 }}>
           <DataGrid
             columns={colums}
             rows={data}
@@ -355,5 +329,4 @@ const colums = [
   );
 }
 
-export default ListarUsuarios;
-
+export default ListarPerfiles;
