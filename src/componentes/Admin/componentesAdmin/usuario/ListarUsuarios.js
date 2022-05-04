@@ -6,8 +6,9 @@ import withReactContent from 'sweetalert2-react-content'
 import { makeStyles } from '@material-ui/core/styles';
 import { Modal, Button, TextField} from '@material-ui/core';
 import { Edit , Delete, Check, Close} from '@material-ui/icons';
-import { DataGrid, GridToolbarExport } from '@mui/x-data-grid';
-
+import { DataGrid, GridToolbarDensitySelector,GridToolbarFilterButton,GridToolbarContainer, GridToolbarExportContainer} from '@mui/x-data-grid';
+import { writeXLSX, writeFile } from 'xlsx';
+import * as XLSX from 'xlsx/xlsx.mjs';
 //* Componentes de Estilos *//
 const useStyles = makeStyles((theme) => ({
   modal: {
@@ -20,7 +21,7 @@ const useStyles = makeStyles((theme) => ({
     top: '50%',
     left: '50%',
     transform: 'translate(-50%, -50%)',
-    
+    borderRadius: '1em'
   },
   iconos:{
     cursor: 'pointer'
@@ -99,6 +100,7 @@ const styles= useStyles();
     })
     .then(response=>{
       setData(response.data.data);
+      console.log(response.data.data)
     }).catch(error=>{
       console.log(error.response.data.message);
       console.log(error.response.status);
@@ -143,7 +145,6 @@ const styles= useStyles();
     id_perfil:consolaSeleccionada.id_perfil,
     id_cliente:consolaSeleccionada.id_cliente,
   } 
-  console.log(datosEnviar)
   const peticionPost=()=>{
        axios.post(process.env.REACT_APP_API_ENDPOINT+'UpdateUsuarios',datosEnviar,{
          headers: {
@@ -151,7 +152,6 @@ const styles= useStyles();
          }
       })
       .then(response=>{
-        console.log(response.data)
         toast.fire({
           icon: 'success',
           title: ''+response.data.message+'',
@@ -271,17 +271,47 @@ const styles= useStyles();
       </div>
     </div>
   )
+  const downloadexcel=()=>{
+    const newData=data.map(rows=>{
+       delete rows.tableData
+       return rows
+    })
+    const worksheet=XLSX.utils.json_to_sheet(newData)
+    const workBook=XLSX.utils.book_new()
+    XLSX.utils.book_append_sheet(workBook, worksheet, "Usuarios")
+    //Buffer//
+     let buf=writeXLSX(workBook,{bookType:"xlsx", type:"buffer"})
+    //Binary string//
+    writeXLSX(workBook, {bookType:"xlsx", type: "binary"})
+    //Download
+    writeFile(workBook, "UserData.xlsx")
+  }
+  /*Toolbars*/
+
+  function CustomToolbar() {
+    return (
+      <GridToolbarContainer>
+        <GridToolbarFilterButton />
+        <GridToolbarDensitySelector/>
+        <GridToolbarExportContainer onClick={()=>downloadexcel()}>
+          CSV
+        </GridToolbarExportContainer>
+      </GridToolbarContainer>
+    );
+  }
  /*Columnas del Datatable*/ 
 const colums = [
-  { field: 'id_usuario', headerName: 'ID Usuario'},
-  { field: 'usuario', headerName: 'Usuario'},
-  { field: 'nombres', headerName: 'Nombres'},
-  { field: 'apellidos', headerName: 'Apellidos'},
-  { field: 'correo', headerName: 'Correo'},
-  { field: 'fecha_creacion' , headerName: 'Fecha  de Creación'},
+  { field: 'id_usuario', headerName: 'ID Usuario',headerAlign:'center',align: 'center', cellClassName:'prueba'},
+  { field: 'usuario', headerName: 'Usuario',headerAlign:'center',align: 'center', width:'160'},
+  { field: 'nombres', headerName: 'Nombres',headerAlign:'center',align: 'center',width:'160'},
+  { field: 'apellidos', headerName: 'Apellidos',headerAlign:'center',align: 'center',width:'160'},
+  { field: 'correo', headerName: 'Correo',headerAlign:'center',align: 'center',width:'200'},
+  { field: 'fecha_creacion' , headerName: 'Fecha  de Creación',headerAlign:'center',align: 'center'},
   {
     field: 'Ind_Us_Activo',
     headerName: 'Usuario Confirmado',
+    headerAlign:'center',
+    align:'center',
     sortable: false,
     renderCell: (params) => {
       var api = params.api;
@@ -301,6 +331,8 @@ const colums = [
   {
     field: 'Ind_Activo',
     headerName: 'Usuario Activo',
+    headerAlign:'center',
+    align:'center',
     sortable: false,
     renderCell: (params) => {
       var api = params.api;
@@ -320,7 +352,9 @@ const colums = [
   {
     field: 'action',
     headerName: 'Action',
+    headerAlign:'center',
     sortable: false,
+    align:'center',
     renderCell: (params) => {
       return[
       <Edit style={{cursor:'pointer'}} onClick={(e)=>{
@@ -328,7 +362,7 @@ const colums = [
           seleccionarConsola('Editar')
           peticionGetID(ID)
       }}/>,
-       <Delete style={{cursor:'pointer'}} onClick={(e)=>{
+       <Delete style={{cursor:'pointer'}} onClick={(e)=>{ 
          var api = params.api;
          var thisRow = {};
          console.log(thisRow)
@@ -342,7 +376,6 @@ const colums = [
        }}/>
       ]
     },
-    
   },
   
 ]
@@ -350,13 +383,15 @@ const colums = [
 /*HTML de React para el Datatable y los Modals*/ 
   return (
     <div className="App">
-      <div style={{ display:'flex', height:'100%'}}>
-        <div style={{flexGrow:1}}>
+      <div style={{ display:'flex', height:'100%',width:'100%'}}>
+        <div style={{flexGrow:4}}>
           <DataGrid
             columns={colums}
             rows={data}
             getRowId={(row) => row.id_usuario}
-            editMode='row'
+            components={{
+              Toolbar: CustomToolbar,
+            }}
           ></DataGrid>
         </div>
       </div>

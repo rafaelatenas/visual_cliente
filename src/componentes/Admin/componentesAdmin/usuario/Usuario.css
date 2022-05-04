@@ -219,3 +219,19 @@
     width: 95% !important;
     margin: 0% 2.5%;
 }
+
+.MuiDataGrid-columnHeadersInner.css-1s0hp0k-MuiDataGrid-columnHeadersInner {
+    width: 100%;
+}
+@media screen and (min-width: 1500px) and (min-height:800px) {
+    .MuiDataGrid-columnHeader.MuiDataGrid-columnHeader--alignCenter.MuiDataGrid-columnHeader--sortable,
+    .MuiDataGrid-columnHeader.MuiDataGrid-columnHeader--alignCenter.MuiDataGrid-columnHeader--sortable {
+        font-size: 1.2em !important;
+    }
+    .MuiDataGrid-cell.MuiDataGrid-cell--textCenter {
+        font-size: 1.2em !important;
+    }
+	.prueba :first-child{
+		width: 10% !important;
+	}
+}
