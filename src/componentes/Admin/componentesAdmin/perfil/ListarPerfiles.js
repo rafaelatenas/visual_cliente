@@ -1,10 +1,15 @@
 import React, {useEffect, useState} from 'react';
 import axios from 'axios';
 import '../usuario/listarUsuarios.css'
+import Swal from 'sweetalert2';
+import withReactContent from 'sweetalert2-react-content'
 import { makeStyles } from '@material-ui/core/styles';
 import { Modal, Button, TextField} from '@material-ui/core';
 import { Edit , Delete, Check, Close} from '@material-ui/icons';
-import { DataGrid, GridToolbarExport } from '@mui/x-data-grid';
+import { DataGrid, GridToolbarDensitySelector,GridToolbarContainer, GridToolbarExportContainer, GridToolbarExport} from '@mui/x-data-grid';
+import { writeXLSX, writeFile } from 'xlsx';
+import * as XLSX from 'xlsx/xlsx.mjs';
+import { Tooltip } from '@mui/material';
 
 //* Componentes de Estilos *//
 const useStyles = makeStyles((theme) => ({
@@ -18,7 +23,7 @@ const useStyles = makeStyles((theme) => ({
     top: '50%',
     left: '50%',
     transform: 'translate(-50%, -50%)',
-    
+    borderRadius: '1em'
   },
   iconos:{
     cursor: 'pointer'
@@ -42,25 +47,25 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 //* Funcion Pricipal del Componente*//
-function ListarPerfiles() {
+function ListarUsuarios() {
 const styles= useStyles();
   const [data, setData]=useState([]);
   const [modalEditar, setModalEditar]=useState(false);
   const [modalEliminar, setModalEliminar]=useState(false);
+  const [currency, setCurrency] = useState({Ind_Activo:''});
   const [consolaSeleccionada, setConsolaSeleccionada]=useState({
-    
-    nombres: '',
-    apellidos:'',
-    correo: '',
+    Persona_Contacto: '',
+    Cliente: '',
+    Telefono:'',
+    Direccion:'',
+    Rif:'',
+    Id_Cliente:'',
+    Fax:''
+  })
+  const [consolaDelete, setConsolaDelete]=useState({
     usuario: '',
     id_usuario:'',
-    id_perfil:'',
-    Ind_Activo:'',
-    Ind_Us_Activo:'',
-    id_cliente:'',
-    clave:'',
   })
-
 /* Funcion para el cambio de valores en tabla*/
   const handleChange=e=>{
     const {name, value}=e.target;
@@ -71,135 +76,204 @@ const styles= useStyles();
   }
 /*Petición a la API LISTAR USUARIOS*/
   var token=localStorage.getItem('token');
+  const MySwal = withReactContent(Swal)
+  const toast = MySwal.mixin({
+    toast: true,
+    position: 'top-end',
+    showConfirmButton: false,
+    timer: 10000,
+    timerProgressBar: true,
+    didOpen: (toast) => {
+      toast.addEventListener('mouseenter', Swal.stopTimer)
+      toast.addEventListener('mouseleave', Swal.resumeTimer)
+     }
+  });
   const peticionGet=async()=>{
-    await axios.get( process.env.REACT_APP_API_ENDPOINT+'ListarUsuarios',{
+
+    await axios.get( process.env.REACT_APP_API_ENDPOINT+'ListarCliente',{
        headers: {
          'Authorization': `Bearer ${token}`
        },
     })
     .then(response=>{
-      console.log(response.data.data)
       setData(response.data.data);
+      console.log(response.data.data)
     }).catch(error=>{
       console.log(error.response.data.message);
       console.log(error.response.status);
-      console.log(error.response.headers);   
+      console.log(error.response.headers); 
+      toast.fire({
+        icon: 'error',
+        title: ''+error.response.data.message+'',
+        confirmButtonText: `Ok`,
+      }) 
     })
   }
-
-
+  /*Muestra los usuarios por ID*/
+  const peticionGetID=async(ID)=>{
+    await axios.get( process.env.REACT_APP_API_ENDPOINT+'ListarClienteId/'+ID,{
+       headers: {
+         'Authorization': `Bearer ${token}`
+       },
+    })
+    .then(response=>{
+      setConsolaSeleccionada(response.data.data[0]);
+    }).catch(error=>{
+      console.log(error.response.data.message);
+      console.log(error.response.status);
+      console.log(error.response.headers); 
+      toast.fire({
+        icon: 'error',
+        title: ''+error.response.data.message+'',
+        confirmButtonText: `Ok`,
+      }) 
+    })
+  }
 /*Petición POST a la API UPDATE USUARIOS para cumplir la funcion de actualizar*/
-
-  var datosEnviar={correo:consolaSeleccionada.correo, 
+  var datosEnviar={
+    id_usuario:consolaSeleccionada.id_usuario,
+    Ind_Activo:currency.Ind_Activo,
+    usuario:consolaSeleccionada.usuario,
+    correo:consolaSeleccionada.correo, 
     nombres:consolaSeleccionada.nombres,
     apellidos:consolaSeleccionada.apellidos,
-    id_usuario:consolaSeleccionada.id_usuario,
     id_perfil:consolaSeleccionada.id_perfil,
-    usuario:consolaSeleccionada.usuario,
-    clave:consolaSeleccionada.clave,
+    id_cliente:consolaSeleccionada.id_cliente,
   } 
-    const peticionPost=()=>{
-       axios.post(process.env.REACT_APP_API_ENDPOINT+'UpdateUsuarios',{
+  const peticionPost=()=>{
+       axios.post(process.env.REACT_APP_API_ENDPOINT+'ListarClienteId',datosEnviar,{
          headers: {
            'Authorization': `Bearer ${token}`
-         },
-        datosEnviar
+         }
       })
       .then(response=>{
-        console.log(response)
-      })
-    }
-/*Petición POST a la API INACTIVAR USUARIOS para cumplir la funcion de "Eliminar"*/
-  const peticionDelete=async()=>{
-      await axios.post(process.env.REACT_APP_API_ENDPOINT+'InactivarUsuario/'+consolaSeleccionada.id_usuario,{
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      })
-      .then(response=>{
-        console.log(response)
-        setData(response.data.data.filter(consola=>consola.id_usuario!==consolaSeleccionada.id_usuario));
-        abrirCerrarModalEliminar();
+        toast.fire({
+          icon: 'success',
+          title: ''+response.data.message+'',
+          confirmButtonText: `Ok`,
+        })
       }).catch(error=>{
-        console.log(error);
+        console.log(error.response.data.message);
+        console.log(error.response.status);
+        console.log(error.response.headers); 
+        toast.fire({
+          icon: 'error',
+          title: ''+error.response.data.message+'',
+          confirmButtonText: `Ok`,
+        }) 
       })
   }
-/*Selecctor de modales y de rellenado de tabla de edición*/
-  const seleccionarConsola=(thisRow, caso)=>{
-    setConsolaSeleccionada(thisRow);
+/*Petición POST a la API INACTIVAR USUARIOS para cumplir la funcion de "Eliminar"*/
+  const peticionDelete=async()=>{
+    const ID = consolaDelete.id_usuario
+       await axios.get(process.env.REACT_APP_API_ENDPOINT+'InactivarUsuario/'+ID)
+       .then(response=>{
+        abrirCerrarModalEliminar();
+         toast.fire({
+           icon: 'success',
+           title: ''+response.data.message+'',
+           confirmButtonText: `Ok`,
+         })  
+         console.log(response.data.message);
+         setTimeout(() => {
+           window.location.href = '/management/panel/createUser'
+         }, 11000);
+        
+       }).catch(error=>{
+        console.log(error.response.data.message);
+        console.log(error.response.status);
+        console.log(error.response.headers); 
+        toast.fire({
+          icon: 'error',
+          title: ''+error.response.data.message+'',
+          confirmButtonText: `Ok`,
+        }) 
+      })
+  }
+
+  const seleccionarConsola=(caso)=>{
+    (caso==='Editar')?abrirCerrarModalEditar():abrirCerrarModalEliminar()
+  }
+  const seleccionarDelete=(thisRow,caso)=>{
+    setConsolaDelete(thisRow);
     (caso==='Editar')?abrirCerrarModalEditar():abrirCerrarModalEliminar()
   }
 
-  /*Funciones para abrir y cerrar modales*/
   const abrirCerrarModalEditar=()=>{
     setModalEditar(!modalEditar);
   }
-
   const abrirCerrarModalEliminar=()=>{
     setModalEliminar(!modalEliminar);
   }
-
   useEffect(async()=>{
     await peticionGet();
   },[])
-
+  /*Función Select*/
   const currencies = [
-    {value: 'true',
+    {value: 0,
      label: 'Activo',
     },
-    {value: 'false',
+    {value: 1,
      label: 'Inactivo',
   }]
-
-  const [currency, setCurrency] = React.useState({
-      Ind_Activo:'',
-  });
-
-  const handleChangeselect = (event) => {
-      setCurrency(event.target.value);
+  const handleChangeselect = (e) => {
+    const {name, value}=e.target;
+    setCurrency(prevState=>({
+      ...prevState,
+      [name]: value
+    }))
+    console.log(value)
   };
+
+  const alertTohandleChange =(e)=>{
+    Swal.fire(
+      {icon: 'warning',
+      title: 'El Usuario debe contener el mismo valor de Correo Electrónico',
+      confirmButtonText: 'Entendido',
+    })
+  }
 /*Cuerpo del Modal de Edición*/
   const bodyEditar=(
     <div style={{width:'60%'}} className={styles.modal}>
       <h3 style={{textAlign:'center'}}>Editar Datos de Usuario</h3>
       <div style={{display: 'flex', width: '100%', alignItems: 'center', justifyContent: 'space-around'}} className='agruparEdit'>
         <div style={{width:'40%'}} className='grupoEdit'>
-          <TextField name="id_usuario" className={styles.inputMaterial} label="ID Usuario" onChange={handleChange} value={consolaSeleccionada && consolaSeleccionada.id_usuario}/>
-          <br />
-          <TextField name="usuario" className={styles.inputMaterial} label="Usuario" onChange={handleChange} value={consolaSeleccionada && consolaSeleccionada.usuario}/>
-          <br />
-          <TextField name="nombres" className={styles.inputMaterial} label="Nombres" onChange={handleChange} value={consolaSeleccionada && consolaSeleccionada.nombres}/>
-          <br />
-          <TextField name="apellidos" className={styles.inputMaterial} label="Apellidos" onChange={handleChange} value={consolaSeleccionada && consolaSeleccionada.apellidos}/>
-          <br />
-          <TextField name="correo" className={styles.inputMaterial} label="Correo" onChange={handleChange} value={consolaSeleccionada && consolaSeleccionada.correo}/>
-          <br /><br />
+        <TextField name="ID_Cliente" className={styles.inputMaterial} type='number' label="ID Cliente" onChange={handleChange}  value={consolaSeleccionada && consolaSeleccionada.Id_Cliente}/>
+        <br />
+        <TextField name="Cliente" className={styles.inputMaterial} label="Cliente" onChange={handleChange} value={consolaSeleccionada && consolaSeleccionada.Cliente}/>
+        <br />
+        <TextField name="Direccion" className={styles.inputMaterial} label="Direccion" onChange={handleChange} value={consolaSeleccionada && consolaSeleccionada.Direccion}/>
+        <br />
+        <TextField name="Telefono" className={styles.inputMaterial} label="Teléfono" onChange={handleChange} value={consolaSeleccionada && consolaSeleccionada.Telefono}/>
+        <br />
+        <TextField name="Rif" className={styles.inputMaterial} label="Rif" onChange={handleChange} value={consolaSeleccionada && consolaSeleccionada.Rif}/>
+        <br /><br />
         </div>
         <div style={{width:'40%'}} className='grupoEdit'>
-          <TextField name="id_perfil" className={styles.inputMaterial} label="ID Perfil" onChange={handleChange} value={consolaSeleccionada && consolaSeleccionada.id_perfil}/>
-          <br />
-          <TextField name="Ind_Activo" 
+        <TextField name="Persona_Contacto" className={styles.inputMaterial} type='text' label="Contacto" onChange={handleChange} value={consolaSeleccionada && consolaSeleccionada.Persona_Contacto}/>
+        <br />
+        <TextField name="Ind_Activo" 
           className={styles.inputMaterial}
           select 
           label="Usuario Activo"
           value={currency.Ind_Activo}
           onChange={handleChangeselect}
+          helperText="Seleccione una opción"
           SelectProps={{
-            native: consolaSeleccionada.Ind_Activo,
+            native: true,
           }}
-          >
-          {currencies.map((option) => (
-              <option key={option.value} value={option.value}>
-                {option.label}
-              </option>
-          ))}</TextField>
-          <br />
-          <TextField name="id_cliente" className={styles.inputMaterial} label="ID Cliente"  onChange={handleChange} value={consolaSeleccionada && consolaSeleccionada.id_cliente}/>
-          <br />
-          <TextField name="clave" className={styles.inputMaterial} label="Clave" onChange={handleChange} value={consolaSeleccionada && consolaSeleccionada.clave}/>
-          <br /><br />
+        >
+        {currencies.map((option) => (
+            <option key={option.value} value={option.value}>
+              {option.label}
+            </option>
+        ))}</TextField>
+        <br />
+        <br />
+        <TextField name="Fax" className={styles.inputMaterial} type='number' label="Fax"  onChange={handleChange} value={consolaSeleccionada && consolaSeleccionada.Fax}/>
+        <br />
       
-      <div align="right">
+      <div align="bottom">
         <Button color="primary" onClick={()=>peticionPost()}>Guardar</Button>
         <Button onClick={()=>abrirCerrarModalEditar()}>Cancelar</Button>
       </div>
@@ -210,107 +284,113 @@ const styles= useStyles();
 /*Cuerpo del Modal de Borrado*/
   const bodyEliminar=(
     <div style={{textAlign:'center', display:'flex', justifyContent:'center', flexDirection:'column'}} className={styles.modal}>
-      <p>¿Estás seguro que deseas eliminar al Usuario: <b>{consolaSeleccionada && consolaSeleccionada.usuario}</b>?</p>
+      <p>¿Estás seguro que deseas eliminar al Usuario: <b>{consolaDelete && consolaDelete.usuario}</b>?</p>
       <div align="right">
-        <Button color="secondary" onClick={()=>peticionDelete()} >Sí</Button>
+        <Button id={consolaDelete.id_usuario} color="secondary" onClick={()=>peticionDelete(consolaDelete.id_usuario)}>Sí</Button>
         <Button onClick={()=>abrirCerrarModalEliminar()}>No</Button>
       </div>
     </div>
   )
- /*Columnas del Datatable*/ 
-const colums = [
-  { field: 'id_usuario', headerName: 'ID Usuario'},
-  { field: 'id_perfil', headerName: 'ID Perfil'},
-  { field: 'id_cliente', headerName: 'ID Cliente'},
-  { field: 'usuario', headerName: 'Usuario'},
-  { field: 'nombres', headerName: 'Nombres'},
-  { field: 'apellidos', headerName: 'Apellidos'},
-  { field: 'correo', headerName: 'Correo'},
-  { field: 'fecha_creacion' , headerName: 'Fecha  de Creación'},
-  {
-    field: 'Ind_Us_Activo',
-    headerName: 'Usuario Confirmado',
-    sortable: false,
-    renderCell: (params) => {
-      var api = params.api;
-      var thisRow = {};
-        api
-        .getAllColumns()
-        .filter((c) => c.field !== '__check__' && !!c)
-        .forEach(
-          (c) => (thisRow[c.field] = params.getValue(params.id, c.field)));
-          if (thisRow.Ind_Us_Activo === true) {
-            return<Check></Check>
-          }else{
-            return<Close></Close>
-          }
-    }     
-  },
-  {
-    field: 'Ind_Activo',
-    headerName: 'Usuario Activo',
-    sortable: false,
-    renderCell: (params) => {
-      var api = params.api;
-      var thisRow = {};
-        api
-        .getAllColumns()
-        .filter((c) => c.field !== '__check__' && !!c)
-        .forEach(
-          (c) => (thisRow[c.field] = params.getValue(params.id, c.field)));
-          if (thisRow.Ind_Activo === true) {
-            return<Check></Check>
-          }else{
-            return<Close></Close>
-          }
+/*Funcion Descargar => Descarga Ordenando por Filas y Columnas*/  
+  const downloadexcel=()=>{
+    const newData=data.map(rows=>{
+       delete rows.tableData
+       return rows
+    })
+    const worksheet=XLSX.utils.json_to_sheet(newData)
+    const workBook=XLSX.utils.book_new()
+    XLSX.utils.book_append_sheet(workBook, worksheet, "Usuarios")
+    //Binary string//
+    writeXLSX(workBook, {bookType:"xlsx", type: "binary"})
+    //Download
+    writeFile(workBook, "UserData.xlsx")
   }
-  },
-  {
-    field: 'action',
-    headerName: 'Action',
-    sortable: false,
-    renderCell: (params) => {
-      return[
-      <Edit style={{cursor:'pointer'}} onClick={(e)=>{
+
+  function CustomToolbar() {
+    return (
+      <GridToolbarContainer>
+        <GridToolbarDensitySelector/>
+        <GridToolbarExportContainer>
+          <button style={{curso:'pointer'}} onClick={()=>downloadexcel()}>Descargar CSV</button>
+        </GridToolbarExportContainer>
+      </GridToolbarContainer>
+    );
+  }
+
+  const colums = [
+    { field: 'Id_Cliente', headerName: 'ID Cliente',headerAlign:'center',align: 'center'},
+    { field: 'Cliente', headerName: 'Cliente',headerAlign:'center',align: 'center', width:'160'},
+    { field: 'Direccion', headerName: 'Dirección',headerAlign:'center',align: 'center',width:'160'},
+    { field: 'Telefono', headerName: 'Teléfono',headerAlign:'center',align: 'center',width:'160'},
+    { field: 'Rif', headerName: 'rif',headerAlign:'center',align: 'center',width:'200'},
+    { field: 'Persona_Contact' , headerName: 'Contacto',headerAlign:'center',align: 'center'},
+    {
+      field: 'Ind_Activo',
+      headerName: 'Perfil Activo',
+      headerAlign:'center',
+      align:'center',
+      sortable: false,
+      renderCell: (params) => {
         var api = params.api;
         var thisRow = {};
         api
           .getAllColumns()
           .filter((c) => c.field !== '__check__' && !!c)
-          .forEach(
-            (c) => (thisRow[c.field] = params.getValue(params.id, c.field)),
-          );
-          seleccionarConsola(thisRow, 'Editar')
-      }}/>,
-       <Delete style={{cursor:'pointer'}} onClick={(e)=>{
-         var api = params.api;
-         var thisRow = {};
-         console.log(thisRow)
-         api
-           .getAllColumns()
-           .filter((c) => c.field !== '__check__' && !!c)
-           .forEach(
-             (c) => (thisRow[c.field] = params.getValue(params.id, c.field)),
-           );
-           seleccionarConsola(thisRow, 'Eliminar')             
-       }}/>
-      ]
+          .forEach((c) => (thisRow[c.field] = params.getValue(params.id, c.field)));
+            if (thisRow.Ind_Activo === true) {
+              return<Check></Check>
+            }else{
+              return<Close></Close>
+            }
+      }     
+    },
+    {
+      field: 'action',
+      headerName: 'Action',
+      headerAlign:'center',
+      sortable: false,
+      align:'center',
+      renderCell: (params) => {
+        return[
+        <Tooltip title="Editar" arrow placement="bottom">
+          <Edit style={{cursor:'pointer'}} onClick={()=>{
+            var ID = params.id
+              seleccionarConsola('Editar')
+              peticionGetID(ID)
+          }}/> 
+        </Tooltip>
+        ,
+        <Tooltip title="Eliminar" arrow placement="bottom">
+          <Delete style={{cursor:'pointer'}} onClick={()=>{ 
+            var api = params.api;
+            var thisRow = {};
+            api
+            .getAllColumns()
+            .filter((c) => c.field !== '__check__' && !!c)
+            .forEach(
+              (c) => (thisRow[c.field] = params.getValue(params.id, c.field)),
+            );
+            seleccionarDelete(thisRow, 'Eliminar')             
+          }}/>
+        </Tooltip>
+        
+        ]
+      },
     },
     
-  },
-  
-]
+  ]
 
-/*HTML de React para el Datatable y los Modales*/ 
   return (
     <div className="App">
-      <div style={{ display: 'flex', height: '100%' }}>
-        <div style={{ flexGrow: 1 }}>
+      <div style={{ display:'flex', height:'100%',width:'100%'}}>
+        <div style={{flexGrow:4}}>
           <DataGrid
             columns={colums}
             rows={data}
-            getRowId={(row) => row.id_usuario}
-            editMode='row'
+            getRowId={(row) => row.Id_Cliente}
+            components={{
+              Toolbar: CustomToolbar,
+            }}
           ></DataGrid>
         </div>
       </div>
@@ -328,5 +408,4 @@ const colums = [
     </div>
   );
 }
-
-export default ListarPerfiles;
+export default ListarUsuarios;

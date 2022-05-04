@@ -4,178 +4,158 @@ import Swal from "sweetalert2";
 import axios from "axios";
 import withReactContent from 'sweetalert2-react-content';
 
-
-
 export default class crearUsuario extends React.Component{
     //Validación de Formulario
 
-      constructor (props) {
-          super(props);
-          this.state = { 
-              formErrors: {
-                  nombres:'',
-                  apellidos:'',
-                  correo: '',
-                  password: '',
-              },
-              nombresValid: false,
-              apellidosValid: false,
-              correoValid: false,
-              passwordValid: false,
-              id_usuarioValid: false,
-              nivelValid: false,
-              clienteValid: false,
-              formValid: false,
-              nombres:'',
-              apellidos:'',
-              correo:'',
-              password:'',
-              usuario:'',
-              id_Cliente:'',
-              id_perfil:'',
-              id_usuario:'',
-          }    
-      } 
-      validateField(fieldName, value) {
-        let fieldValidationErrors = this.state.formErrors;
-        let nombresValid= this.state.nombresValid;
-        let apellidosValid= this.state.apellidosValid;
-        let correoValid = this.state.correoValid;
-        let passwordValid = this.state.passwordValid;
-        //let id_usuarioValid = this.state.id_usuarioValid;
+  constructor (props) {
+    super(props);
+    this.state = { 
+      formErrors: {
+        nombres:'',
+        apellidos:'',
+        correo: '',
+        password: '',
+      },
+      nombresValid: false,
+      apellidosValid: false,
+      correoValid: false,
+      passwordValid: false,
+      id_usuarioValid: false,
+      nivelValid: false,
+      clienteValid: false,
+      formValid: false,
+      nombres:'',
+      apellidos:'',
+      correo:'',
+      password:'',
+      usuario:'',
+      Id_Cliente:'',
+      id_perfil:'',
+    }    
+  } 
+  validateField(fieldName, value) {
+    let fieldValidationErrors = this.state.formErrors;
+    let nombresValid= this.state.nombresValid;
+    let apellidosValid= this.state.apellidosValid;
+    let correoValid = this.state.correoValid;
+    let passwordValid = this.state.passwordValid;
 
-       const MySwal = withReactContent(Swal)
-       const toast = MySwal.mixin({
-         toast: true,
-         position: 'top-end',
-         showConfirmButton: false,
-         timer: 10000,
-         timerProgressBar: true,
-         didOpen: (toast) => {
-             toast.addEventListener('mouseenter', Swal.stopTimer)
-             toast.addEventListener('mouseleave', Swal.resumeTimer)
-          }
-       });  
-
-       switch(fieldName) {
-
-            case 'nombres':
-              nombresValid = value.length >= 6;
-              fieldValidationErrors.nombres = nombresValid ? '' : ' es demasiado corto';
-              
-              break;
-              case 'apellidos':
-                  apellidosValid = value.length >= 6;
-                  fieldValidationErrors.apellidos = apellidosValid ? '' : ' es demasiado corto';
-              break;  
-            case 'correo':
-              correoValid = value.match(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i);
-              fieldValidationErrors.correo = correoValid ? '' : ' es invalido';
-              toast.fire({
-                icon: 'error',
-                title: ''+fieldValidationErrors.correo+'',
-                confirmButtonText: `Ok`,
-              })
-              break;
-            case 'password':
-              passwordValid = value.length >= 6;
-              fieldValidationErrors.password = passwordValid ? '': ' es demasiado corto';
-              break;
-             
-            default:
-              break;
-
-        }
-        
-        this.setState(
-          {
-            formErrors: fieldValidationErrors,
-            nombresValid:nombresValid,
-            apellidosValid:apellidosValid,
-            correoValid: correoValid,
-            passwordValid: passwordValid,
-          }, 
-          this.validateForm
-          );
+    const MySwal = withReactContent(Swal)
+    const toast = MySwal.mixin({
+      toast: true,
+      position: 'top-end',
+      showConfirmButton: false,
+      timer: 10000,
+      timerProgressBar: true,
+      didOpen: (toast) => {
+        toast.addEventListener('mouseenter', Swal.stopTimer)
+        toast.addEventListener('mouseleave', Swal.resumeTimer)
       }
-      errorClass(error) {
-        return(error.length === 0 ? '' : 'has-error');
-      }
-      validateForm() {
-        //--- Para botón Next ---//
-        
-        this.setState({formValidNext: this.state.nombresValid && this.state.apellidosValid});
+    });  
 
+      switch(fieldName) {
+        case 'nombres':
+          nombresValid = value.length >= 6;
+          fieldValidationErrors.nombres = nombresValid ? '' : ' es demasiado corto';
+          break;
+        case 'apellidos':
+          apellidosValid = value.length >= 6;
+          fieldValidationErrors.apellidos = apellidosValid ? '' : ' es demasiado corto';
+          break;  
+        case 'correo':
+          correoValid = value.match(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i);
+          fieldValidationErrors.correo = correoValid ? '' : ' es invalido';
+            toast.fire({
+              icon: 'error',
+              title: ''+fieldValidationErrors.correo+'',
+              confirmButtonText: `Ok`,
+            })
+          break;
+        case 'password':
+          passwordValid = value.length >= 6;
+          fieldValidationErrors.password = passwordValid ? '': ' es demasiado corto';
+            break;
+        default:
+          break;
+      }
+      this.setState(
+        {formErrors: fieldValidationErrors,
+          nombresValid:nombresValid,
+          apellidosValid:apellidosValid,
+          correoValid: correoValid,
+          passwordValid: passwordValid,
+        }, this.validateForm
+      );
+  }
+  errorClass(error) {
+    return(error.length === 0 ? '' : 'has-error');
+  }
+  validateForm() {
+      //--- Para botón Next ---//
+    this.setState({formValidNext: this.state.nombresValid && this.state.apellidosValid});
         //--- Para botón Submit ---//
-        this.setState({formValid: this.state.nombresValid && this.state.apellidosValid && this.state.correoValid && this.state.passwordValid});
-
+    this.setState({formValid: this.state.nombresValid && this.state.apellidosValid && this.state.correoValid && this.state.passwordValid});
+  }
+  handleUserInput = (e) => {
+    const name = e.target.name;
+    const value = e.target.value;
+    this.setState({[name]: value},() => { this.validateField(name, value) });
+  }  
+  enviarDatos=(e)=>{ 
+    const MySwal = withReactContent(Swal)
+    const toast = MySwal.mixin({
+      toast: true,
+      position: 'top-end',
+      showConfirmButton: false,
+      timer: 4000,
+      timerProgressBar: true,
+      didOpen: (toast) => {
+        toast.addEventListener('mouseenter', Swal.stopTimer)
+        toast.addEventListener('mouseleave', Swal.resumeTimer)
       }
-      handleUserInput = (e) => {
-        const name = e.target.name;
-        const value = e.target.value;
-        this.setState({[name]: value},() => { this.validateField(name, value) });
-      }  
-      enviarDatos=(e)=>{ 
-        const MySwal = withReactContent(Swal)
-        const toast = MySwal.mixin({
-          toast: true,
-          position: 'top-end',
-          showConfirmButton: false,
-          timer: 5000,
-          timerProgressBar: true,
-          didOpen: (toast) => {
-              toast.addEventListener('mouseenter', Swal.stopTimer)
-              toast.addEventListener('mouseleave', Swal.resumeTimer)
-           }
-        });
-        e.preventDefault();
-        var datos={
-          usuario: this.state.correo,
-          correo: this.state.correo,
-          clave:this.state.password,
-          correo:this.state.correo,
-          nombres:this.state.nombres,
-          apellidos:this.state.apellidos,
-          id_Cliente: this.state.id_cliente,
-          id_perfil: this.state.id_perfil,
-        }
+    });
+    e.preventDefault();
+    var datos={
+      usuario:this.state.correo,
+      correo:this.state.correo,
+      password:this.state.password,
+      nombres:this.state.nombres,
+      apellidos:this.state.apellidos,
+      Id_Cliente:this.state.Id_Cliente,
+      id_perfil:this.state.id_perfil,
+    }
 
-        var token=localStorage.getItem('token');
-        console.log(token)
-        
-        axios.post(process.env.REACT_APP_API_ENDPOINT+'NuevoUsuarios',datos,{
-          headers: {
-            'Authorization': `Bearer ${token}`
-          },
-        }).then((result) => {
-            console.log(result)
-            console.log(result.data);  
-
-              toast.fire({
-                icon: 'success',
-                title: ''+result.data.message+'',
-                confirmButtonText: `Ok`,
-              })
-            })
-            .catch((error) => {
-              console.error(error)
-              console.log(error.response.data.message);
-              console.log(error.response.status);
-              console.log(error.response.headers);        
-                toast.fire({
-                  icon: 'error',
-                  title: ''+error.response.message+'',
-                  confirmButtonText: `Ok`,
-                  })              
-            })
-      }
- 
+  var token=localStorage.getItem('token');
+  axios.post(process.env.REACT_APP_API_ENDPOINT+'NuevoUsuarios',datos,{
+    headers: {
+      'Authorization': `Bearer ${token}`
+    },
+  }).then((result) => {
+    console.log(result)
+    console.log(result.data); 
+      setTimeout(() => {
+        window.location.href = '/management/panel/createUser'
+      }, 3500); 
+      toast.fire({
+        icon: 'success',
+        title: ''+result.data.message+'',
+        confirmButtonText: `Ok`,
+      })
+    }).catch((error) => {
+        console.error(error)
+        console.log(error.response.data.message);
+        console.log(error.response.status);
+        console.log(error.response.headers);        
+          toast.fire({
+            icon: 'error',
+            title: ''+error.response.message+'',
+            confirmButtonText: `Ok`,
+          })              
+    })
+  }
 
 componentDidMount(){
-
- 
-
-   // Inicio de animación del formulario
+// Inicio de animación del formulario
    var current_fs, next_fs, previous_fs;
    var left, opacity, scale;
    var animating;
@@ -239,9 +219,6 @@ componentDidMount(){
            //this comes from the custom easing plugin
            easing: 'easeInOutBack'
        });
-       $(".submit").on('click',(function(){
-             alert(2322)
-         }))
    }));
 
    
@@ -305,7 +282,7 @@ componentDidMount(){
   }              
 }
 
-    render(){
+  render(){
         return(
             <form id="msform">
             <ul id="progressbar">
@@ -323,7 +300,7 @@ componentDidMount(){
             </fieldset>
             <fieldset>
                 <h2 className="fs-title">Crear Usuario</h2>
-                <input type="number" name="id_cliente" placeholder="Id Cliente" value={this.state.id_cliente} onChange={this.handleUserInput}/>
+                <input type="number" name="Id_Cliente" placeholder="Id Cliente" value={this.state.Id_Cliente} onChange={this.handleUserInput}/>
                 <input  type="email" name="correo" placeholder="Correo" value={this.state.correo} onChange={this.handleUserInput}/>
                 <input  type="text" name="usuario" placeholder="Usuario" value={this.state.usuario} onChange={this.handleUserInput}/>
 
@@ -333,6 +310,6 @@ componentDidMount(){
             </fieldset>
         </form> 
         )
-    }
+  }
 }
 

@@ -6,9 +6,11 @@ import withReactContent from 'sweetalert2-react-content'
 import { makeStyles } from '@material-ui/core/styles';
 import { Modal, Button, TextField} from '@material-ui/core';
 import { Edit , Delete, Check, Close} from '@material-ui/icons';
-import { DataGrid, GridToolbarDensitySelector,GridToolbarFilterButton,GridToolbarContainer, GridToolbarExportContainer} from '@mui/x-data-grid';
+import { DataGrid, GridToolbarDensitySelector,GridToolbarFilterButton,GridToolbarContainer, GridToolbarExportContainer, GridToolbarExport} from '@mui/x-data-grid';
 import { writeXLSX, writeFile } from 'xlsx';
 import * as XLSX from 'xlsx/xlsx.mjs';
+import { Tooltip } from '@mui/material';
+
 //* Componentes de Estilos *//
 const useStyles = makeStyles((theme) => ({
   modal: {
@@ -50,9 +52,7 @@ const styles= useStyles();
   const [data, setData]=useState([]);
   const [modalEditar, setModalEditar]=useState(false);
   const [modalEliminar, setModalEliminar]=useState(false);
-  const [currency, setCurrency] = useState({
-    Ind_Activo:'',
-});
+  const [currency, setCurrency] = useState({Ind_Activo:''});
   const [consolaSeleccionada, setConsolaSeleccionada]=useState({
     nombres: '',
     apellidos:'',
@@ -68,7 +68,6 @@ const styles= useStyles();
     usuario: '',
     id_usuario:'',
   })
-
 /* Funcion para el cambio de valores en tabla*/
   const handleChange=e=>{
     const {name, value}=e.target;
@@ -84,7 +83,7 @@ const styles= useStyles();
     toast: true,
     position: 'top-end',
     showConfirmButton: false,
-    timer: 10000,
+    timer: 4000,
     timerProgressBar: true,
     didOpen: (toast) => {
       toast.addEventListener('mouseenter', Swal.stopTimer)
@@ -132,18 +131,16 @@ const styles= useStyles();
       }) 
     })
   }
-
 /*Petición POST a la API UPDATE USUARIOS para cumplir la funcion de actualizar*/
-
   var datosEnviar={
+    Id_Cliente:consolaSeleccionada.id_cliente,
     id_usuario:consolaSeleccionada.id_usuario,
-    Ind_Activo:currency.Ind_Activo,
-    usuario:consolaSeleccionada.usuario,
+    Ind_Activo:1,
+    usuario:consolaSeleccionada.correo,
     correo:consolaSeleccionada.correo, 
     nombres:consolaSeleccionada.nombres,
     apellidos:consolaSeleccionada.apellidos,
-    id_perfil:consolaSeleccionada.id_perfil,
-    id_cliente:consolaSeleccionada.id_cliente,
+    id_perfil:consolaSeleccionada.id_perfil,    
   } 
   const peticionPost=()=>{
        axios.post(process.env.REACT_APP_API_ENDPOINT+'UpdateUsuarios',datosEnviar,{
@@ -152,15 +149,27 @@ const styles= useStyles();
          }
       })
       .then(response=>{
+        abrirCerrarModalEditar()
         toast.fire({
           icon: 'success',
           title: ''+response.data.message+'',
           confirmButtonText: `Ok`,
         })
+        setTimeout(() => {
+          window.location.href = '/management/panel/createUser'
+        }, 3500);
+      }).catch(error=>{
+        console.log(error.response.data.message);
+        console.log(error.response.status);
+        console.log(error.response.headers); 
+        toast.fire({
+          icon: 'error',
+          title: ''+error.response.data.message+'',
+          confirmButtonText: `Ok`,
+        }) 
       })
   }
 /*Petición POST a la API INACTIVAR USUARIOS para cumplir la funcion de "Eliminar"*/
-
   const peticionDelete=async()=>{
     const ID = consolaDelete.id_usuario
        await axios.get(process.env.REACT_APP_API_ENDPOINT+'InactivarUsuario/'+ID)
@@ -177,10 +186,17 @@ const styles= useStyles();
          }, 11000);
         
        }).catch(error=>{
-         console.log(error);
-       })
+        console.log(error.response.data.message);
+        console.log(error.response.status);
+        console.log(error.response.headers); 
+        toast.fire({
+          icon: 'error',
+          title: ''+error.response.data.message+'',
+          confirmButtonText: `Ok`,
+        }) 
+      })
   }
-/*Selecctor de modales y de rellenado de tabla de edición*/
+
   const seleccionarConsola=(caso)=>{
     (caso==='Editar')?abrirCerrarModalEditar():abrirCerrarModalEliminar()
   }
@@ -188,7 +204,7 @@ const styles= useStyles();
     setConsolaDelete(thisRow);
     (caso==='Editar')?abrirCerrarModalEditar():abrirCerrarModalEliminar()
   }
-  /*Funciones para abrir y cerrar modales*/
+
   const abrirCerrarModalEditar=()=>{
     setModalEditar(!modalEditar);
   }
@@ -206,24 +222,22 @@ const styles= useStyles();
     {value: 1,
      label: 'Inactivo',
   }]
-
-  const handleChangeselect = (e) => {
-    const {name, value}=e.target;
-    setCurrency(prevState=>({
-      ...prevState,
-      [name]: value
-    }))
-    console.log(value)
-  };
+  const alertTohandleChange =(e)=>{
+    Swal.fire(
+      {icon: 'warning',
+      title: 'El Usuario debe contener el mismo valor de Correo Electrónico',
+      confirmButtonText: 'Entendido',
+    })
+  }
 /*Cuerpo del Modal de Edición*/
   const bodyEditar=(
     <div style={{width:'60%'}} className={styles.modal}>
       <h3 style={{textAlign:'center'}}>Editar Datos de Usuario</h3>
       <div style={{display: 'flex', width: '100%', alignItems: 'center', justifyContent: 'space-around'}} className='agruparEdit'>
         <div style={{width:'40%'}} className='grupoEdit'>
-        <TextField name="id_usuario" className={styles.inputMaterial} type='number' label="ID Usuario" onChange={handleChange} value={consolaSeleccionada && consolaSeleccionada.id_usuario}/>
+        <TextField name="id_usuario" className={styles.inputMaterial} type='number' label="ID Usuario" onChange={handleChange}  value={consolaSeleccionada && consolaSeleccionada.id_usuario}/>
         <br />
-        <TextField name="usuario" className={styles.inputMaterial} label="Usuario" onChange={handleChange} value={consolaSeleccionada && consolaSeleccionada.usuario}/>
+        <TextField name="usuario" className={styles.inputMaterial} label="Usuario" onClick={alertTohandleChange} onChange={handleChange} value={consolaSeleccionada && consolaSeleccionada.correo}/>
         <br />
         <TextField name="nombres" className={styles.inputMaterial} label="Nombres" onChange={handleChange} value={consolaSeleccionada && consolaSeleccionada.nombres}/>
         <br />
@@ -235,25 +249,12 @@ const styles= useStyles();
         <div style={{width:'40%'}} className='grupoEdit'>
         <TextField name="id_perfil" className={styles.inputMaterial} type='number' label="ID Perfil" onChange={handleChange} value={consolaSeleccionada && consolaSeleccionada.id_perfil}/>
         <br />
-        <TextField name="Ind_Activo" 
-        className={styles.inputMaterial}
-        select 
-        label="Usuario Activo"
-        value={currency.Ind_Activo}
-        onChange={handleChangeselect}
-        
-        >
-        {currencies.map((option) => (
-            <option key={option.value} value={option.value}>
-              {option.label}
-            </option>
-        ))}</TextField>
         <br />
         <br />
         <TextField name="id_cliente" className={styles.inputMaterial} type='number' label="ID Cliente"  onChange={handleChange} value={consolaSeleccionada && consolaSeleccionada.id_cliente}/>
         <br />
       
-      <div align="right">
+      <div align="bottom">
         <Button color="primary" onClick={()=>peticionPost()}>Guardar</Button>
         <Button onClick={()=>abrirCerrarModalEditar()}>Cancelar</Button>
       </div>
@@ -271,6 +272,7 @@ const styles= useStyles();
       </div>
     </div>
   )
+/*Funcion Descargar => Descarga Ordenando por Filas y Columnas*/  
   const downloadexcel=()=>{
     const newData=data.map(rows=>{
        delete rows.tableData
@@ -279,108 +281,107 @@ const styles= useStyles();
     const worksheet=XLSX.utils.json_to_sheet(newData)
     const workBook=XLSX.utils.book_new()
     XLSX.utils.book_append_sheet(workBook, worksheet, "Usuarios")
-    //Buffer//
-     let buf=writeXLSX(workBook,{bookType:"xlsx", type:"buffer"})
     //Binary string//
     writeXLSX(workBook, {bookType:"xlsx", type: "binary"})
     //Download
     writeFile(workBook, "UserData.xlsx")
   }
-  /*Toolbars*/
 
   function CustomToolbar() {
     return (
       <GridToolbarContainer>
-        <GridToolbarFilterButton />
         <GridToolbarDensitySelector/>
-        <GridToolbarExportContainer onClick={()=>downloadexcel()}>
-          CSV
+        <GridToolbarExportContainer>
+          <button style={{curso:'pointer'}} onClick={()=>downloadexcel()}>Descargar CSV</button>
         </GridToolbarExportContainer>
       </GridToolbarContainer>
     );
   }
- /*Columnas del Datatable*/ 
-const colums = [
-  { field: 'id_usuario', headerName: 'ID Usuario',headerAlign:'center',align: 'center', cellClassName:'prueba'},
-  { field: 'usuario', headerName: 'Usuario',headerAlign:'center',align: 'center', width:'160'},
-  { field: 'nombres', headerName: 'Nombres',headerAlign:'center',align: 'center',width:'160'},
-  { field: 'apellidos', headerName: 'Apellidos',headerAlign:'center',align: 'center',width:'160'},
-  { field: 'correo', headerName: 'Correo',headerAlign:'center',align: 'center',width:'200'},
-  { field: 'fecha_creacion' , headerName: 'Fecha  de Creación',headerAlign:'center',align: 'center'},
-  {
-    field: 'Ind_Us_Activo',
-    headerName: 'Usuario Confirmado',
-    headerAlign:'center',
-    align:'center',
-    sortable: false,
-    renderCell: (params) => {
-      var api = params.api;
-      var thisRow = {};
-        api
-        .getAllColumns()
-        .filter((c) => c.field !== '__check__' && !!c)
-        .forEach(
-          (c) => (thisRow[c.field] = params.getValue(params.id, c.field)));
-          if (thisRow.Ind_Us_Activo === true) {
-            return<Check></Check>
-          }else{
-            return<Close></Close>
-          }
-    }     
-  },
-  {
-    field: 'Ind_Activo',
-    headerName: 'Usuario Activo',
-    headerAlign:'center',
-    align:'center',
-    sortable: false,
-    renderCell: (params) => {
-      var api = params.api;
-      var thisRow = {};
-        api
-        .getAllColumns()
-        .filter((c) => c.field !== '__check__' && !!c)
-        .forEach(
-          (c) => (thisRow[c.field] = params.getValue(params.id, c.field)));
-          if (thisRow.Ind_Activo === true) {
-            return<Check></Check>
-          }else{
-            return<Close></Close>
-          }
-  }
-  },
-  {
-    field: 'action',
-    headerName: 'Action',
-    headerAlign:'center',
-    sortable: false,
-    align:'center',
-    renderCell: (params) => {
-      return[
-      <Edit style={{cursor:'pointer'}} onClick={(e)=>{
-        var ID = params.id
-          seleccionarConsola('Editar')
-          peticionGetID(ID)
-      }}/>,
-       <Delete style={{cursor:'pointer'}} onClick={(e)=>{ 
-         var api = params.api;
-         var thisRow = {};
-         console.log(thisRow)
-         api
-           .getAllColumns()
-           .filter((c) => c.field !== '__check__' && !!c)
-           .forEach(
-             (c) => (thisRow[c.field] = params.getValue(params.id, c.field)),
-           );
-           seleccionarDelete(thisRow, 'Eliminar')             
-       }}/>
-      ]
-    },
-  },
-  
-]
 
-/*HTML de React para el Datatable y los Modals*/ 
+  const colums = [
+    { field: 'id_usuario', headerName: 'ID Usuario',headerAlign:'center',align: 'center'},
+    { field: 'usuario', headerName: 'Usuario',headerAlign:'center',align: 'center', width:'160'},
+    { field: 'nombres', headerName: 'Nombres',headerAlign:'center',align: 'center',width:'160'},
+    { field: 'apellidos', headerName: 'Apellidos',headerAlign:'center',align: 'center',width:'160'},
+    { field: 'correo', headerName: 'Correo',headerAlign:'center',align: 'center',width:'200'},
+    { field: 'fecha_creacion' , headerName: 'Fecha  de Creación',headerAlign:'center',align: 'center'},
+    {
+      field: 'Ind_Us_Activo',
+      headerName: 'Usuario Confirmado',
+      headerAlign:'center',
+      align:'center',
+      sortable: false,
+      renderCell: (params) => {
+        var api = params.api;
+        var thisRow = {};
+        api
+          .getAllColumns()
+          .filter((c) => c.field !== '__check__' && !!c)
+          .forEach((c) => (thisRow[c.field] = params.getValue(params.id, c.field)));
+            if (thisRow.Ind_Us_Activo === true) {
+              return<Check></Check>
+            }else{
+              return<Close></Close>
+            }
+      }     
+    },
+    {
+      field: 'Ind_Activo',
+      headerName: 'Usuario Activo',
+      headerAlign:'center',
+      align:'center',
+      sortable: false,
+      renderCell: (params) => {
+        var api = params.api;
+        var thisRow = {};
+          api
+          .getAllColumns()
+          .filter((c) => c.field !== '__check__' && !!c)
+          .forEach(
+            (c) => (thisRow[c.field] = params.getValue(params.id, c.field)));
+            if (thisRow.Ind_Activo === true) {
+              return<Check></Check>
+            }else{
+              return<Close></Close>
+            }
+    }
+    },
+    {
+      field: 'action',
+      headerName: 'Action',
+      headerAlign:'center',
+      sortable: false,
+      align:'center',
+      renderCell: (params) => {
+        return[
+        <Tooltip title="Editar" arrow placement="bottom">
+          <Edit style={{cursor:'pointer'}} onClick={()=>{
+            var ID = params.id
+              seleccionarConsola('Editar')
+              peticionGetID(ID)
+          }}/> 
+        </Tooltip>
+        ,
+        <Tooltip title="Eliminar" arrow placement="bottom">
+          <Delete style={{cursor:'pointer'}} onClick={()=>{ 
+            var api = params.api;
+            var thisRow = {};
+            api
+            .getAllColumns()
+            .filter((c) => c.field !== '__check__' && !!c)
+            .forEach(
+              (c) => (thisRow[c.field] = params.getValue(params.id, c.field)),
+            );
+            seleccionarDelete(thisRow, 'Eliminar')             
+          }}/>
+        </Tooltip>
+        
+        ]
+      },
+    },
+    
+  ]
+
   return (
     <div className="App">
       <div style={{ display:'flex', height:'100%',width:'100%'}}>
@@ -409,6 +410,5 @@ const colums = [
     </div>
   );
 }
-
 export default ListarUsuarios;
 

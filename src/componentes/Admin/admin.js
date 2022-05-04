@@ -6,6 +6,7 @@ class Admin extends React.Component {
     render(){
         return(
             <><section className="cuerpo-modificable">
+                
             </section>
             <MenuAdmin/>
             </>
