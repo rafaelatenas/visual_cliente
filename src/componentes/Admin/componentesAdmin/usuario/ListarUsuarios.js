@@ -52,7 +52,6 @@ const styles= useStyles();
   const [data, setData]=useState([]);
   const [modalEditar, setModalEditar]=useState(false);
   const [modalEliminar, setModalEliminar]=useState(false);
-  const [currency, setCurrency] = useState({Ind_Activo:''});
   const [consolaSeleccionada, setConsolaSeleccionada]=useState({
     nombres: '',
     apellidos:'',
@@ -83,7 +82,7 @@ const styles= useStyles();
     toast: true,
     position: 'top-end',
     showConfirmButton: false,
-    timer: 4000,
+    timer: 3500,
     timerProgressBar: true,
     didOpen: (toast) => {
       toast.addEventListener('mouseenter', Swal.stopTimer)
@@ -157,7 +156,7 @@ const styles= useStyles();
         })
         setTimeout(() => {
           window.location.href = '/management/panel/createUser'
-        }, 3500);
+        }, 2000);
       }).catch(error=>{
         console.log(error.response.data.message);
         console.log(error.response.status);
@@ -215,13 +214,7 @@ const styles= useStyles();
     await peticionGet();
   },[])
   /*Función Select*/
-  const currencies = [
-    {value: 0,
-     label: 'Activo',
-    },
-    {value: 1,
-     label: 'Inactivo',
-  }]
+
   const alertTohandleChange =(e)=>{
     Swal.fire(
       {icon: 'warning',
@@ -292,7 +285,7 @@ const styles= useStyles();
       <GridToolbarContainer>
         <GridToolbarDensitySelector/>
         <GridToolbarExportContainer>
-          <button style={{curso:'pointer'}} onClick={()=>downloadexcel()}>Descargar CSV</button>
+          <button style={{curso:'pointer'}} onClick={()=>downloadexcel()}>Descargar Excel</button>
         </GridToolbarExportContainer>
       </GridToolbarContainer>
     );

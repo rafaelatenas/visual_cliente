@@ -257,7 +257,6 @@ componentDidMount(){
           var ancho = img.width;
           var alto = img.height
           
-          
           let medida =  parseInt(ancho*alto);
           
           var imagenValid = 8100;

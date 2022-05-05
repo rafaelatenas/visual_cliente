@@ -85,7 +85,9 @@ class Login extends React.Component {
         var nombre=result.data.NombresUsuarios;
         var apellidos=result.data.ApellidosUsuarios;  
         localStorage.setItem('token', result.data.token);
-        localStorage.setItem('Login', result.data.Login);    
+        localStorage.setItem('Login', result.data.Login);
+        localStorage.setItem('nombres', result.data.NombresUsuarios);
+        localStorage.setItem('apellidos', result.data.ApellidosUsuarios);
       toast.fire({
           icon: 'success',
           title: ''+result.data.message+' '+nombre+' '+apellidos+'',
