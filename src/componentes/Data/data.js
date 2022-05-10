@@ -1,18 +1,21 @@
 import * as React from 'react';
 import './data.css'
 import { styled, useTheme } from '@mui/material/styles';
-import { Box,Drawer,CssBaseline,Toolbar } from '@material-ui/core';
-import { List,Typography,Divider,IconButton} from '@material-ui/core';
-import { Menu, ChevronLeft, ChevronRight } from '@material-ui/icons';
-import {Inbox,Mail } from '@material-ui/icons';
-import { ListItem, ListItemText } from '@material-ui/core';
+import { Box,Drawer,CssBaseline,Toolbar, List,Typography,Divider,IconButton, ListItem, ListItemText } from '@material-ui/core';
+import { Menu, TagFaces,ExpandMore, Inbox,Mail, ArrowBack } from '@material-ui/icons';
+import { Accordion, AccordionDetails, AccordionSummary, Autocomplete, Avatar, Chip, Stack, Tooltip } from '@mui/material';
+import { Paper, Button} from '@mui/material';
+import { CheckBox, CheckBoxOutlineBlank} from '@material-ui/icons';
+import { TextField } from '@mui/material';
+import Header from '../componentes_data/header'
+import { Checkbox } from '@mui/material';
+import { InputLabel } from '@mui/material';
 
 const drawerWidth = 15;
 
 const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })(
   ({ theme, open }) => ({
     flexGrow: 1,
-    padding: theme.spacing(3),
     transition: theme.transitions.create('margin', {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.leavingScreen,
@@ -23,7 +26,7 @@ const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })(
         easing: theme.transitions.easing.easeOut,
         duration: theme.transitions.duration.enteringScreen,
       }),
-      marginLeft:`${drawerWidth}%` ,
+      marginLeft:`${drawerWidth-5}%` ,
     }),
   }),
 );
@@ -31,11 +34,11 @@ const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })(
 
 const DrawerHeader = styled('div')(({ theme }) => ({
   display: 'flex',
-  alignItems: 'flex-start',
-  padding: theme.spacing(0, 1),
+  flexDirection:'row-reverse',
+  alignItems: 'center',
   // necessary for content to be below app bar
   ...theme.mixins.toolbar,
-  justifyContent: 'flex-end',
+  justifyContent: 'space-evenly',
 }));
 
 export default function PersistentDrawerLeft() {
@@ -49,106 +52,323 @@ export default function PersistentDrawerLeft() {
   const handleDrawerClose = () => {
     setOpen(false);
   };
+  const [chipData, setChipData] = React.useState([
+    { key: 0, label: 'Angular' },
+    { key: 1, label: 'jQuery' },
+    { key: 2, label: 'Polymer' },
+    { key: 3, label: 'React' },
+    { key: 4, label: 'Vue.js' },
+  ]);
 
+  const handleDelete = (chipToDelete) => () => {
+    setChipData((chips) => chips.filter((chip) => chip.key !== chipToDelete.key));
+  };
+   const top100Films = [
+  { title: 'The Shawshank Redemption', year: 1994 },
+  { title: 'The Godfather', year: 1972 },
+  { title: 'The Godfather: Part II', year: 1974 },
+  { title: 'The Dark Knight', year: 2008 },
+  { title: '12 Angry Men', year: 1957 },
+  { title: "Schindler's List", year: 1993 },
+  { title: 'Pulp Fiction', year: 1994 },
+  {
+    title: 'The Lord of the Rings: The Return of the King',
+    year: 2003,
+  },
+  { title: 'The Good, the Bad and the Ugly', year: 1966 },
+  { title: 'Fight Club', year: 1999 },
+  {
+    title: 'The Lord of the Rings: The Fellowship of the Ring',
+    year: 2001,
+  },
+  {
+    title: 'Star Wars: Episode V - The Empire Strikes Back',
+    year: 1980,
+  },
+  { title: 'Forrest Gump', year: 1994 },
+  { title: 'Inception', year: 2010 },
+  {
+    title: 'The Lord of the Rings: The Two Towers',
+    year: 2002,
+  },
+  { title: "One Flew Over the Cuckoo's Nest", year: 1975 },
+  { title: 'Goodfellas', year: 1990 },
+  { title: 'The Matrix', year: 1999 },
+  { title: 'Seven Samurai', year: 1954 },
+  {
+    title: 'Star Wars: Episode IV - A New Hope',
+    year: 1977,
+  },
+  { title: 'City of God', year: 2002 },
+  { title: 'Se7en', year: 1995 },
+  { title: 'The Silence of the Lambs', year: 1991 },
+  { title: "It's a Wonderful Life", year: 1946 },
+  { title: 'Life Is Beautiful', year: 1997 },
+  { title: 'The Usual Suspects', year: 1995 },
+  { title: 'Léon: The Professional', year: 1994 },
+  { title: 'Spirited Away', year: 2001 },
+  { title: 'Saving Private Ryan', year: 1998 },
+  { title: 'Once Upon a Time in the West', year: 1968 },
+  { title: 'American History X', year: 1998 },
+  { title: 'Interstellar', year: 2014 },
+]; 
+
+const icon = <CheckBoxOutlineBlank fontSize="small" />;
+const checked = <CheckBox fontSize="small" />;
   return (
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />
-        <Toolbar>
-          <IconButton
+      <Toolbar style={{marginLeft:'1%',width:'15%',height:'10%',padding:'0',justifyContent:'space-around'}}>
+        <IconButton
+            style={{margin:'0',padding:'0',background:'#F6B232', borderRadius:'.3em',width:'auto',height:'50%'}}
             color="inherit"
             aria-label="open drawer"
             onClick={handleDrawerOpen}
             edge="start"
-            sx={{ mr: 2, ...(open && { display: 'none' }) }}
+            sx={{mr: 2, ...(open && { display: 'none' }) }}
           >
-            <Menu/>
-          </IconButton>
-        </Toolbar>
+            <Menu  style={{fontSize:'35px',fill:'#fff'}}/>
+        </IconButton>
+        <Stack style={{width:'70%', height:'100%', justifyContent:'center'}}>
+          <Tooltip title={localStorage.getItem('Login')} arrow placement="right">
+            <Chip 
+              style={{background:'#fff', color:'#03508f'}}
+              avatar={<Avatar>R</Avatar>}
+              label={localStorage.getItem('Login')}
+              variant="outlined"
+            ></Chip>
+          </Tooltip>
+        </Stack>
+      </Toolbar>
       <Drawer
+        style={{borderTopRightRadius:'.5em',borderButtomRightRadius:'.5em'}}
         sx={{
           width: `${drawerWidth*2}%`,
           flexShrink: 0,
-          
+          borderTopRightRadius:'.5em',
           '& .MuiDrawer-paper': {
             width: `${drawerWidth*2}%`,
             boxSizing: 'border-box',
+            borderTopRightRadius:'.5em',
+            borderButtomRightRadius:'.5em'
           },
         }}
-        variant="persistent"
+        variant="persistent"       
         anchor="left"
         open={open}
       >
         <DrawerHeader>
-            hola
-          <IconButton onClick={handleDrawerClose}>
-            {theme.direction === 'ltr' ? <ChevronLeft /> : <ChevronRight />}
+          <Stack style={{width:'70%', height:'100%', justifyContent:'center'}}>
+            <Tooltip title={localStorage.getItem('Login')} arrow placement="right">
+              <Chip
+              avatar={<Avatar>R</Avatar>}
+              label={localStorage.getItem('Login')}
+              variant="outlined"
+              ></Chip>
+            </Tooltip>
+          </Stack>
+          <IconButton  style={{margin:'0',padding:'0',background:'#F6B232',borderRadius:'.3em', width:'auto', height:'50%'}} onClick={handleDrawerClose}>
+            {theme.direction === 'ltr' ? <Menu  style={{fontSize:'35px',fill:'#fff'}}/> : <Menu style={{fontSize:'35px',fill:'#fff'}}/>}
           </IconButton>
         </DrawerHeader>
         <Divider />
+        <Accordion style={{margin:'0',padding:'5% 0',width:'100%',height:'auto'}}>
+          <AccordionSummary style={{margin:'0 2.5%',color:'#03508f',width:'95%', border:'.1em solid #000', borderRadius:'1.5em'}}
+            expandIcon={<ExpandMore style={{fill:'#03508f'}}/>}
+            aria-controls="panel1a-content"
+            id="panel1a-header"
+          >
+            <Typography style={{margin:'0'}}>Mis Selecciones</Typography>
+          </AccordionSummary>
+          <AccordionDetails>
+            <Paper
+              sx={{
+                display: 'flex',
+                justifyContent: 'center',
+                flexWrap: 'wrap',
+                listStyle: 'none',
+                p:' 0 0 5%',
+                m: 0,
+                overflowY:'scroll'
+              }}
+              component="ul"
+            >
+              {chipData.map((data) => {
+                let icon;
+                if (data.label === 'React') {
+                  icon = <TagFaces/>;
+                }
+                return (
+                  <ListItem style={{width:'auto',paddingLeft:'1%',paddingRight:'1%'}} key={data.key}>
+                    <Chip
+                      icon={icon}
+                      label={data.label}
+                      onDelete={data.label === 'React' ? undefined : handleDelete(data)}
+                    />
+                  </ListItem>
+                );
+              })}
+            </Paper>
+          </AccordionDetails>
+        </Accordion>
         <List>
-            <ListItem>hola</ListItem>
-          {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
-            <ListItem button key={text}>
-              <ListItem>
-                {index % 2 === 0 ? <Inbox /> : <Mail />}
-              </ListItem>
-              <ListItemText primary={text} />
-            </ListItem>
-          ))}
+        
         </List>
         <Divider />
         <List>
-          {['All mail', 'Trash', 'Spam'].map((text, index) => (
-            <ListItem button key={text}>
-              <ListItem>
-                {index % 2 === 0 ? <Inbox /> : <Mail />}
-              </ListItem>
-              <ListItemText primary={text} />
-            </ListItem>
-          ))}
+
         </List>
       </Drawer>
+
       <Main open={open}>
-        <DrawerHeader />
-        <Typography paragraph>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-          tempor incididunt ut labore et dolore magna aliqua. Rhoncus dolor purus non
-          enim praesent elementum facilisis leo vel. Risus at ultrices mi tempus
-          imperdiet. Semper risus in hendrerit gravida rutrum quisque non tellus.
-          Convallis convallis tellus id interdum velit laoreet id donec ultrices.
-          Odio morbi quis commodo odio aenean sed adipiscing. Amet nisl suscipit
-          adipiscing bibendum est ultricies integer quis. Cursus euismod quis viverra
-          nibh cras. Metus vulputate eu scelerisque felis imperdiet proin fermentum
-          leo. Mauris commodo quis imperdiet massa tincidunt. Cras tincidunt lobortis
-          feugiat vivamus at augue. At augue eget arcu dictum varius duis at
-          consectetur lorem. Velit sed ullamcorper morbi tincidunt. Lorem donec massa
-          sapien faucibus et molestie ac.
-        </Typography>
-        <Typography paragraph>
-          Consequat mauris nunc congue nisi vitae suscipit. Fringilla est ullamcorper
-          eget nulla facilisi etiam dignissim diam. Pulvinar elementum integer enim
-          neque volutpat ac tincidunt. Ornare suspendisse sed nisi lacus sed viverra
-          tellus. Purus sit amet volutpat consequat mauris. Elementum eu facilisis
-          sed odio morbi. Euismod lacinia at quis risus sed vulputate odio. Morbi
-          tincidunt ornare massa eget egestas purus viverra accumsan in. In hendrerit
-          gravida rutrum quisque non tellus orci ac. Pellentesque nec nam aliquam sem
-          et tortor. Habitant morbi tristique senectus et. Adipiscing elit duis
-          tristique sollicitudin nibh sit. Ornare aenean euismod elementum nisi quis
-          eleifend. Commodo viverra maecenas accumsan lacus vel facilisis. Nulla
-          posuere sollicitudin aliquam ultrices sagittis orci a.
-        </Typography> 
+        <div className="Contenedordata"> 
+          <DrawerHeader/>
+          <section className="container-of-table">
+            <Header></Header>
+              <article className="table-of-data">
+                <div className="cards-of-data">
+                  <Box style={{border:'.1em solid rgb(87 87 86/60%)',background:'#f7f4f4', borderRadius:'1.5em', width:'15%', height:'auto', display:'flex', flexDirection:'column'}}>
+                    <InputLabel>Períodos</InputLabel>
+                    <Autocomplete
+                      multiple
+                      id="checkboxes-tags-demo"
+                      options={top100Films}
+                      disableCloseOnSelect
+                      getOptionLabel={(option) => option.title}
+                      renderOption={(props, option, { selected }) => (
+                        <li {...props}>
+                          <Checkbox
+                            icon={icon}
+                            checkedIcon={checked}
+                            style={{ marginRight: 8 }}
+                            checked={selected}
+                          />
+                            {option.title}
+                        </li>
+                      )}
+                      style={{ width:'100%'}}
+                      renderInput={(params) => (
+                        <TextField {...params} label="Semanas" placeholder="Semanas" />
+                      )}
+                    />  
+                  </Box>
+                  
+                  <Box style={{border:'.1em solid rgb(87 87 86/60%)',background:'#f7f4f4', borderRadius:'1.5em', width:'15%', height:'auto', display:'flex', flexDirection:'column'}}>
+                    <InputLabel>Canales</InputLabel>
+                    <Autocomplete
+                      multiple
+                      id="checkboxes-tags-demo"
+                      options={top100Films}
+                      disableCloseOnSelect
+                      getOptionLabel={(option) => option.title}
+                      renderOption={(props, option, { selected }) => (
+                        <li {...props}>
+                          <Checkbox
+                            icon={icon}
+                            checkedIcon={checked}
+                            style={{ marginRight: 8 }}
+                            checked={selected}
+                          />
+                            {option.title}
+                        </li>
+                      )}
+                      style={{ width:'100%'}}
+                      renderInput={(params) => (
+                        <TextField {...params} label="Semanas" placeholder="Semanas" />
+                      )}
+                    />  
+                  </Box>
+                  <Box style={{border:'.1em solid rgb(87 87 86/60%)',background:'#f7f4f4', borderRadius:'1.5em', width:'15%', height:'auto', display:'flex', flexDirection:'column'}}>
+                    <InputLabel>Regiones</InputLabel>
+                    <Autocomplete
+                      multiple
+                      id="checkboxes-tags-demo"
+                      options={top100Films}
+                      disableCloseOnSelect
+                      getOptionLabel={(option) => option.title}
+                      renderOption={(props, option, { selected }) => (
+                        <li {...props}>
+                          <Checkbox
+                            icon={icon}
+                            checkedIcon={checked}
+                            style={{ marginRight: 8 }}
+                            checked={selected}
+                          />
+                            {option.title}
+                        </li>
+                      )}
+                      style={{ width:'100%'}}
+                      renderInput={(params) => (
+                        <TextField {...params} label="Semanas" placeholder="Semanas" />
+                      )}
+                    />  
+                  </Box>
+                  <Box style={{border:'.1em solid rgb(87 87 86/60%)',background:'#f7f4f4', borderRadius:'1.5em', width:'15%', height:'auto', display:'flex', flexDirection:'column'}}>
+                    <InputLabel>Productos</InputLabel>
+                    <Autocomplete
+                      multiple
+                      id="checkboxes-tags-demo"
+                      options={top100Films}
+                      disableCloseOnSelect
+                      getOptionLabel={(option) => option.title}
+                      renderOption={(props, option, { selected }) => (
+                        <li {...props}>
+                          <Checkbox
+                            icon={icon}
+                            checkedIcon={checked}
+                            style={{ marginRight: 8 }}
+                            checked={selected}
+                          />
+                            {option.title}
+                        </li>
+                      )}
+                      style={{ width:'100%'}}
+                      renderInput={(params) => (
+                        <TextField {...params} label="Semanas" placeholder="Semanas" />
+                      )}
+                    />  
+                  </Box>
+                  <Box style={{border:'.1em solid rgb(87 87 86/60%)',background:'#f7f4f4', borderRadius:'1.5em', width:'15%', height:'auto', display:'flex', flexDirection:'column'}}>
+                    <InputLabel>Indicadores</InputLabel>
+                    <Autocomplete
+                      multiple
+                      id="checkboxes-tags-demo"
+                      options={top100Films}
+                      disableCloseOnSelect
+                      getOptionLabel={(option) => option.title}
+                      renderOption={(props, option, { selected }) => (
+                        <li {...props}>
+                          <Checkbox
+                            icon={icon}
+                            checkedIcon={checked}
+                            style={{ marginRight: 8 }}
+                            checked={selected}
+                          />
+                            {option.title}
+                        </li>
+                      )}
+                      style={{ width:'100%'}}
+                      renderInput={(params) => (
+                        <TextField {...params} label="Semanas" placeholder="Semanas" />
+                      )}
+                    />  
+                  </Box>
+                </div>
+              </article>
+              <button id="process" type="submit">
+                <a href="./view-data.html">Process</a> </button>
+          </section>
+        </div>
       </Main>
+      <Button className='atras'
+        style={{background: 'transparent',position:'fixed',border:'0.2em solid #fff',minWidth:'50px', borderRadius:'50%'}} 
+        variant="contained">
+        <ArrowBack style={{fontSize:'2.5em'}}></ArrowBack>
+      </Button>
     </Box>
   );
 }
 
-// import React from "react";
-// import { Link } from 'react-router-dom';
-// import previo from '../../landing/favicon/arrow-left-solid.svg';
-// import BotonUser from "../componentes_data/botonuser";
-// import Header from "../componentes_data/header";
-// import Menu from "../componentes_data/menu";
-// import './data.css';
 
 
 

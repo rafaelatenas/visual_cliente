@@ -8,18 +8,28 @@
     height: 100%;
 }
 .MuiDrawer-paper{
-    width:15%
+    width:20%;
+    border-top-right-radius: 1.5em;
+    border-bottom-right-radius: 1.5em;
   }
+.atras{
+    position: fixed;
+    min-width: 50px;
+    min-height: 50px;
+    top: 90%;
+    left: 1%;
+    width: 1em;
+    height: 1em;
+    border: 0.2em solid #fff;
+    border-radius: 50%;
+}
 
 @media screen and (min-width: 992px) {
     
     .container-of-table {
         font-family: Lucida-Sans-Demibold-Roman, sans-serif;
-
-        grid-row: 1/4;
-        grid-column: 3/6;
         background: #fff;
-        width: 80%;
+        width: 100%;
         height: 100%;
         align-items: center;
         justify-items: center;
@@ -31,7 +41,6 @@
         -webkit-box-shadow: -4px 6px 20px 0px rgba(0, 0, 0, 0.49);
         box-shadow: -4px 6px 20px 0px rgba(0, 0, 0, 0.49);
     }
-    
     .table-of-data {
         grid-column: 1/3;
         grid-row: 2/3;
@@ -40,14 +49,14 @@
         justify-content: flex-end;
         overflow: visible;
         height: 100%;
-        width: 95%;
+        width: 100%;
     }
     .cards-of-data {
         width: 97%;
         height: 100%;
         display: flex;
         flex-direction: row;
-        flex-wrap: wrap;
+
         border-radius: 1em;
         -webkit-box-shadow: -6px 13px 16px 0px rgba(0, 0, 0, 0.15);
         box-shadow: -6px 13px 16px 0px rgba(0, 0, 0, 0.15);

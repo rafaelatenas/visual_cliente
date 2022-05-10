@@ -322,10 +322,9 @@ const styles= useStyles();
     { field: 'Cliente', headerName: 'Cliente',headerAlign:'center',align: 'center', width:'160'},
     { field: 'Direccion', headerName: 'Dirección',headerAlign:'center',align: 'center',width:'160'},
     { field: 'Telefono', headerName: 'Teléfono',headerAlign:'center',align: 'center',width:'160'},
-    { field: 'Rif', headerName: 'rif',headerAlign:'center',align: 'center',width:'200'},
+    { field: 'Rif', headerName: 'Rif',headerAlign:'center',align: 'center',width:'200'},
     { field: 'Persona_Contact' , headerName: 'Contacto',headerAlign:'center',align: 'center'},
-    {
-      field: 'Ind_Activo',
+    { field: 'Ind_Activo',
       headerName: 'Perfil Activo',
       headerAlign:'center',
       align:'center',
@@ -344,13 +343,12 @@ const styles= useStyles();
             }
       }     
     },
-    {
-      field: 'action',
+    { field: 'action',
       headerName: 'Action',
       headerAlign:'center',
       sortable: false,
       align:'center',
-      renderCell: (params) => {
+      renderCell:(params)=>{
         return[
         <Tooltip title="Editar" arrow placement="bottom">
           <Edit style={{cursor:'pointer'}} onClick={()=>{
@@ -358,8 +356,7 @@ const styles= useStyles();
               seleccionarConsola('Editar')
               peticionGetID(ID)
           }}/> 
-        </Tooltip>
-        ,
+        </Tooltip>,
         <Tooltip title="Eliminar" arrow placement="bottom">
           <Delete style={{cursor:'pointer'}} onClick={()=>{ 
             var api = params.api;
@@ -373,11 +370,9 @@ const styles= useStyles();
             seleccionarDelete(thisRow, 'Eliminar')             
           }}/>
         </Tooltip>
-        
         ]
       },
     },
-    
   ]
 
   return (
