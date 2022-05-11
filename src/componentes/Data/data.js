@@ -10,12 +10,19 @@ import { TextField } from '@mui/material';
 import Header from '../componentes_data/header'
 import { Checkbox } from '@mui/material';
 import { InputLabel } from '@mui/material';
+import Card from '@material-ui/core/Card';
+import CardHeader from '@material-ui/core/CardHeader';
+import CardActions from '@material-ui/core/CardActions';
+import Link from '@material-ui/core/Link';
+import Popover from '@mui/material/Popover';
+
 
 const drawerWidth = 15;
 
 const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })(
   ({ theme, open }) => ({
     flexGrow: 1,
+    width:'80%',
     transition: theme.transitions.create('margin', {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.leavingScreen,
@@ -31,7 +38,6 @@ const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })(
   }),
 );
 
-
 const DrawerHeader = styled('div')(({ theme }) => ({
   display: 'flex',
   flexDirection:'row-reverse',
@@ -39,6 +45,7 @@ const DrawerHeader = styled('div')(({ theme }) => ({
   // necessary for content to be below app bar
   ...theme.mixins.toolbar,
   justifyContent: 'space-evenly',
+  width:'100%'
 }));
 
 export default function PersistentDrawerLeft() {
@@ -52,6 +59,7 @@ export default function PersistentDrawerLeft() {
   const handleDrawerClose = () => {
     setOpen(false);
   };
+  /*DATA Provisional*/
   const [chipData, setChipData] = React.useState([
     { key: 0, label: 'Angular' },
     { key: 1, label: 'jQuery' },
@@ -112,8 +120,19 @@ export default function PersistentDrawerLeft() {
   { title: 'American History X', year: 1998 },
   { title: 'Interstellar', year: 2014 },
 ]; 
+const [anchorEl, setAnchorEl] = React.useState(null);
 
-const icon = <CheckBoxOutlineBlank fontSize="small" />;
+const handleClick = (event) => {
+  setAnchorEl(event.currentTarget);
+};
+
+const handleClose = () => {
+  setAnchorEl(null);
+};
+
+const openo = Boolean(anchorEl);
+const id = openo ? 'simple-popover' : undefined;
+const icon = <CheckBoxOutlineBlank fontSize=" style={{width:'auto'}}small" />;
 const checked = <CheckBox fontSize="small" />;
   return (
     <Box sx={{ display: 'flex' }}>
@@ -171,9 +190,9 @@ const checked = <CheckBox fontSize="small" />;
             {theme.direction === 'ltr' ? <Menu  style={{fontSize:'35px',fill:'#fff'}}/> : <Menu style={{fontSize:'35px',fill:'#fff'}}/>}
           </IconButton>
         </DrawerHeader>
-        <Divider />
-        <Accordion style={{margin:'0',padding:'5% 0',width:'100%',height:'auto'}}>
-          <AccordionSummary style={{margin:'0 2.5%',color:'#03508f',width:'95%', border:'.1em solid #000', borderRadius:'1.5em'}}
+        <Divider/>
+        <Accordion style={{margin:'0',padding:'5% 0',width:'85%',height:'auto', boxShadow:'none'}}>
+          <AccordionSummary style={{minHeight:'30px',margin:'0 2.5%',color:'#03508f',width:'95%', border:'.1em solid #000', borderRadius:'1.5em'}}
             expandIcon={<ExpandMore style={{fill:'#03508f'}}/>}
             aria-controls="panel1a-content"
             id="panel1a-header"
@@ -200,7 +219,7 @@ const checked = <CheckBox fontSize="small" />;
                 }
                 return (
                   <ListItem style={{width:'auto',paddingLeft:'1%',paddingRight:'1%'}} key={data.key}>
-                    <Chip
+                    <Chip style={{background:'#F6B232', color:'#fff'}}
                       icon={icon}
                       label={data.label}
                       onDelete={data.label === 'React' ? undefined : handleDelete(data)}
@@ -211,24 +230,222 @@ const checked = <CheckBox fontSize="small" />;
             </Paper>
           </AccordionDetails>
         </Accordion>
+        <Divider style={{width:'90%', background: 'rgb(0 0 0 / 38%)'}}/>
         <List>
-        
-        </List>
-        <Divider />
-        <List>
+          <ListItem>
+            <div>
+            <Button aria-describedby={id} variant="contained" onClick={handleClick}>
+              WOP
+            </Button>
+              <Popover
+                id={id}
+                open={openo}
+                anchorEl={anchorEl}
+                onClose={handleClose}
+                anchorOrigin={{
+                  vertical: 'bottom',
+                  horizontal: 'center',
+                }}
+              >
+                <ListItem button>
+                  <Link href='./home' style={{textDecoration:'none'}}>
+                    <ListItemText>WOP</ListItemText>
+                  </Link>
+                </ListItem>
+                <ListItem button>
+                  <Link href='./home' style={{textDecoration:'none'}}>
+                    <ListItemText>WOP</ListItemText>
+                  </Link>
+                </ListItem>
+                <ListItem button>
+                  <Link href='./home' style={{textDecoration:'none'}}>
+                    <ListItemText>WOP</ListItemText>
+                  </Link>
+                </ListItem>
+                <ListItem button>
+                  <Link href='./home' style={{textDecoration:'none'}}>
+                    <ListItemText>WOP</ListItemText>
+                  </Link>
+                </ListItem>
+              </Popover>
+            </div>
+          </ListItem>
 
+          <ListItem>
+            <div>
+            <Button aria-describedby={id} variant="contained" onClick={handleClick}>Retail Scanning</Button>
+              <Popover
+                id={id}
+                open={openo}
+                anchorEl={anchorEl}
+                onClose={handleClose}
+                anchorOrigin={{
+                  vertical: 'bottom',
+                  horizontal: 'center',
+                }}
+              >
+                <ListItem button>
+                  <Link href='./home' style={{textDecoration:'none'}}>
+                    <ListItemText>WOP</ListItemText>
+                  </Link>
+                </ListItem>
+                <ListItem button>
+                  <Link href='./home' style={{textDecoration:'none'}}>
+                    <ListItemText>WOP</ListItemText>
+                  </Link>
+                </ListItem>
+                <ListItem button>
+                  <Link href='./home' style={{textDecoration:'none'}}>
+                    <ListItemText>WOP</ListItemText>
+                  </Link>
+                </ListItem>
+                <ListItem button>
+                  <Link href='./home' style={{textDecoration:'none'}}>
+                    <ListItemText>WOP</ListItemText>
+                  </Link>
+                </ListItem>
+              </Popover>
+            </div>
+          </ListItem>
+
+          <ListItem>
+            <div>
+            <Button aria-describedby={id} variant="contained" onClick={handleClick}>Home Pantry</Button>
+              <Popover
+                id={id}
+                open={openo}
+                anchorEl={anchorEl}
+                onClose={handleClose}
+                anchorOrigin={{
+                  vertical: 'bottom',
+                  horizontal: 'center',
+                }}
+              >
+                <ListItem button>
+                  <Link href='./home' style={{textDecoration:'none'}}>
+                    <ListItemText>WOP</ListItemText>
+                  </Link>
+                </ListItem>
+                <ListItem button>
+                  <Link href='./home' style={{textDecoration:'none'}}>
+                    <ListItemText>WOP</ListItemText>
+                  </Link>
+                </ListItem>
+                <ListItem button>
+                  <Link href='./home' style={{textDecoration:'none'}}>
+                    <ListItemText>WOP</ListItemText>
+                  </Link>
+                </ListItem>
+                <ListItem button>
+                  <Link href='./home' style={{textDecoration:'none'}}>
+                    <ListItemText>WOP</ListItemText>
+                  </Link>
+                </ListItem>
+              </Popover>
+            </div>
+          </ListItem>
+
+          <ListItem>
+            <div>
+            <Button aria-describedby={id} variant="contained" onClick={handleClick}>CI</Button>
+              <Popover
+                id={id}
+                open={openo}
+                anchorEl={anchorEl}
+                onClose={handleClose}
+                anchorOrigin={{
+                  vertical: 'bottom',
+                  horizontal: 'center',
+                }}
+              >
+                <ListItem button>
+                  <Link href='./home' style={{textDecoration:'none'}}>
+                    <ListItemText>WOP</ListItemText>
+                  </Link>
+                </ListItem>
+                <ListItem button>
+                  <Link href='./home' style={{textDecoration:'none'}}>
+                    <ListItemText>WOP</ListItemText>
+                  </Link>
+                </ListItem>
+                <ListItem button>
+                  <Link href='./home' style={{textDecoration:'none'}}>
+                    <ListItemText>WOP</ListItemText>
+                  </Link>
+                </ListItem>
+                <ListItem button>
+                  <Link href='./home' style={{textDecoration:'none'}}>
+                    <ListItemText>WOP</ListItemText>
+                  </Link>
+                </ListItem>
+              </Popover>
+            </div>
+          </ListItem>
+
+          <ListItem>
+            <div>
+            <Button aria-describedby={id} variant="contained" onClick={handleClick}>Execution</Button>
+              <Popover
+                id={id}
+                open={openo}
+                anchorEl={anchorEl}
+                onClose={handleClose}
+                anchorOrigin={{
+                  vertical: 'bottom',
+                  horizontal: 'center',
+                }}
+              >
+                <ListItem button>
+                  <Link href='./home' style={{textDecoration:'none'}}>
+                    <ListItemText>WOP</ListItemText>
+                  </Link>
+                </ListItem>
+                <ListItem button>
+                  <Link href='./home' style={{textDecoration:'none'}}>
+                    <ListItemText>WOP</ListItemText>
+                  </Link>
+                </ListItem>
+                <ListItem button>
+                  <Link href='./home' style={{textDecoration:'none'}}>
+                    <ListItemText>WOP</ListItemText>
+                  </Link>
+                </ListItem>
+                <ListItem button>
+                  <Link href='./home' style={{textDecoration:'none'}}>
+                    <ListItemText>WOP</ListItemText>
+                  </Link>
+                </ListItem>
+              </Popover>
+            </div>
+          </ListItem>
+
+          <ListItem>
+            <Link href='./home' style={{textDecoration:'none'}}>
+              <ListItemText>Hola</ListItemText>
+            </Link>
+          </ListItem>
         </List>
       </Drawer>
-
+      
+      <Card className='reporte' style={{borderRadius:'1.5em'}}>
+          <CardHeader style={{padding:'10% 0 5%'}} title="REPORTE"/>
+          <Divider style={{width:'70%', background: 'rgb(0 0 0 / 38%)'}}/>
+          <CardActions style={{display:'flex', padding:'0', flexDirection:'column', width:'80%'}}>
+            <Button className='botonreporte' style={{color:'#fff',background:'#03508f', borderRadius:'1.5em', width:'90%', margin:'4% 0 2%', padding:'10%'}}>SEMANAL</Button>
+            <Button className='botonreporte' style={{color:'#fff',background:'#03508f', borderRadius:'1.5em', width:'90%', margin:'2% 0', padding:'10%'}}>MENSUAL</Button>
+            <Button className='botonreporte' style={{color:'#fff',background:'#03508f', borderRadius:'1.5em', width:'90%', margin:'2% 0', padding:'10%'}}>TRIMESTRAL</Button>
+            <Button className='botonreporte' style={{color:'#fff',background:'#03508f', borderRadius:'1.5em', width:'90%', margin:'2% 0 4%', padding:'10%'}}>SEMESTRAL</Button>
+          </CardActions>
+      </Card>
+      
       <Main open={open}>
         <div className="Contenedordata"> 
-          <DrawerHeader/>
           <section className="container-of-table">
             <Header></Header>
               <article className="table-of-data">
                 <div className="cards-of-data">
-                  <Box style={{border:'.1em solid rgb(87 87 86/60%)',background:'#f7f4f4', borderRadius:'1.5em', width:'15%', height:'auto', display:'flex', flexDirection:'column'}}>
-                    <InputLabel>Períodos</InputLabel>
+                  <Box style={{border:'.1em solid rgb(87 87 86/11%)',background:'#f7f4f4', borderRadius:'1.5em', width:'15%', height:'90%', display:'flex', flexDirection:'column', alignItems:'center'}}>
+                    <InputLabel style={{width:'auto'}}>PERÍODOS</InputLabel>
                     <Autocomplete
                       multiple
                       id="checkboxes-tags-demo"
@@ -246,15 +463,15 @@ const checked = <CheckBox fontSize="small" />;
                             {option.title}
                         </li>
                       )}
-                      style={{ width:'100%'}}
+                      style={{ width:'85%',overflow:'visible'}}
                       renderInput={(params) => (
                         <TextField {...params} label="Semanas" placeholder="Semanas" />
                       )}
                     />  
                   </Box>
                   
-                  <Box style={{border:'.1em solid rgb(87 87 86/60%)',background:'#f7f4f4', borderRadius:'1.5em', width:'15%', height:'auto', display:'flex', flexDirection:'column'}}>
-                    <InputLabel>Canales</InputLabel>
+                  <Box style={{border:'.1em solid rgb(87 87 86/11%)',background:'#f7f4f4', borderRadius:'1.5em', width:'15%', height:'90%', display:'flex', flexDirection:'column', alignItems:'center'}}>
+                    <InputLabel style={{width:'auto'}}>CANALES</InputLabel>
                     <Autocomplete
                       multiple
                       id="checkboxes-tags-demo"
@@ -262,7 +479,7 @@ const checked = <CheckBox fontSize="small" />;
                       disableCloseOnSelect
                       getOptionLabel={(option) => option.title}
                       renderOption={(props, option, { selected }) => (
-                        <li {...props}>
+                        <li style={{width:'auto'}} {...props}>
                           <Checkbox
                             icon={icon}
                             checkedIcon={checked}
@@ -272,14 +489,14 @@ const checked = <CheckBox fontSize="small" />;
                             {option.title}
                         </li>
                       )}
-                      style={{ width:'100%'}}
+                      style={{ width:'85%',overflow:'visible'}}
                       renderInput={(params) => (
                         <TextField {...params} label="Semanas" placeholder="Semanas" />
                       )}
                     />  
                   </Box>
-                  <Box style={{border:'.1em solid rgb(87 87 86/60%)',background:'#f7f4f4', borderRadius:'1.5em', width:'15%', height:'auto', display:'flex', flexDirection:'column'}}>
-                    <InputLabel>Regiones</InputLabel>
+                  <Box style={{border:'.1em solid rgb(87 87 86/11%)',background:'#f7f4f4', borderRadius:'1.5em', width:'15%', height:'90%', display:'flex', flexDirection:'column', alignItems:'center'}}>
+                    <InputLabel style={{width:'auto'}}>REGIONES</InputLabel>
                     <Autocomplete
                       multiple
                       id="checkboxes-tags-demo"
@@ -297,14 +514,14 @@ const checked = <CheckBox fontSize="small" />;
                             {option.title}
                         </li>
                       )}
-                      style={{ width:'100%'}}
+                      style={{ width:'85%',overflow:'visible'}}
                       renderInput={(params) => (
                         <TextField {...params} label="Semanas" placeholder="Semanas" />
                       )}
                     />  
                   </Box>
-                  <Box style={{border:'.1em solid rgb(87 87 86/60%)',background:'#f7f4f4', borderRadius:'1.5em', width:'15%', height:'auto', display:'flex', flexDirection:'column'}}>
-                    <InputLabel>Productos</InputLabel>
+                  <Box style={{border:'.1em solid rgb(87 87 86/11%)',background:'#f7f4f4', borderRadius:'1.5em', width:'15%', height:'90%', display:'flex', flexDirection:'column', alignItems:'center'}}>
+                    <InputLabel style={{width:'auto'}}>PRODUCTOS</InputLabel>
                     <Autocomplete
                       multiple
                       id="checkboxes-tags-demo"
@@ -322,14 +539,14 @@ const checked = <CheckBox fontSize="small" />;
                             {option.title}
                         </li>
                       )}
-                      style={{ width:'100%'}}
+                      style={{ width:'85%',overflow:'visible'}}
                       renderInput={(params) => (
                         <TextField {...params} label="Semanas" placeholder="Semanas" />
                       )}
                     />  
                   </Box>
-                  <Box style={{border:'.1em solid rgb(87 87 86/60%)',background:'#f7f4f4', borderRadius:'1.5em', width:'15%', height:'auto', display:'flex', flexDirection:'column'}}>
-                    <InputLabel>Indicadores</InputLabel>
+                  <Box style={{border:'.1em solid rgb(87 87 86/11%)',background:'#f7f4f4', borderRadius:'1.5em', width:'15%', height:'90%', display:'flex', flexDirection:'column', alignItems:'center'}}>
+                    <InputLabel style={{width:'auto'}}>INDICADORES</InputLabel>
                     <Autocomplete
                       multiple
                       id="checkboxes-tags-demo"
@@ -347,7 +564,7 @@ const checked = <CheckBox fontSize="small" />;
                             {option.title}
                         </li>
                       )}
-                      style={{ width:'100%'}}
+                      style={{ width:'85%',overflow:'visible'}}
                       renderInput={(params) => (
                         <TextField {...params} label="Semanas" placeholder="Semanas" />
                       )}
@@ -362,8 +579,8 @@ const checked = <CheckBox fontSize="small" />;
       </Main>
       <Button className='atras'
         style={{background: 'transparent',position:'fixed',border:'0.2em solid #fff',minWidth:'50px', borderRadius:'50%'}} 
-        variant="contained">
-        <ArrowBack style={{fontSize:'2.5em'}}></ArrowBack>
+        variant="contained" href='./Home'>
+          <ArrowBack style={{fontSize:'2.5em'}}></ArrowBack>
       </Button>
     </Box>
   );

@@ -107,7 +107,6 @@ class Home extends React.Component {
         var acumuladorClik = 0;
 
         opciones_usuario.addEventListener('click',()=>{
-
             acumuladorClik = acumuladorClik +1;
             contadorClick = contadorClick++;
             let iterador = acumuladorClik%2
@@ -331,13 +330,10 @@ class Home extends React.Component {
             default:
                 break;
         }
-        
         modal.innerHTML = iframe;
     }
 	render() {
- 
 		return(
-
             <>
              <header>
                 <div className='components-header'>
@@ -486,7 +482,6 @@ class Home extends React.Component {
             
         </>
         )
-        
     }
     
 }
