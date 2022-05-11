@@ -15,6 +15,7 @@ import CardHeader from '@material-ui/core/CardHeader';
 import CardActions from '@material-ui/core/CardActions';
 import Link from '@material-ui/core/Link';
 import Popover from '@mui/material/Popover';
+import { useState } from 'react';
 
 
 const drawerWidth = 15;
@@ -60,18 +61,9 @@ export default function PersistentDrawerLeft() {
     setOpen(false);
   };
   /*DATA Provisional*/
-  const [chipData, setChipData] = React.useState([
-    { key: 0, label: 'Angular' },
-    { key: 1, label: 'jQuery' },
-    { key: 2, label: 'Polymer' },
-    { key: 3, label: 'React' },
-    { key: 4, label: 'Vue.js' },
-  ]);
-
-  const handleDelete = (chipToDelete) => () => {
-    setChipData((chips) => chips.filter((chip) => chip.key !== chipToDelete.key));
-  };
-   const top100Films = [
+  const optiones = [{ title: 'The Shawshank Redemption', year: 1994 },
+  { title: 'The Godfather', year: 1972 }];
+  const top100Films = [
   { title: 'The Shawshank Redemption', year: 1994 },
   { title: 'The Godfather', year: 1972 },
   { title: 'The Godfather: Part II', year: 1974 },
@@ -119,7 +111,23 @@ export default function PersistentDrawerLeft() {
   { title: 'Once Upon a Time in the West', year: 1968 },
   { title: 'American History X', year: 1998 },
   { title: 'Interstellar', year: 2014 },
-]; 
+  ];
+  const [valueee, setValue] = React.useState(top100Films[0]);
+console.log(valueee)
+  const [chipData, setChipData] = React.useState([
+    { key: 0, label: 'Angular' },
+    { key: 1, label: 'jQuery' },
+    { key: 2, label: 'Polymer' },
+    { key: 3, label: 'React' },
+    { key: 4, label: 'Vue.js' },
+  ]);
+
+  const handleDelete = (chipToDelete) => () => {
+    setChipData((chips) => chips.filter((chip) => chip.key !== chipToDelete.key));
+  };
+  
+
+
 const [anchorEl, setAnchorEl] = React.useState(null);
 
 const handleClick = (event) => {
@@ -130,8 +138,12 @@ const handleClose = () => {
   setAnchorEl(null);
 };
 
+
+
+
 const openo = Boolean(anchorEl);
 const id = openo ? 'simple-popover' : undefined;
+
 const icon = <CheckBoxOutlineBlank fontSize=" style={{width:'auto'}}small" />;
 const checked = <CheckBox fontSize="small" />;
   return (
@@ -231,10 +243,10 @@ const checked = <CheckBox fontSize="small" />;
           </AccordionDetails>
         </Accordion>
         <Divider style={{width:'90%', background: 'rgb(0 0 0 / 38%)'}}/>
-        <List>
-          <ListItem>
-            <div>
-            <Button aria-describedby={id} variant="contained" onClick={handleClick}>
+        <List style={{width:'80%', display:'inline-flex', flexDirection:'column'}}>
+          <ListItem style={{padding:'5% 0', justifyContent:'center'}}>
+            <div className='divPopover' style={{width:'90%', borderRadius:'1.5em'}}>
+            <Button className='buttonPopover' style={{width:'100%', borderRadius:'1.5em'}} aria-describedby={id} variant="contained" onClick={handleClick}>
               WOP
             </Button>
               <Popover
@@ -269,11 +281,12 @@ const checked = <CheckBox fontSize="small" />;
                 </ListItem>
               </Popover>
             </div>
+          
           </ListItem>
 
-          <ListItem>
-            <div>
-            <Button aria-describedby={id} variant="contained" onClick={handleClick}>Retail Scanning</Button>
+          <ListItem style={{padding:'5% 0', justifyContent:'center'}}>
+            <div className='divPopover' style={{width:'90%', borderRadius:'1.5em'}}>
+            <Button className='buttonPopover' style={{width:'100%', borderRadius:'1.5em'}} aria-describedby={id} variant="contained" onClick={handleClick}>Retail Scanning</Button>
               <Popover
                 id={id}
                 open={openo}
@@ -306,11 +319,12 @@ const checked = <CheckBox fontSize="small" />;
                 </ListItem>
               </Popover>
             </div>
+          
           </ListItem>
 
-          <ListItem>
-            <div>
-            <Button aria-describedby={id} variant="contained" onClick={handleClick}>Home Pantry</Button>
+          <ListItem style={{padding:'5% 0', justifyContent:'center'}}>
+            <div className='divPopover' style={{width:'90%', borderRadius:'1.5em'}}>
+            <Button className='buttonPopover' style={{width:'100%', borderRadius:'1.5em'}} aria-describedby={id} variant="contained" onClick={handleClick}>Home Pantry</Button>
               <Popover
                 id={id}
                 open={openo}
@@ -343,11 +357,12 @@ const checked = <CheckBox fontSize="small" />;
                 </ListItem>
               </Popover>
             </div>
+          
           </ListItem>
 
-          <ListItem>
-            <div>
-            <Button aria-describedby={id} variant="contained" onClick={handleClick}>CI</Button>
+          <ListItem style={{padding:'5% 0', justifyContent:'center'}}>
+            <div className='divPopover' style={{width:'90%', borderRadius:'1.5em'}}>
+            <Button className='buttonPopover' style={{width:'100%', borderRadius:'1.5em'}} aria-describedby={id} variant="contained" onClick={handleClick}>CI</Button>
               <Popover
                 id={id}
                 open={openo}
@@ -380,11 +395,12 @@ const checked = <CheckBox fontSize="small" />;
                 </ListItem>
               </Popover>
             </div>
+          
           </ListItem>
 
-          <ListItem>
-            <div>
-            <Button aria-describedby={id} variant="contained" onClick={handleClick}>Execution</Button>
+          <ListItem style={{padding:'5% 0', justifyContent:'center'}}>
+            <div className='divPopover' style={{width:'90%', borderRadius:'1.5em'}}>
+            <Button className='buttonPopover' style={{width:'100%', borderRadius:'1.5em'}} aria-describedby={id} variant="contained" onClick={handleClick}>Execution</Button>
               <Popover
                 id={id}
                 open={openo}
@@ -417,18 +433,20 @@ const checked = <CheckBox fontSize="small" />;
                 </ListItem>
               </Popover>
             </div>
+          
           </ListItem>
 
-          <ListItem>
-            <Link href='./home' style={{textDecoration:'none'}}>
-              <ListItemText>Hola</ListItemText>
+          <ListItem style={{padding:'5% 0', justifyContent:'center'}}>
+            <Link className='buttonPopover' href='./' style={{textAlign:'center' ,textDecoration:'none', width:'90%', borderRadius:'1.5em'}}>
+              <ListItemText>Salir</ListItemText>
             </Link>
+          
           </ListItem>
         </List>
       </Drawer>
       
       <Card className='reporte' style={{borderRadius:'1.5em'}}>
-          <CardHeader style={{padding:'10% 0 5%'}} title="REPORTE"/>
+          <CardHeader style={{padding:'10% 0 5%', color:'#03508f', fontSize:'1em'}} title="REPORTE"/>
           <Divider style={{width:'70%', background: 'rgb(0 0 0 / 38%)'}}/>
           <CardActions style={{display:'flex', padding:'0', flexDirection:'column', width:'80%'}}>
             <Button className='botonreporte' style={{color:'#fff',background:'#03508f', borderRadius:'1.5em', width:'90%', margin:'4% 0 2%', padding:'10%'}}>SEMANAL</Button>
@@ -451,6 +469,10 @@ const checked = <CheckBox fontSize="small" />;
                       id="checkboxes-tags-demo"
                       options={top100Films}
                       disableCloseOnSelect
+                      onChange={(event, newValue) => {
+                        setValue(newValue)
+                        console.log(newValue)
+                      }}
                       getOptionLabel={(option) => option.title}
                       renderOption={(props, option, { selected }) => (
                         <li {...props}>
@@ -462,6 +484,7 @@ const checked = <CheckBox fontSize="small" />;
                           />
                             {option.title}
                         </li>
+                        
                       )}
                       style={{ width:'85%',overflow:'visible'}}
                       renderInput={(params) => (
@@ -476,6 +499,10 @@ const checked = <CheckBox fontSize="small" />;
                       multiple
                       id="checkboxes-tags-demo"
                       options={top100Films}
+                      onChange={(event, newValue) => {
+                        setValue(newValue)
+                        console.log(newValue)
+                      }}
                       disableCloseOnSelect
                       getOptionLabel={(option) => option.title}
                       renderOption={(props, option, { selected }) => (

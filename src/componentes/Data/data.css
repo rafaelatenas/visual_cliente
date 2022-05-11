@@ -41,6 +41,23 @@
 .MuiAccordionDetails-root.css-15v22id-MuiAccordionDetails-root {
     padding: 0 !important;
 }
+.MuiAccordionSummary-content.MuiAccordionSummary-contentGutters.css-o4b71y-MuiAccordionSummary-content,
+.MuiAccordionSummary-content.Mui-expanded.MuiAccordionSummary-contentGutters.css-o4b71y-MuiAccordionSummary-content {
+    margin: 0 !important;
+}
+.divPopover{
+    background: transparent !important;
+}
+
+.buttonPopover{
+    border: .2em solid #03508f !important;
+    color: #000 !important;
+    background: transparent !important;
+}
+.buttonPopover:hover{
+    color: #fff !important;
+    background: #03508f !important;
+}
 
 @media screen and (min-width: 992px) {
     
