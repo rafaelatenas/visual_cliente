@@ -3,7 +3,7 @@ import './data.css'
 import { styled, useTheme } from '@mui/material/styles';
 import { Box,Drawer,CssBaseline,Toolbar, List,Typography,Divider,IconButton, ListItem, ListItemText } from '@material-ui/core';
 import { Menu, TagFaces,ExpandMore, Inbox,Mail, ArrowBack } from '@material-ui/icons';
-import { Accordion, AccordionDetails, AccordionSummary, Autocomplete, Avatar, Chip, Stack, Tooltip } from '@mui/material';
+import { Accordion, AccordionDetails, AccordionSummary, Autocomplete, Avatar, Chip, FormControlLabel, MenuItem, Stack, Tooltip } from '@mui/material';
 import { Paper, Button} from '@mui/material';
 import { CheckBox, CheckBoxOutlineBlank} from '@material-ui/icons';
 import { TextField } from '@mui/material';
@@ -16,6 +16,43 @@ import CardActions from '@material-ui/core/CardActions';
 import Link from '@material-ui/core/Link';
 import Popover from '@mui/material/Popover';
 import { useState } from 'react';
+import { FormControl } from '@mui/material';
+import { Select } from '@mui/material';
+import { OutlinedInput } from '@mui/material';
+
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
+const MenuProps = {
+  PaperProps: {
+    style: {
+      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+      width: 250,
+    },
+  },
+};
+
+const names = [
+  'All',
+  'Oliver Hansen',
+  'Van Henry',
+  'April Tucker',
+  'Ralph Hubbard',
+  'Omar Alexander',
+  'Carlos Abbott',
+  'Miriam Wagner',
+  'Bradley Wilkerson',
+  'Virginia Andrews',
+  'Kelly Snyder',
+];
+
+function getStyles(name, periodos, theme) {
+  return {
+    fontWeight:
+      periodos.indexOf(name) === -1
+        ? theme.typography.fontWeightRegular
+        : theme.typography.fontWeightMedium,
+  };
+}
 
 
 const drawerWidth = 15;
@@ -61,9 +98,8 @@ export default function PersistentDrawerLeft() {
     setOpen(false);
   };
   /*DATA Provisional*/
-  const optiones = [{ title: 'The Shawshank Redemption', year: 1994 },
-  { title: 'The Godfather', year: 1972 }];
-  const top100Films = [
+
+  const top100Films =[
   { title: 'The Shawshank Redemption', year: 1994 },
   { title: 'The Godfather', year: 1972 },
   { title: 'The Godfather: Part II', year: 1974 },
@@ -112,8 +148,7 @@ export default function PersistentDrawerLeft() {
   { title: 'American History X', year: 1998 },
   { title: 'Interstellar', year: 2014 },
   ];
-  const [valueee, setValue] = React.useState(top100Films[0]);
-console.log(valueee)
+
   const [chipData, setChipData] = React.useState([
     { key: 0, label: 'Angular' },
     { key: 1, label: 'jQuery' },
@@ -127,7 +162,7 @@ console.log(valueee)
   };
   
 
-
+/* Elementos de Menú*/
 const [anchorEl, setAnchorEl] = React.useState(null);
 
 const handleClick = (event) => {
@@ -138,7 +173,59 @@ const handleClose = () => {
   setAnchorEl(null);
 };
 
+/* Elementos de Selección */
+const [periodos, setPeriodos] = React.useState([]);
+const [regiones, setRegiones] = React.useState([]);
+const [productos, setProductos] = React.useState([]);
+const [indicadores, setIndicadores] = React.useState([]);
+const [canales, setCanales] = React.useState([]);
+const [selected, setSelected] = React.useState([]);
 
+console.log(periodos)
+console.log(regiones)
+console.log(productos)
+console.log(indicadores)
+console.log(canales)
+
+const handleChange = (event) => {
+    const {
+      target: { value },
+    } = event;
+    switch (event.target.name) {
+      case 'Periodos':
+        setPeriodos(
+        typeof value === 'string' ? value.split(',') : value,
+        );
+        break;
+      case 'Regiones':
+        setRegiones(
+        typeof value === 'string' ? value.split(',') : value,
+        );
+        break;
+      case 'Productos':
+        setProductos(
+        typeof value === 'string' ? value.split(',') : value,
+        );
+        break;
+      case 'Indicadores':
+        setIndicadores(
+        typeof value === 'string' ? value.split(',') : value,
+        );
+        break;
+      case 'Canales':
+        setCanales(
+        typeof value === 'string' ? value.split(',') : value,
+        );
+        break;
+      default:
+        break;
+    }
+    console.log(event)
+     if (event.target.value === "all") {
+       setSelected(selected.length === names.length ? [] : names);
+       return;
+     }
+  };
 
 
 const openo = Boolean(anchorEl);
@@ -463,144 +550,127 @@ const checked = <CheckBox fontSize="small" />;
               <article className="table-of-data">
                 <div className="cards-of-data">
                   <Box style={{border:'.1em solid rgb(87 87 86/11%)',background:'#f7f4f4', borderRadius:'1.5em', width:'15%', height:'90%', display:'flex', flexDirection:'column', alignItems:'center'}}>
-                    <InputLabel style={{width:'auto'}}>PERÍODOS</InputLabel>
-                    <Autocomplete
-                      multiple
-                      id="checkboxes-tags-demo"
-                      options={top100Films}
-                      disableCloseOnSelect
-                      onChange={(event, newValue) => {
-                        setValue(newValue)
-                        console.log(newValue)
-                      }}
-                      getOptionLabel={(option) => option.title}
-                      renderOption={(props, option, { selected }) => (
-                        <li {...props}>
-                          <Checkbox
-                            icon={icon}
-                            checkedIcon={checked}
-                            style={{ marginRight: 8 }}
-                            checked={selected}
-                          />
-                            {option.title}
-                        </li>
-                        
-                      )}
-                      style={{ width:'85%',overflow:'visible'}}
-                      renderInput={(params) => (
-                        <TextField {...params} label="Semanas" placeholder="Semanas" />
-                      )}
-                    />  
+                    <FormControl sx={{ m: 1, width: 300 }}>
+                      <InputLabel style={{width:'auto'}}>PERÍODOS</InputLabel>
+                      <Select labelId="multiple-checkbox-label" id="multiple-checkbox" name='Periodos' multiple value={periodos} onChange={handleChange} input={<OutlinedInput label="Tag"/>}
+                        renderValue={(selected) => (
+                          console.log(selected),
+                          <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                            {selected.map((value) => (
+                              <Chip key={value} label={value}/>
+                            ))}
+                          </Box>
+                        )}
+                        MenuProps={MenuProps}
+                      ><Checkbox value="all" onChange={handleChange} />
+                            <ListItemText primary='Select All'/>
+                        {names.map((name) => (
+                          <MenuItem key={name} value={name}>
+                            
+                            <Checkbox checked={periodos.indexOf(name) > -1} />
+                            <ListItemText primary={name}/>
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl> 
                   </Box>
                   
                   <Box style={{border:'.1em solid rgb(87 87 86/11%)',background:'#f7f4f4', borderRadius:'1.5em', width:'15%', height:'90%', display:'flex', flexDirection:'column', alignItems:'center'}}>
-                    <InputLabel style={{width:'auto'}}>CANALES</InputLabel>
-                    <Autocomplete
-                      multiple
-                      id="checkboxes-tags-demo"
-                      options={top100Films}
-                      onChange={(event, newValue) => {
-                        setValue(newValue)
-                        console.log(newValue)
-                      }}
-                      disableCloseOnSelect
-                      getOptionLabel={(option) => option.title}
-                      renderOption={(props, option, { selected }) => (
-                        <li style={{width:'auto'}} {...props}>
-                          <Checkbox
-                            icon={icon}
-                            checkedIcon={checked}
-                            style={{ marginRight: 8 }}
-                            checked={selected}
-                          />
-                            {option.title}
-                        </li>
-                      )}
-                      style={{ width:'85%',overflow:'visible'}}
-                      renderInput={(params) => (
-                        <TextField {...params} label="Semanas" placeholder="Semanas" />
-                      )}
-                    />  
+                    <FormControl sx={{ m: 1, width: 300 }}>
+                      <InputLabel style={{width:'auto'}}>CANALES</InputLabel>
+                      <Select labelId="multiple-checkbox-label" id="multiple-checkbox" name='Canales' multiple value={canales} onChange={handleChange} input={<OutlinedInput label="Tag"/>}
+                        renderValue={(selected) => (
+                          <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                            {selected.map((value) => (
+                              <Chip key={value} label={value}/>
+                            ))}
+                          </Box>
+                        )}
+                        MenuProps={MenuProps}
+                      >
+                        {names.map((name) => (
+                          <MenuItem key={name} value={name}>
+                            <Checkbox checked={canales.indexOf(name) > -1} />
+                            <ListItemText primary={name} />
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl> 
                   </Box>
+
                   <Box style={{border:'.1em solid rgb(87 87 86/11%)',background:'#f7f4f4', borderRadius:'1.5em', width:'15%', height:'90%', display:'flex', flexDirection:'column', alignItems:'center'}}>
-                    <InputLabel style={{width:'auto'}}>REGIONES</InputLabel>
-                    <Autocomplete
-                      multiple
-                      id="checkboxes-tags-demo"
-                      options={top100Films}
-                      disableCloseOnSelect
-                      getOptionLabel={(option) => option.title}
-                      renderOption={(props, option, { selected }) => (
-                        <li {...props}>
-                          <Checkbox
-                            icon={icon}
-                            checkedIcon={checked}
-                            style={{ marginRight: 8 }}
-                            checked={selected}
-                          />
-                            {option.title}
-                        </li>
-                      )}
-                      style={{ width:'85%',overflow:'visible'}}
-                      renderInput={(params) => (
-                        <TextField {...params} label="Semanas" placeholder="Semanas" />
-                      )}
-                    />  
+                    <FormControl sx={{ m: 1, width: 300 }}>
+                      <InputLabel style={{width:'auto'}}>REGIONES</InputLabel>
+                      <Select labelId="multiple-checkbox-label" id="multiple-checkbox" name='Regiones' multiple value={regiones} onChange={handleChange} input={<OutlinedInput label="Tag"/>}
+                        renderValue={(selected) => (
+                          <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                            {selected.map((value) => (
+                              <Chip key={value} label={value}/>
+                            ))}
+                          </Box>
+                        )}
+                        MenuProps={MenuProps}
+                      >
+                        {names.map((name) => (
+                          <MenuItem key={name} value={name}>
+                            <Checkbox checked={regiones.indexOf(name) > -1} />
+                            <ListItemText primary={name} />
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>  
                   </Box>
+
                   <Box style={{border:'.1em solid rgb(87 87 86/11%)',background:'#f7f4f4', borderRadius:'1.5em', width:'15%', height:'90%', display:'flex', flexDirection:'column', alignItems:'center'}}>
-                    <InputLabel style={{width:'auto'}}>PRODUCTOS</InputLabel>
-                    <Autocomplete
-                      multiple
-                      id="checkboxes-tags-demo"
-                      options={top100Films}
-                      disableCloseOnSelect
-                      getOptionLabel={(option) => option.title}
-                      renderOption={(props, option, { selected }) => (
-                        <li {...props}>
-                          <Checkbox
-                            icon={icon}
-                            checkedIcon={checked}
-                            style={{ marginRight: 8 }}
-                            checked={selected}
-                          />
-                            {option.title}
-                        </li>
-                      )}
-                      style={{ width:'85%',overflow:'visible'}}
-                      renderInput={(params) => (
-                        <TextField {...params} label="Semanas" placeholder="Semanas" />
-                      )}
-                    />  
+                    <FormControl sx={{ m: 1, width: 300 }}>
+                      <InputLabel style={{width:'auto'}}>PRODUCTOS</InputLabel>
+                      <Select labelId="multiple-checkbox-label" id="multiple-checkbox" name='Productos' multiple value={productos} onChange={handleChange} input={<OutlinedInput label="Tag"/>}
+                        renderValue={(selected) => (
+                          <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                            {selected.map((value) => (
+                              <Chip key={value} label={value}/>
+                            ))}
+                          </Box>
+                        )}
+                        MenuProps={MenuProps}
+                      >
+                        {names.map((name) => (
+                          <MenuItem key={name} value={name}>
+                            <Checkbox checked={productos.indexOf(name) > -1} />
+                            <ListItemText primary={name} />
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
                   </Box>
+
                   <Box style={{border:'.1em solid rgb(87 87 86/11%)',background:'#f7f4f4', borderRadius:'1.5em', width:'15%', height:'90%', display:'flex', flexDirection:'column', alignItems:'center'}}>
-                    <InputLabel style={{width:'auto'}}>INDICADORES</InputLabel>
-                    <Autocomplete
-                      multiple
-                      id="checkboxes-tags-demo"
-                      options={top100Films}
-                      disableCloseOnSelect
-                      getOptionLabel={(option) => option.title}
-                      renderOption={(props, option, { selected }) => (
-                        <li {...props}>
-                          <Checkbox
-                            icon={icon}
-                            checkedIcon={checked}
-                            style={{ marginRight: 8 }}
-                            checked={selected}
-                          />
-                            {option.title}
-                        </li>
-                      )}
-                      style={{ width:'85%',overflow:'visible'}}
-                      renderInput={(params) => (
-                        <TextField {...params} label="Semanas" placeholder="Semanas" />
-                      )}
-                    />  
+                    <FormControl sx={{ m: 1, width: 300 }}>
+                      <InputLabel style={{width:'auto'}}>INDICADORES</InputLabel>
+                      <Select labelId="multiple-checkbox-label" id="multiple-checkbox" name='Indicadores' multiple value={indicadores} onChange={handleChange} input={<OutlinedInput label="Tag"/>}
+                        renderValue={(selected) => (
+                          <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                            {selected.map((value) => (
+                              <Chip key={value} label={value}/>
+                            ))}
+                          </Box>
+                        )}
+                        MenuProps={MenuProps}
+                      >
+                        {names.map((name) => (
+                          <MenuItem key={name} value={name}>
+                            <Checkbox checked={indicadores.indexOf(name) > -1} />
+                            <ListItemText primary={name} />
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl> 
                   </Box>
+
                 </div>
+                <div>{periodos}</div>
               </article>
-              <button id="process" type="submit">
-                <a href="./view-data.html">Process</a> </button>
+              <button id="process">Procesar</button>
           </section>
         </div>
       </Main>
