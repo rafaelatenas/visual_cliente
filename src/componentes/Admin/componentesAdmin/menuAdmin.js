@@ -36,7 +36,7 @@ class MenuAdmin extends React.Component{
                     </li>
                     <li>
                         <Tooltip title="Salir" arrow placement="right">
-                            <Link to={'CreateUser'}><ExitToApp style={{fill:'#000000'}}></ExitToApp></Link>
+                            <Link to={'/data'}><ExitToApp style={{fill:'#000000'}}></ExitToApp></Link>
                         </Tooltip>
                     </li>
                     <li>

@@ -2,8 +2,8 @@ import * as React from 'react';
 import './data.css'
 import { styled, useTheme } from '@mui/material/styles';
 import { Box,Drawer,CssBaseline,Toolbar, List,Typography,Divider,IconButton, ListItem, ListItemText } from '@material-ui/core';
-import { Menu, TagFaces,ExpandMore, Inbox,Mail, ArrowBack } from '@material-ui/icons';
-import { Accordion, AccordionDetails, AccordionSummary, Autocomplete, Avatar, Chip, FormControlLabel, MenuItem, Stack, Tooltip } from '@mui/material';
+import { Menu, TagFaces,ExpandMore, Inbox,Mail, ArrowBack, Search } from '@material-ui/icons';
+import { Accordion, AccordionDetails, AccordionSummary, Autocomplete, Avatar, Chip, FormControlLabel, InputAdornment, ListSubheader, MenuItem, Stack, Tooltip } from '@mui/material';
 import { Paper, Button} from '@mui/material';
 import { CheckBox, CheckBoxOutlineBlank} from '@material-ui/icons';
 import { TextField } from '@mui/material';
@@ -19,6 +19,8 @@ import { useState } from 'react';
 import { FormControl } from '@mui/material';
 import { Select } from '@mui/material';
 import { OutlinedInput } from '@mui/material';
+import MultiSelectSemanas from '../componentes_data/MultiSelectSemanas';
+import axios from 'axios';
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -32,7 +34,6 @@ const MenuProps = {
 };
 
 const names = [
-  'All',
   'Oliver Hansen',
   'Van Henry',
   'April Tucker',
@@ -174,18 +175,19 @@ const handleClose = () => {
 };
 
 /* Elementos de Selección */
-const [periodos, setPeriodos] = React.useState([]);
+const [periodos, setPeriodos] = React.useState([])
+const [tiempo, setTiempo] = React.useState([]);
+console.log(tiempo)
+const [data, setData]=useState([]);
 const [regiones, setRegiones] = React.useState([]);
 const [productos, setProductos] = React.useState([]);
 const [indicadores, setIndicadores] = React.useState([]);
 const [canales, setCanales] = React.useState([]);
 const [selected, setSelected] = React.useState([]);
 
-console.log(periodos)
-console.log(regiones)
-console.log(productos)
-console.log(indicadores)
-console.log(canales)
+/* */
+const [value, setValue] = useState([]);
+
 
 const handleChange = (event) => {
     const {
@@ -220,17 +222,97 @@ const handleChange = (event) => {
       default:
         break;
     }
-    console.log(event)
-     if (event.target.value === "all") {
-       setSelected(selected.length === names.length ? [] : names);
+    for (let i = 0; i < names.length; i++) {
+      if (event.target.value[i] === "All") {
+      setPeriodos(selected.length === names.length ? [] : names);
        return;
      }
+    }
+     
   };
 
 
+  const isAllSelected = names.length > 0 && selected.length === names.length;
+
 const openo = Boolean(anchorEl);
 const id = openo ? 'simple-popover' : undefined;
+// const selectItem = names.map((name)=>{
+//   return(
+//     <MenuItem key={name} value={name}>
+//       <Checkbox checked={periodos.indexOf(name) > -1} />
+//         <ListItemText primary={name}/>
+//     </MenuItem>
+//   )
+// })
 
+
+
+
+
+  // const handlaaChange = (event) => {
+  //   const {
+  //     target: { value },
+  //   } = event;
+
+  //   if (value === "all") {
+  //     setSelected(selected.length === names.length ? [] : names);
+  //     return;
+  //   }
+  //   // added below code to update selected options
+  //   const list = [...selected];
+  //   const index = list.indexOf(value);
+  //   index === -1 ? list.push(value) : list.splice(index, 1);
+  //   setSelected(list);
+  //   console.log(list)
+  // };
+
+
+  // const listItem = names.map((name) => {
+  //   return (
+  //     <MenuItem key={name}>
+  //       <Checkbox
+  //         value={name}
+  //         onChange={handlaaChange}
+  //         checked={selected.indexOf(name) > -1}
+  //       />
+  //       <ListItemText primary={name}/>
+  //     </MenuItem>
+  //   );
+  // });
+
+
+   const [searchText, setSearchText] = useState("");
+
+   const containsText = (text, searchText) => 
+   text.toString().toLowerCase().indexOf(searchText.toLowerCase()) > -1;
+
+   const displayedOptions = React.useMemo (
+     () => names.filter((name) => containsText(name, searchText)),
+     [searchText],
+
+   );
+
+const seleccionarPeriodo=(parametro)=>{
+  setTiempo(parametro)
+}
+   const [valuee, setValuee] = useState([]);
+   var token=localStorage.getItem('token');
+   const peticionGet=async()=>{
+    await axios.get( process.env.REACT_APP_API_ENDPOINT+'ListarSemana',{
+       headers: {
+         'Authorization': `Bearer ${token}`
+       },
+    })
+    .then(response=>{
+      setData(response.data.data);
+      console.log(response.data)
+      console.log(response.data.data)
+    }).catch(error=>{
+      console.log(error.response.data.message);
+      console.log(error.response.status);
+      console.log(error.response.headers); 
+    })
+  }
 const icon = <CheckBoxOutlineBlank fontSize=" style={{width:'auto'}}small" />;
 const checked = <CheckBox fontSize="small" />;
   return (
@@ -536,7 +618,10 @@ const checked = <CheckBox fontSize="small" />;
           <CardHeader style={{padding:'10% 0 5%', color:'#03508f', fontSize:'1em'}} title="REPORTE"/>
           <Divider style={{width:'70%', background: 'rgb(0 0 0 / 38%)'}}/>
           <CardActions style={{display:'flex', padding:'0', flexDirection:'column', width:'80%'}}>
-            <Button className='botonreporte' style={{color:'#fff',background:'#03508f', borderRadius:'1.5em', width:'90%', margin:'4% 0 2%', padding:'10%'}}>SEMANAL</Button>
+            <Button className='botonreporte' onClick={()=>{
+              var parametro = 'semanas'
+              seleccionarPeriodo(parametro)
+              peticionGet()}} style={{color:'#fff',background:'#03508f', borderRadius:'1.5em', width:'90%', margin:'4% 0 2%', padding:'10%'}}>SEMANAL</Button>
             <Button className='botonreporte' style={{color:'#fff',background:'#03508f', borderRadius:'1.5em', width:'90%', margin:'2% 0', padding:'10%'}}>MENSUAL</Button>
             <Button className='botonreporte' style={{color:'#fff',background:'#03508f', borderRadius:'1.5em', width:'90%', margin:'2% 0', padding:'10%'}}>TRIMESTRAL</Button>
             <Button className='botonreporte' style={{color:'#fff',background:'#03508f', borderRadius:'1.5em', width:'90%', margin:'2% 0 4%', padding:'10%'}}>SEMESTRAL</Button>
@@ -551,27 +636,15 @@ const checked = <CheckBox fontSize="small" />;
                 <div className="cards-of-data">
                   <Box style={{border:'.1em solid rgb(87 87 86/11%)',background:'#f7f4f4', borderRadius:'1.5em', width:'15%', height:'90%', display:'flex', flexDirection:'column', alignItems:'center'}}>
                     <FormControl sx={{ m: 1, width: 300 }}>
-                      <InputLabel style={{width:'auto'}}>PERÍODOS</InputLabel>
-                      <Select labelId="multiple-checkbox-label" id="multiple-checkbox" name='Periodos' multiple value={periodos} onChange={handleChange} input={<OutlinedInput label="Tag"/>}
-                        renderValue={(selected) => (
-                          console.log(selected),
-                          <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-                            {selected.map((value) => (
-                              <Chip key={value} label={value}/>
-                            ))}
-                          </Box>
-                        )}
-                        MenuProps={MenuProps}
-                      ><Checkbox value="all" onChange={handleChange} />
-                            <ListItemText primary='Select All'/>
-                        {names.map((name) => (
-                          <MenuItem key={name} value={name}>
-                            
-                            <Checkbox checked={periodos.indexOf(name) > -1} />
-                            <ListItemText primary={name}/>
-                          </MenuItem>
-                        ))}
-                      </Select>
+                      <InputLabel style={{width:'auto'}}>{tiempo}</InputLabel>
+                      <MultiSelectSemanas
+                        items={data}
+                        // getOptionDisabled={getOptionDisabled}
+                        label={tiempo}
+                        placeholder="Placeholder for textbox"
+                        selectAllLabel="Select all"
+                        onChange={setValuee}
+                      />
                     </FormControl> 
                   </Box>
                   
@@ -603,7 +676,7 @@ const checked = <CheckBox fontSize="small" />;
                       <InputLabel style={{width:'auto'}}>REGIONES</InputLabel>
                       <Select labelId="multiple-checkbox-label" id="multiple-checkbox" name='Regiones' multiple value={regiones} onChange={handleChange} input={<OutlinedInput label="Tag"/>}
                         renderValue={(selected) => (
-                          <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                          <Box id='boxChip' sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
                             {selected.map((value) => (
                               <Chip key={value} label={value}/>
                             ))}
