@@ -4,102 +4,140 @@ import { Autocomplete, createFilterOptions } from "@mui/material";
 import CheckBox from "@material-ui/icons/CheckBox";
 import CheckBoxOutlineBlank from "@material-ui/icons/CheckBoxOutlineBlank";
 import { Checkbox } from "@material-ui/core";
-
+import axios from "axios";
+ 
 const MultiSelectSemanas = ({
   items,
+  selectedValues,
   label,
   placeholder,
   selectAllLabel,
   noOptionsText,
   limitTags,
-  onChange
+  onToggleOption,
+  onClearOptions,
+  onSelectAll
+  
 }) => {
-  const [selectedOptions, setSelectedOptions] = useState([]);
-  const allSelected = items.length === selectedOptions.length;
-  console.log(items.length)
-  console.log(selectedOptions.length)
-  const handleToggleOption = selectedOptions =>
-    setSelectedOptions(selectedOptions);
-  const handleClearOptions = () => setSelectedOptions([]);
-  const getOptionLabel = option => `${option.label}`;
-  const handleSelectAll = isSelected => {
-    if (isSelected) {
-      setSelectedOptions(items);
-    } else {
-      handleClearOptions();
-    }
-  };
-
+  const allSelected = items.length === selectedValues.length;
+  
   const handleToggleSelectAll = () => {
-    handleSelectAll && handleSelectAll(!allSelected);
+    onSelectAll && onSelectAll(!allSelected);
   };
-
 
   const handleChange = (event, selectedOptions, reason) => {
-    if (reason === "select-option" || reason === "remove-option") {
-      if (selectedOptions.find(option => option.value === "select-all")) {
+    console.log(reason)
+    if (reason === "selectOption" || reason === "removeOption") {
+      if (selectedOptions.find(option => option.Semana === "Seleccionar Todas")) {
         handleToggleSelectAll();
-        let result = [];
-        result = items.filter(el => el.value !== "select-all");
-        return onChange(result);
       } else {
-        handleToggleOption && handleToggleOption(selectedOptions);
-        return onChange(selectedOptions);
+        onToggleOption && onToggleOption(selectedOptions);
       }
     } else if (reason === "clear") {
-      handleClearOptions && handleClearOptions();
+      onClearOptions && onClearOptions();
     }
   };
+  const getOptionLabel = (option) => option.Semana;
 
 
   const optionRenderer = (props, option, { selected }) => {
-    const selectAllProps =
-      option.value === "select-all" // To control the state of 'select-all' checkbox
-        ? { checked: allSelected }
-        : {};
-    return (
-        <li {...props}>
-        <Checkbox
-          icon={icon}
-          checkedIcon={checked}
-          style={{ marginRight: 8 }}
-          checked={selected}
-          {...selectAllProps}
-        />
-        {option.Semana}
-      </li>
-    );
+    const selectAllProps = option.Semana === "Seleccionar Todas" ? { checked: allSelected } : {};
+      
+    if (option.Semana != null) {
+      return (
+        <li {...props} style={{ fontSize:'.7em' }}>
+          <Checkbox
+            icon={icon}
+            checkedIcon={checked}
+            style={{ marginRight: 8 }}
+            checked={selected}
+            {...selectAllProps}
+          />
+          {getOptionLabel(option)}
+        </li>
+      );
+    } else if (option.Periodo != null) {
+      return (
+        <li {...props} style={{ fontSize:'.7em' }}>
+          <Checkbox
+            icon={icon}
+            checkedIcon={checked}
+            style={{ marginRight: 8 }}
+            checked={selected}
+            {...selectAllProps}
+          />
+          {option.Periodo}
+        </li>
+      );
+    } else if (option.trimestres != null) {
+      return (
+        <li {...props} style={{ fontSize:'.7em' }}>
+          <Checkbox
+            icon={icon}
+            checkedIcon={checked}
+            style={{ marginRight: 8 }}
+            checked={selected}
+            {...selectAllProps}
+          />
+          {option.trimestres}
+        </li>
+      );
+    } else if (option.semestres != null) {
+      return (
+        <li {...props} style={{ fontSize:'.7em' }}>
+          <Checkbox
+            icon={icon}
+            checkedIcon={checked}
+            style={{ marginRight: 8 }}
+            checked={selected}
+            {...selectAllProps}
+          />
+          {option.semestres}
+        </li>
+      );
+    }
   };
   const inputRenderer = params => (
     <TextField {...params} label={label} placeholder={placeholder} />
   );
+  const getOptionSelected = (option, anotherOption) =>option.Semana === anotherOption.Semana;
 
   const filter = createFilterOptions();
     const icon = <CheckBoxOutlineBlank fontSize="small" />;
     const checked = <CheckBox fontSize="small" />;
-  return (
+
+
+    var a = selectedValues.length;
+    console.log(a)
+    let relativo;
+    switch (a) {
+      
+      case a >=3:
+        console.log(a)
+        relativo = `Se han seleccionado ${a} opciones`;
+        break;
+    
+      default:
+        break;
+    }
+    
+  return(
     <Autocomplete
       multiple
       size="small"
       options={items}
-      value={selectedOptions}
       disableCloseOnSelect
-      getOptionLabel={(option) => option.Semana}
+      value={relativo}
+      getOptionLabel={getOptionLabel}
       renderOption={optionRenderer}
+      renderInput={inputRenderer}
+      onChange={handleChange}
+      getOptionSelected={getOptionSelected}
       filterOptions={(options, params) => {
         const filtered = filter(options, params);
-        const { inputValue } = params;
-        const isExisting = options.some((option) => inputValue === option.name);
-        if (inputValue !== '' && !isExisting) {
-            filtered.push({
-                inputValue:inputValue,
-                name: `Add "${inputValue}"`,
-            });
-        }
-        return filtered
-    }}
-
-      renderInput={inputRenderer}
+        console.log(filtered)
+        return [{ idSemana: selectAllLabel, Semana: "Seleccionar Todas" }, ...filtered];
+      }}
     />
   );
 };
