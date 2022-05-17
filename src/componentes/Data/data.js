@@ -2,7 +2,7 @@ import * as React from 'react';
 import './data.css'
 import { styled, useTheme } from '@mui/material/styles';
 import { Box,Drawer,CssBaseline,Toolbar, List,Typography,Divider,IconButton, ListItem, ListItemText, ClickAwayListener } from '@material-ui/core';
-import { Menu, TagFaces,ExpandMore, Inbox,Mail, ArrowBack, Search, SettingsRemoteOutlined } from '@material-ui/icons';
+import { Menu, TagFaces,ExpandMore, Inbox,Mail, ArrowBack, Search, SettingsRemoteOutlined, SelectAll } from '@material-ui/icons';
 import { Accordion, AccordionDetails, AccordionSummary, Autocomplete, Avatar, Chip, FormControlLabel, InputAdornment, ListSubheader, MenuItem, Stack, Tooltip } from '@mui/material';
 import { Paper, Button} from '@mui/material';
 import { CheckBox, CheckBoxOutlineBlank} from '@material-ui/icons';
@@ -115,31 +115,27 @@ const handleClose = () => {
 
 /* Elementos de Selección */
 const [periodos, setPeriodos] = React.useState([])
-/* Periodos y Data*/
+
+/* Periodos y DataSemanal*/
 const [tiempoReporte, settiempoReporte] = React.useState([]);
 const [data, setData]=useState([]);
+const [selectedOptions1, setSelectedOptions1] = useState([]);
+
+
 /*Canales*/
-const [canales, setCanales] = React.useState([]);
-
-const [regiones, setRegiones] = React.useState([]);
-const [productos, setProductos] = React.useState([]);
-const [indicadores, setIndicadores] = React.useState([]);
-
-const [selected, setSelected] = React.useState([]);
+const [canal, setCanal]=useState([]);
+const [selectedOptions2, setSelectedOptions2] = useState([]);
 
 const openo = Boolean(anchorEl);
 const id = openo ? 'simple-popover' : undefined;
-
 const seleccionarPeriodo=(parametro)=>{
   settiempoReporte(parametro)
 }
-   const [valuee, setValuee] = useState([]);
-   var token=localStorage.getItem('token');
-   const peticionSemanas=async()=>{
+  var token=localStorage.getItem('token');
+  /*Funciones de Listar PERÍODOS*/
+  const peticionSemanas=async()=>{
     await axios.get( process.env.REACT_APP_API_ENDPOINT+'ListarSemana',{
-       headers: {
-         'Authorization': `Bearer ${token}`
-       },
+      headers: {'Authorization': `Bearer ${token}`},
     })
     .then(response=>{
       setData(response.data.data);
@@ -153,9 +149,7 @@ const seleccionarPeriodo=(parametro)=>{
   }
   const peticionMeses=async()=>{
     await axios.get( process.env.REACT_APP_API_ENDPOINT+'ListarPeriodo',{
-       headers: {
-         'Authorization': `Bearer ${token}`
-       },
+      headers: {'Authorization': `Bearer ${token}`},
     })
     .then(response=>{
       setData(response.data.data);
@@ -167,37 +161,56 @@ const seleccionarPeriodo=(parametro)=>{
       console.log(error.response.headers); 
     })
   }
-
-  const [selectedOptions, setSelectedOptions] = useState([]);
-  
-  const handleToggleOption = selectedOptions =>
-    setSelectedOptions(selectedOptions);
-  const handleClearOptions = () => setSelectedOptions([]);
-  const handleSelectAll = isSelected => {
-    if (isSelected) {
-      setSelectedOptions(data);
-    } else {
-      handleClearOptions();
-    }
+  const isAllSelected = data.length > 0 && selectedOptions1.length === data.length;
+  /*Funcion onChange del combo Períodos*/
+  const handlePeriodos = (event) => {
+    setSelectedOptions1(event.target.value);
+  };
+  const SelectAll = (event)=>{
+    console.log(event)
+    const value = event.target.value;
+      console.log(data)
+      if (value === "all") {
+        setSelectedOptions1(selectedOptions1.length === data.length ? [] : data);
+        return;
+      }
+      const list = [...selectedOptions1];
+      const index = list.indexOf(value);
+      index === -1 ? list.push(value) : list.splice(index, 1);
+      setSelectedOptions1(list);
   }
-
-   if(selectedOptions.length>=1){
-    // axios.get( process.env.REACT_APP_API_ENDPOINT+'ListarCanal',{
-    //      headers: {
-    //        'Authorization': `Bearer ${token}`
-    //      },
-    //   })
-    //   .then(response=>{
-    //     setCanales(response.data.data);
-    //     console.log(response.data)
-    //     console.log(response.data.data)
-    //   }).catch(error=>{
-    //     console.log(error.response.data.message);
-    //     console.log(error.response.status);
-    //     console.log(error.response.headers); 
-    //   })
+  /*Funcion onChange del combo Canales*/
+  const handleCanales = (event) => {
+    setSelectedOptions2(event.target.value);
+  };
+  /* Funcion de Peticion Canal. Solo se hará la llamada de esta función según el controlador del select*/
+  const peticionCanales=async()=>{
+    await axios.get( process.env.REACT_APP_API_ENDPOINT+'ListarCanal',{
+      headers: {'Authorization': `Bearer ${token}`},
+    })
+    .then(response=>{
+      setCanal(response.data.data);
+      console.log(response.data)
+      console.log(response.data.data)
+    }).catch(error=>{
+      console.log(error.response.data.message);
+      console.log(error.response.status);
+      console.log(error.response.headers); 
+    })
+  }
+  /*Este contralador de select envía el estado 'true' o 'false' según corresponda a las acciones del usuario.*/
+  const [op, setOp] = React.useState(false);
   
-   }
+  const handleClosee = () => {
+    setOp(false);
+    if(selectedOptions1.length >= 1){
+      peticionCanales()
+    }
+  };
+
+  const handleOpen = () => {
+    setOp(true);
+  };
 
   return (
     <Box sx={{ display: 'flex' }}>
@@ -251,7 +264,7 @@ const seleccionarPeriodo=(parametro)=>{
               ></Chip>
             </Tooltip>
           </Stack>
-          <IconButton  style={{margin:'0',padding:'0',background:'#F6B232',borderRadius:'.3em', width:'auto', height:'50%'}} onClick={handleDrawerClose}>
+          <IconButton  style={{margin:'0',padding:'0',background:'#F6B232',borderRadius:'.3em', width:'auto'}} onClick={handleDrawerClose}>
             {theme.direction === 'ltr' ? <Menu  style={{fontSize:'35px',fill:'#fff'}}/> : <Menu style={{fontSize:'35px',fill:'#fff'}}/>}
           </IconButton>
         </DrawerHeader>
@@ -528,60 +541,92 @@ const seleccionarPeriodo=(parametro)=>{
               <article className="table-of-data">
                 <div className="cards-of-data">
                   <Box style={{border:'.1em solid rgb(87 87 86/11%)',background:'#f7f4f4', borderRadius:'1.5em', width:'15%', height:'90%', display:'flex', flexDirection:'column', alignItems:'center'}}>
-                  <InputLabel style={{width:'auto', padding:'10% 0 5%'}}>PERÍODOS</InputLabel>
+                    <InputLabel style={{width:'auto', padding:'10% 0 5%'}}>PERÍODOS</InputLabel>
                     <FormControl sx={{width: '100%'}}>
-                    
-                        <MultiSelectSemanas
-                          items={data}
-                          variant
-                          openOnFocus={true}
-                          label={tiempoReporte}
-                          placeholder="Seleccione un Reporte"
-                          selectAllLabel="Marcas Todos"
-                          selectedValues={selectedOptions}
-                          onToggleOption={handleToggleOption}
-                          onClearOptions={handleClearOptions}
-                          onSelectAll={handleSelectAll}
-                        />
-                      
+                    <InputLabel id="demo-simple-select-label">{tiempoReporte}</InputLabel>
+                      <Select 
+                        multiple
+                        value={selectedOptions1} 
+                        open={op}
+                        onChange={handlePeriodos}
+                        onClose={handleClosee}
+                        onOpen={handleOpen}
+                        labelId="demo-multiple-checkbox-label"
+                        id="demo-multiple-checkbox"
+                        input={<OutlinedInput label="Tag"/>}
+                          renderValue={(selected) => (
+                            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                              {selected.map((value) => (
+                                <Chip key={value} label={value}/>
+                              ))}
+                            </Box>
+                          )}
+                        MenuProps={MenuProps}
+                        >
+                          <MenuItem value="all">
+                            <Checkbox onChange={SelectAll} checked={isAllSelected} indeterminate={selectedOptions1.length > 0 && selectedOptions1.length < data.length}></Checkbox>
+                            <ListItemText sx={{fontSize:'1em'}} primary={'Marcar Todas'} />
+                          </MenuItem>
+                          {data.map((item) => (
+                            <MenuItem key={item.idSemana} value={item.Semana}>
+                              <Checkbox checked={selectedOptions1.indexOf(item.Semana) > -1} />
+                              <ListItemText sx={{fontSize:'1em'}} primary={item.Semana} />
+                            </MenuItem>
+                          ))}
+
+                      </Select>
                     </FormControl>
                   </Box>
                   
                   <Box style={{border:'.1em solid rgb(87 87 86/11%)',background:'#f7f4f4', borderRadius:'1.5em', width:'15%', height:'90%', display:'flex', flexDirection:'column', alignItems:'center'}}>
-                  <InputLabel style={{width:'auto', padding:'10% 0 5%'}}>CANALES</InputLabel>
-                    <FormControl sx={{width: '100%'}}>
-                      <MultiSelectCanales
-                        items={canales}
-                        variant
-                        label={tiempoReporte}
-                        placeholder="Placeholder for textbox"
-                        selectAllLabel='0'
-                        selectedValues={selectedOptions}
-                        onToggleOption={handleToggleOption}
-                        onClearOptions={handleClearOptions}
-                        onSelectAll={handleSelectAll}
-                      />
+                    <InputLabel style={{width:'auto', padding:'10% 0 5%'}}>CANALES</InputLabel>
+                    <FormControl style={{overflow:'visible'}} sx={{width: '100%'}}>
+                    <InputLabel style={{overflow:'visible'}} id="demo-simple-select-label">Canales</InputLabel>
+                      <Select 
+                        multiple
+                        value={selectedOptions2} 
+                        onChange={handleCanales}
+                        labelId="demo-multiple-checkbox-label"
+                        id="demo-multiple-checkbox"
+                        input={<OutlinedInput label="Tag"/>}
+                          renderValue={(selected) => (
+                            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                              {selected.map((value) => (
+                                <Chip key={value} label={value}/>
+                              ))}
+                            </Box>
+                          )}
+                        MenuProps={MenuProps}
+                        ><MenuItem>
+                          <Checkbox value="MI CADENA"></Checkbox>
+                          <ListItemText sx={{fontSize:'1em'}} primary={'MI CADENA'} />
+                        </MenuItem>
+                          {canal.map((item) => (
+                            <MenuItem key={item.id_canal} value={item.canal}>
+                              <Checkbox checked={selectedOptions2.indexOf(item.canal) > -1} />
+                              <ListItemText sx={{fontSize:'1em'}} primary={item.canal} />
+                            </MenuItem>
+                          ))}
+
+                      </Select>
                     </FormControl> 
                   </Box>
 
                   <Box style={{border:'.1em solid rgb(87 87 86/11%)',background:'#f7f4f4', borderRadius:'1.5em', width:'15%', height:'90%', display:'flex', flexDirection:'column', alignItems:'center'}}>
                     <FormControl sx={{ m: 1, width: 300 }}>
                       <InputLabel style={{width:'auto'}}>REGIONES</InputLabel>
-                      
                     </FormControl>  
                   </Box>
 
                   <Box style={{border:'.1em solid rgb(87 87 86/11%)',background:'#f7f4f4', borderRadius:'1.5em', width:'15%', height:'90%', display:'flex', flexDirection:'column', alignItems:'center'}}>
                     <FormControl sx={{ m: 1, width: 300 }}>
                       <InputLabel style={{width:'auto'}}>PRODUCTOS</InputLabel>
-                      
                     </FormControl>
                   </Box>
 
                   <Box style={{border:'.1em solid rgb(87 87 86/11%)',background:'#f7f4f4', borderRadius:'1.5em', width:'15%', height:'90%', display:'flex', flexDirection:'column', alignItems:'center'}}>
                     <FormControl sx={{ m: 1, width: 300 }}>
                       <InputLabel style={{width:'auto'}}>INDICADORES</InputLabel>
-                      
                     </FormControl> 
                   </Box>
 

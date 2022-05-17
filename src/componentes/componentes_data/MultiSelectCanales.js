@@ -25,7 +25,6 @@ const MultiSelectCanales = ({
   };
 
   const handleChange = (event, selectedOptions, reason) => {
-    console.log(reason)
     if (reason === "selectOption" || reason === "removeOption") {
       if (selectedOptions.find(option => option.canal === "Seleccionar Todas")) {
         handleToggleSelectAll();
@@ -67,13 +66,13 @@ const MultiSelectCanales = ({
       size="small"
       options={items}
       disableCloseOnSelect
+      value={selectedValues}
       getOptionLabel={getOptionLabel}
       renderOption={optionRendererCanal}
       renderInput={inputRenderer}
       onChange={handleChange}
       filterOptions={(options, params) => {
         const filtered = filter(options, params);
-        console.log(filtered)
         return [{ id_canal: selectAllLabel, canal: "MI CADENA" }, ...filtered];
       }}
     />

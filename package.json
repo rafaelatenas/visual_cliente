@@ -13,6 +13,7 @@
     "@testing-library/react": "^12.1.4",
     "@testing-library/user-event": "^13.5.0",
     "axios": "^0.26.1",
+    "bootstrap-select": "^1.13.18",
     "datatables.net": "^1.11.5",
     "datatables.net-dt": "^1.11.5",
     "jquery": "^3.6.0",

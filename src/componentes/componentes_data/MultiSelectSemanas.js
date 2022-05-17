@@ -4,29 +4,25 @@ import { Autocomplete, createFilterOptions } from "@mui/material";
 import CheckBox from "@material-ui/icons/CheckBox";
 import CheckBoxOutlineBlank from "@material-ui/icons/CheckBoxOutlineBlank";
 import { Checkbox } from "@material-ui/core";
-import axios from "axios";
- 
+
 const MultiSelectSemanas = ({
   items,
   selectedValues,
   label,
   placeholder,
   selectAllLabel,
-  noOptionsText,
   limitTags,
   onToggleOption,
   onClearOptions,
-  onSelectAll
-  
+  onSelectAll,
+  tiempoReporte
 }) => {
   const allSelected = items.length === selectedValues.length;
-  
+  console.log(tiempoReporte)
   const handleToggleSelectAll = () => {
     onSelectAll && onSelectAll(!allSelected);
   };
-
   const handleChange = (event, selectedOptions, reason) => {
-    console.log(reason)
     if (reason === "selectOption" || reason === "removeOption") {
       if (selectedOptions.find(option => option.Semana === "Seleccionar Todas")) {
         handleToggleSelectAll();
@@ -105,22 +101,14 @@ const MultiSelectSemanas = ({
   const filter = createFilterOptions();
     const icon = <CheckBoxOutlineBlank fontSize="small" />;
     const checked = <CheckBox fontSize="small" />;
-
+   
 
     var a = selectedValues.length;
-    console.log(a)
     let relativo;
-    switch (a) {
-      
-      case a >=3:
-        console.log(a)
-        relativo = `Se han seleccionado ${a} opciones`;
-        break;
-    
-      default:
-        break;
+    if(a>=3){
+      console.log(`Ha seleccionado ${a} opciones`)
+      relativo =`Ha seleccionado ${a} opciones`
     }
-    
   return(
     <Autocomplete
       multiple
@@ -135,8 +123,7 @@ const MultiSelectSemanas = ({
       getOptionSelected={getOptionSelected}
       filterOptions={(options, params) => {
         const filtered = filter(options, params);
-        console.log(filtered)
-        return [{ idSemana: selectAllLabel, Semana: "Seleccionar Todas" }, ...filtered];
+        return [{ idSemana: selectAllLabel, Semana: "Marcar Todas" }, ...filtered];
       }}
     />
   );
