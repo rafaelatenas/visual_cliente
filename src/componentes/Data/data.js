@@ -125,6 +125,10 @@ const [selectedOptions1, setSelectedOptions1] = useState([]);
 /*Canales*/
 const [canal, setCanal]=useState([]);
 const [selectedOptions2, setSelectedOptions2] = useState([]);
+/*Regiones*/
+const [region, setRegion]=useState([]);
+const [selectedOptions3, setSelectedOptions3] = useState([]);
+
 
 const openo = Boolean(anchorEl);
 const id = openo ? 'simple-popover' : undefined;
@@ -161,7 +165,7 @@ const seleccionarPeriodo=(parametro)=>{
       console.log(error.response.headers); 
     })
   }
-  const Option = data.map((item) => {
+  const OptionPeriodo = data.map((item) => {
     if (item.Semana != null) {
     return(
       <MenuItem key={item.idSemana} value={item.Semana}>
@@ -205,19 +209,77 @@ const seleccionarPeriodo=(parametro)=>{
       setSelectedOptions1(value);
     }
   }
-  /*Funcion onChange del combo Canales*/
-  const handleCanales = (event) => {
+
+  /*Funciones de Listar CANALES*/
+    /*Funcion onChange del combo Canales*/
+    const handleCanales = (event) => {
+      const value =event.target.value;
+      console.log(value)
+      setSelectedOptions2(event.target.value);
+    };  
+    /* Funcion de Peticion Canal. Solo se hará la llamada de esta función según el controlador del select*/
+    const peticionCanales=async()=>{
+      await axios.get( process.env.REACT_APP_API_ENDPOINT+'ListarCanal',{
+        headers: {'Authorization': `Bearer ${token}`},
+      })
+      .then(response=>{
+        setCanal(response.data.data);
+        console.log(response.data)
+        console.log(response.data.data)
+      }).catch(error=>{
+        console.log(error.response.data.message);
+        console.log(error.response.status);
+        console.log(error.response.headers); 
+      })
+    }
+  
+    const OptionCanales = canal.map((item) => (
+      <MenuItem key={item.id_canal} value={item.canal}>
+        <Checkbox checked={selectedOptions2.indexOf(item.canal) > -1} />
+        <ListItemText sx={{fontSize:'1em'}} primary={item.canal} />
+      </MenuItem>
+    ))
+  
+  /*Funcion onChange del combo Rgiones*/
+  const handleRegiones = (event) => {
     const value =event.target.value;
     console.log(value)
-    setSelectedOptions2(event.target.value);
+    setSelectedOptions3(event.target.value);
   };
-  /* Funcion de Peticion Canal. Solo se hará la llamada de esta función según el controlador del select*/
-  const peticionCanales=async()=>{
-    await axios.get( process.env.REACT_APP_API_ENDPOINT+'ListarCanal',{
+  const OptionRegiones = region.map((item) => (
+    <FormControl variant="standard" style={{overflow:'visible'}} sx={{width: '100%'}}>
+      <MenuItem key={item.id} value={item.nombre}>
+      <Checkbox checked={selectedOptions3.indexOf(item.nombre) > -1} />
+      <InputLabel style={{overflow:'visible'}} id="demo-simple-select-label">{item.nombre}</InputLabel>
+        <Select 
+          multiple
+          value={selectedOptions3} 
+          onChange={handleRegiones}
+          labelId="demo-multiple-checkbox-label"
+          id="demo-multiple-checkbox"
+          input={<OutlinedInput label="Tag"/>}
+            renderValue={(selected) => (console.log(selected.length),
+              <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                {selected.map((value) => (
+                  <Chip style={{fontSize:'.7em'}} key={value} label={value}/>
+                ))}
+              </Box>
+            )}
+          MenuProps={MenuProps}
+          >
+        </Select>
+    </MenuItem>
+    </FormControl> 
+
+    
+  ))
+  /* Funcion de Peticion Regiones. Solo se hará la llamada de esta función según el controlador del select*/
+  const peticionRegiones=async()=>{
+    await axios.get( process.env.REACT_APP_API_ENDPOINT+'ListarRegion',{
       headers: {'Authorization': `Bearer ${token}`},
     })
     .then(response=>{
-      setCanal(response.data.data);
+      setRegion(response.data.data);
       console.log(response.data)
       console.log(response.data.data)
     }).catch(error=>{
@@ -228,12 +290,23 @@ const seleccionarPeriodo=(parametro)=>{
   }
   /*Este contralador de select envía el estado 'true' o 'false' según corresponda a las acciones del usuario.*/
   const [op, setOp] = React.useState(false);
-  
+  const [ope, setOpe] = React.useState(false);
+
+  const CloseCanal =()=>{
+    setOpe(false);
+    if(selectedOptions2.length >= 1){
+      peticionRegiones()
+    }
+  }
+  const OpenCanal = () => {
+    setOpe(true);
+  };
   const handleClosee = () => {
     setOp(false);
     if(selectedOptions1.length >= 1){
       peticionCanales()
     }
+    
   };
 
   const handleOpen = () => {
@@ -251,7 +324,7 @@ const checkedIcon = <CheckBox fontSize="small" />
       <CssBaseline />
       <Toolbar style={{marginLeft:'1%',width:'15%',height:'10%',padding:'0',justifyContent:'space-around'}}>
         <IconButton
-            style={{margin:'0',padding:'0',background:'#F6B232', borderRadius:'.3em',width:'auto',height:'50%'}}
+            style={{margin:'0',padding:'0',background:'#F6B232', borderRadius:'.3em',width:'auto'}}
             color="inherit"
             aria-label="open drawer"
             onClick={handleDrawerOpen}
@@ -494,10 +567,7 @@ const checkedIcon = <CheckBox fontSize="small" />
                 open={openo}
                 anchorEl={anchorEl}
                 onClose={handleClose}
-                anchorOrigin={{
-                  vertical: 'bottom',
-                  horizontal: 'center',
-                }}
+                anchorOrigin={{vertical: 'bottom',horizontal: 'center',}}
               >
                 <ListItem button>
                   <Link href='./home' style={{textDecoration:'none'}}>
@@ -577,15 +647,15 @@ const checkedIcon = <CheckBox fontSize="small" />
                         id="demo-multiple-checkbox"
                         input={<OutlinedInput label="Tag"/>}
                           renderValue={(selected) =>{ 
-                            if(selected.length>=3){
-                              return(<ListItemText sx={{fontSize:'1em'}} primary={`${selected.length} Opciones Seleccionadas`}/>)
+                            if(selected.length>=3 && selected.length< data.length){
+                              return(<ListItemText sx={{fontSize:'1em'}} primary={`${selected.length} Opciones Marcadas`}/>)
                             }else if(selected.length === data.length){
-                              return(<ListItemText sx={{fontSize:'1em'}} primary={`Todas las Opciones Seleccionadas (${selected.length})`}/>)
+                              return(<ListItemText sx={{fontSize:'1em'}} primary={`Todas las Opciones Marcadas (${selected.length})`}/>)
                             }else if(selected.length<3){
                               return(
                               <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
                                 {selected.map((value) => (
-                                  <Chip style={{fontZise:'.7em'}} key={value} label={value}/>
+                                  <Chip style={{fontSize:'.7em'}} key={value} label={value}/>
                                 ))}
                               </Box>
                               )
@@ -598,7 +668,7 @@ const checkedIcon = <CheckBox fontSize="small" />
                             <Checkbox  checked={isAllSelected}></Checkbox>
                             <ListItemText sx={{fontSize:'1em'}} primary={'Marcar Todas'} />
                           </MenuItem>
-                          {Option}
+                          {OptionPeriodo}
 
                       </Select>
                     </FormControl>
@@ -610,16 +680,18 @@ const checkedIcon = <CheckBox fontSize="small" />
                     <InputLabel style={{overflow:'visible'}} id="demo-simple-select-label">Canales</InputLabel>
                       <Select 
                         multiple
+                        open={ope}
+                        onClose={CloseCanal}
+                        onOpen={OpenCanal}
                         value={selectedOptions2} 
                         onChange={handleCanales}
                         labelId="demo-multiple-checkbox-label"
                         id="demo-multiple-checkbox"
                         input={<OutlinedInput label="Tag"/>}
-                          renderValue={(selected) => (console.log(selected.length),
+                          renderValue={(selected) => (
                             <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-                              
                               {selected.map((value) => (
-                                <Chip key={value} label={value}/>
+                                <Chip style={{fontSize:'.7em'}} key={value} label={value}/>
                               ))}
                             </Box>
                           )}
@@ -628,21 +700,34 @@ const checkedIcon = <CheckBox fontSize="small" />
                           <Checkbox value="MI CADENA"></Checkbox>
                           <ListItemText sx={{fontSize:'1em'}} primary={'MI CADENA'} />
                         </MenuItem>
-                          {canal.map((item) => (
-                            <MenuItem key={item.id_canal} value={item.canal}>
-                              <Checkbox checked={selectedOptions2.indexOf(item.canal) > -1} />
-                              <ListItemText sx={{fontSize:'1em'}} primary={item.canal} />
-                            </MenuItem>
-                          ))}
+                          {OptionCanales}
 
                       </Select>
                     </FormControl>
                   </Box>
 
                   <Box style={{border:'.1em solid rgb(87 87 86/11%)',background:'#f7f4f4', borderRadius:'1.5em', width:'15%', height:'90%', display:'flex', flexDirection:'column', alignItems:'center'}}>
-                    <FormControl sx={{ m: 1, width: 300 }}>
-                      <InputLabel style={{width:'auto'}}>REGIONES</InputLabel>
-                      
+                  <InputLabel style={{width:'auto', padding:'10% 0 5%'}}>REGIONES</InputLabel>
+                    <FormControl style={{overflow:'visible'}} sx={{width: '100%'}}>
+                    <InputLabel style={{overflow:'visible'}} id="demo-simple-select-label">Regiones</InputLabel>
+                      <Select 
+                        multiple
+                        value={selectedOptions3} 
+                        onChange={handleRegiones}
+                        labelId="demo-multiple-checkbox-label"
+                        id="demo-multiple-checkbox"
+                        input={<OutlinedInput label="Tag"/>}
+                          renderValue={(selected) => (console.log(selected.length),
+                            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                              {selected.map((value) => (
+                                <Chip style={{fontSize:'.7em'}} key={value} label={value}/>
+                              ))}
+                            </Box>
+                          )}
+                        MenuProps={MenuProps}
+                        >
+                          {OptionRegiones}
+                      </Select>
                     </FormControl>  
                   </Box>
 
