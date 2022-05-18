@@ -161,26 +161,54 @@ const seleccionarPeriodo=(parametro)=>{
       console.log(error.response.headers); 
     })
   }
+  const Option = data.map((item) => {
+    if (item.Semana != null) {
+    return(
+      <MenuItem key={item.idSemana} value={item.Semana}>
+        <Checkbox checked={selectedOptions1.indexOf(item.Semana) > -1} />
+        <ListItemText sx={{fontSize:'1em'}} primary={item.Semana} />
+      </MenuItem> 
+    )
+    }else if (item.Periodo != null) {
+      return(
+        <MenuItem key={item.idPeriodo} value={item.Periodo}>
+          <Checkbox checked={selectedOptions1.indexOf(item.Periodo) > -1} />
+          <ListItemText sx={{fontSize:'1em'}} primary={item.Periodo} />
+        </MenuItem> 
+      )
+    }
+    // else if (item.Periodo != null) {
+    //   return(
+    //     <MenuItem key={item.idPeriodo} value={item.Periodo}>
+    //       <Checkbox checked={selectedOptions1.indexOf(item.Periodo) > -1} />
+    //       <ListItemText sx={{fontSize:'1em'}} primary={item.Periodo} />
+    //     </MenuItem> 
+    //   )
+    // }else if (item.Periodo != null) {
+    //   return(
+    //     <MenuItem key={item.idPeriodo} value={item.Periodo}>
+    //       <Checkbox checked={selectedOptions1.indexOf(item.Periodo) > -1} />
+    //       <ListItemText sx={{fontSize:'1em'}} primary={item.Periodo} />
+    //     </MenuItem> 
+    //   )
+    // }
+  })
+  
   const isAllSelected = data.length > 0 && selectedOptions1.length === data.length;
   /*Funcion onChange del combo Períodos*/
   const handlePeriodos = (event) => {
-    setSelectedOptions1(event.target.value);
-  };
-  const SelectAll = (event)=>{
-    console.log(event)
-    const value = event.target.value;
-      console.log(data)
-      if (value === "all") {
-        setSelectedOptions1(selectedOptions1.length === data.length ? [] : data);
-        return;
-      }
-      const list = [...selectedOptions1];
-      const index = list.indexOf(value);
-      index === -1 ? list.push(value) : list.splice(index, 1);
-      setSelectedOptions1(list);
+    const value = event.target.value
+    console.log(value[0])
+    if (value[0] === "all") {
+      setSelectedOptions1(data)
+    }else{
+      setSelectedOptions1(value);
+    }
   }
   /*Funcion onChange del combo Canales*/
   const handleCanales = (event) => {
+    const value =event.target.value;
+    console.log(value)
     setSelectedOptions2(event.target.value);
   };
   /* Funcion de Peticion Canal. Solo se hará la llamada de esta función según el controlador del select*/
@@ -211,6 +239,12 @@ const seleccionarPeriodo=(parametro)=>{
   const handleOpen = () => {
     setOp(true);
   };
+/*prueba */
+
+const icon = <CheckBoxOutlineBlank fontSize="small" />;
+const checkedIcon = <CheckBox fontSize="small" />
+  const [selectedFilm, setSelectedFilm] = useState([]);
+
 
   return (
     <Box sx={{ display: 'flex' }}>
@@ -279,15 +313,7 @@ const seleccionarPeriodo=(parametro)=>{
           </AccordionSummary>
           <AccordionDetails>
             <Paper
-              sx={{
-                display: 'flex',
-                justifyContent: 'center',
-                flexWrap: 'wrap',
-                listStyle: 'none',
-                p:' 0 0 5%',
-                m: 0,
-                overflowY:'scroll'
-              }}
+              sx={{display: 'flex', justifyContent: 'center', flexWrap: 'wrap', listStyle: 'none', p:' 0 0 5%', m: 0, overflowY:'scroll'}}
               component="ul"
             >
               {chipData.map((data) => {
@@ -347,7 +373,6 @@ const seleccionarPeriodo=(parametro)=>{
                 </ListItem>
               </Popover>
             </div>
-          
           </ListItem>
 
           <ListItem style={{padding:'5% 0', justifyContent:'center'}}>
@@ -385,7 +410,6 @@ const seleccionarPeriodo=(parametro)=>{
                 </ListItem>
               </Popover>
             </div>
-          
           </ListItem>
 
           <ListItem style={{padding:'5% 0', justifyContent:'center'}}>
@@ -423,7 +447,6 @@ const seleccionarPeriodo=(parametro)=>{
                 </ListItem>
               </Popover>
             </div>
-          
           </ListItem>
 
           <ListItem style={{padding:'5% 0', justifyContent:'center'}}>
@@ -461,7 +484,6 @@ const seleccionarPeriodo=(parametro)=>{
                 </ListItem>
               </Popover>
             </div>
-          
           </ListItem>
 
           <ListItem style={{padding:'5% 0', justifyContent:'center'}}>
@@ -554,25 +576,29 @@ const seleccionarPeriodo=(parametro)=>{
                         labelId="demo-multiple-checkbox-label"
                         id="demo-multiple-checkbox"
                         input={<OutlinedInput label="Tag"/>}
-                          renderValue={(selected) => (
-                            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-                              {selected.map((value) => (
-                                <Chip key={value} label={value}/>
-                              ))}
-                            </Box>
-                          )}
+                          renderValue={(selected) =>{ 
+                            if(selected.length>=3){
+                              return(<ListItemText sx={{fontSize:'1em'}} primary={`${selected.length} Opciones Seleccionadas`}/>)
+                            }else if(selected.length === data.length){
+                              return(<ListItemText sx={{fontSize:'1em'}} primary={`Todas las Opciones Seleccionadas (${selected.length})`}/>)
+                            }else if(selected.length<3){
+                              return(
+                              <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                                {selected.map((value) => (
+                                  <Chip style={{fontZise:'.7em'}} key={value} label={value}/>
+                                ))}
+                              </Box>
+                              )
+                            }
+                          } 
+                          }
                         MenuProps={MenuProps}
                         >
                           <MenuItem value="all">
-                            <Checkbox onChange={SelectAll} checked={isAllSelected} indeterminate={selectedOptions1.length > 0 && selectedOptions1.length < data.length}></Checkbox>
+                            <Checkbox  checked={isAllSelected}></Checkbox>
                             <ListItemText sx={{fontSize:'1em'}} primary={'Marcar Todas'} />
                           </MenuItem>
-                          {data.map((item) => (
-                            <MenuItem key={item.idSemana} value={item.Semana}>
-                              <Checkbox checked={selectedOptions1.indexOf(item.Semana) > -1} />
-                              <ListItemText sx={{fontSize:'1em'}} primary={item.Semana} />
-                            </MenuItem>
-                          ))}
+                          {Option}
 
                       </Select>
                     </FormControl>
@@ -589,8 +615,9 @@ const seleccionarPeriodo=(parametro)=>{
                         labelId="demo-multiple-checkbox-label"
                         id="demo-multiple-checkbox"
                         input={<OutlinedInput label="Tag"/>}
-                          renderValue={(selected) => (
+                          renderValue={(selected) => (console.log(selected.length),
                             <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                              
                               {selected.map((value) => (
                                 <Chip key={value} label={value}/>
                               ))}
@@ -609,12 +636,13 @@ const seleccionarPeriodo=(parametro)=>{
                           ))}
 
                       </Select>
-                    </FormControl> 
+                    </FormControl>
                   </Box>
 
                   <Box style={{border:'.1em solid rgb(87 87 86/11%)',background:'#f7f4f4', borderRadius:'1.5em', width:'15%', height:'90%', display:'flex', flexDirection:'column', alignItems:'center'}}>
                     <FormControl sx={{ m: 1, width: 300 }}>
                       <InputLabel style={{width:'auto'}}>REGIONES</InputLabel>
+                      
                     </FormControl>  
                   </Box>
 
