@@ -1,7 +1,7 @@
 import * as React from 'react';
 import './data.css'
 import { styled, useTheme } from '@mui/material/styles';
-import { Box,Drawer,CssBaseline,Toolbar, List,Typography,Divider,IconButton, ListItem, ListItemText, ClickAwayListener } from '@material-ui/core';
+import { Box,Drawer,CssBaseline,Toolbar, List,Typography,Divider,IconButton, ListItem, ListItemText, ClickAwayListener, Input } from '@material-ui/core';
 import { Menu, TagFaces,ExpandMore, Inbox,Mail, ArrowBack, Search, SettingsRemoteOutlined, SelectAll } from '@material-ui/icons';
 import { Accordion, AccordionDetails, AccordionSummary, Autocomplete, Avatar, Chip, FormControlLabel, InputAdornment, ListSubheader, MenuItem, Stack, Tooltip } from '@mui/material';
 import { Paper, Button} from '@mui/material';
@@ -78,46 +78,55 @@ const DrawerHeader = styled('div')(({ theme }) => ({
 
 export default function PersistentDrawerLeft() {
   const theme = useTheme();
+  /*Control del Drawer*/
   const [open, setOpen] = React.useState(false);
-
   const handleDrawerOpen = () => {
     setOpen(true);
   };
-
   const handleDrawerClose = () => {
     setOpen(false);
   };
   /*DATA Provisional*/
-
-  const [chipData, setChipData] = React.useState([
-    { key: 0, label: 'Angular' },
-    { key: 1, label: 'jQuery' },
-    { key: 2, label: 'Polymer' },
-    { key: 3, label: 'React' },
-    { key: 4, label: 'Vue.js' },
-  ]);
+  const [chipData, setChipData] = React.useState([]);
+  console.log(chipData)
+  /* Elementos de Selección PERÍODOS*/
+  const [periodos, setPeriodos] = React.useState({})
+  console.log(periodos)
 
   const handleDelete = (chipToDelete) => () => {
     setChipData((chips) => chips.filter((chip) => chip.key !== chipToDelete.key));
   };
   
+  const ControlSelectedPeriodos=(selected)=>{
+    for (let w = 0; w < selected.length; w++) {
+      const elementSelected = selected[w];
+      if(Array.from(elementSelected).length > 30 && Array.from(elementSelected).length < 40){
+        setPeriodos(selected)
+        console.log(Array.from(elementSelected).length)
+      }else if(Array.from(elementSelected).length > 5 && Array.from(elementSelected).length < 15){
+        setPeriodos(elementSelected)
+        console.log(Array.from(elementSelected).length)
+      }
+    }
+  }
+  /* Elementos de Menú*/
+  const [anchorEl, setAnchorEl] = React.useState(null);
 
-/* Elementos de Menú*/
-const [anchorEl, setAnchorEl] = React.useState(null);
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
 
-const handleClick = (event) => {
-  setAnchorEl(event.currentTarget);
-};
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
 
-const handleClose = () => {
-  setAnchorEl(null);
-};
 
-/* Elementos de Selección */
-const [periodos, setPeriodos] = React.useState([])
-
+  
 /* Periodos y DataSemanal*/
 const [tiempoReporte, settiempoReporte] = React.useState([]);
+const seleccionarPeriodo=(parametro)=>{
+    settiempoReporte(parametro)
+}
 const [data, setData]=useState([]);
 const [selectedOptions1, setSelectedOptions1] = useState([]);
 
@@ -128,15 +137,15 @@ const [selectedOptions2, setSelectedOptions2] = useState([]);
 /*Regiones*/
 const [region, setRegion]=useState([]);
 const [selectedOptions3, setSelectedOptions3] = useState([]);
-
+  /*SubRegionres*/
+  const [selectedSubregiones, setSelectedSubregiones] = useState([]);
 
 const openo = Boolean(anchorEl);
 const id = openo ? 'simple-popover' : undefined;
-const seleccionarPeriodo=(parametro)=>{
-  settiempoReporte(parametro)
-}
+
+
   var token=localStorage.getItem('token');
-  /*Funciones de Listar PERÍODOS*/
+  /*Funciones de Listar PERÍODOS 😄*/
   const peticionSemanas=async()=>{
     await axios.get( process.env.REACT_APP_API_ENDPOINT+'ListarSemana',{
       headers: {'Authorization': `Bearer ${token}`},
@@ -197,12 +206,25 @@ const seleccionarPeriodo=(parametro)=>{
     //   )
     // }
   })
+    /*Control de Select PERÍODOS.*/
+  const [op, setOp] = React.useState(false);
   
+  const handleClosee = () => {
+    setOp(false);
+    if(selectedOptions1.length >= 1){
+      peticionCanales()
+    }
+  };
+  const handleOpen = () => {
+    setOp(true);
+  };
+
+
   const isAllSelected = data.length > 0 && selectedOptions1.length === data.length;
-  /*Funcion onChange del combo Períodos*/
+  /*Función onChange del combo Períodos*/
   const handlePeriodos = (event) => {
     const value = event.target.value
-    console.log(value[0])
+    console.log(value)
     if (value[0] === "all") {
       setSelectedOptions1(data)
     }else{
@@ -210,7 +232,7 @@ const seleccionarPeriodo=(parametro)=>{
     }
   }
 
-  /*Funciones de Listar CANALES*/
+  /*Funciones de Listar CANALES 😄*/
     /*Funcion onChange del combo Canales*/
     const handleCanales = (event) => {
       const value =event.target.value;
@@ -234,84 +256,89 @@ const seleccionarPeriodo=(parametro)=>{
     }
   
     const OptionCanales = canal.map((item) => (
-      <MenuItem key={item.id_canal} value={item.canal}>
-        <Checkbox checked={selectedOptions2.indexOf(item.canal) > -1} />
-        <ListItemText sx={{fontSize:'1em'}} primary={item.canal} />
+      <MenuItem key={item.id} value={item.nombre}>
+        <Checkbox checked={selectedOptions2.indexOf(item.nombre) > -1} />
+        <ListItemText sx={{fontSize:'1em'}} primary={item.nombre} />
       </MenuItem>
     ))
-  
-  /*Funcion onChange del combo Rgiones*/
-  const handleRegiones = (event) => {
-    const value =event.target.value;
-    console.log(value)
-    setSelectedOptions3(event.target.value);
-  };
-  const OptionRegiones = region.map((item) => (
-    <FormControl variant="standard" style={{overflow:'visible'}} sx={{width: '100%'}}>
-      <MenuItem key={item.id} value={item.nombre}>
-      <Checkbox checked={selectedOptions3.indexOf(item.nombre) > -1} />
-      <InputLabel style={{overflow:'visible'}} id="demo-simple-select-label">{item.nombre}</InputLabel>
-        <Select 
-          multiple
-          value={selectedOptions3} 
-          onChange={handleRegiones}
-          labelId="demo-multiple-checkbox-label"
-          id="demo-multiple-checkbox"
-          input={<OutlinedInput label="Tag"/>}
-            renderValue={(selected) => (console.log(selected.length),
+    
+    /*Control de Select CANALES.*/
+    const [ope, setOpe] = React.useState(false);
+    const CloseCanal =()=>{
+      setOpe(false);
+      if(selectedOptions2.length >= 1){
+        peticionRegiones()
+      }
+    }
+    const OpenCanal = () => {
+      setOpe(true);
+    };
+
+  /*Funciones de Listar REGIONES 😄*/
+
+    /*Funcion onChange del combo Regiones */
+    const handleRegiones = (event) => {
+      const value =event.target.value;
+      console.log(value)
+      setSelectedOptions3(event.target.value);
+    };
+      /*Funcion onChange del combo SubRegiones */
+      const handleSubRegiones = (event) => {
+        const value =event.target.value;
+        console.log(value)
+        setSelectedSubregiones(event.target.value);
+      };
+    const OptionRegiones = region.map((item) => (
+      console.log(selectedOptions3.indexOf(item.nombre)),
+        <MenuItem key={item.id} value={item.nombre}>
+        <Checkbox checked={selectedOptions3.indexOf(item.nombre) > -1} />
+        <ListItemText style={{overflow:'visible'}} id="demo-simple-select-label">{item.nombre}</ListItemText>
+          <Select 
+            multiple
+            value={selectedSubregiones} 
+            onChange={handleSubRegiones}
+            labelId="demo-multiple-checkbox-label"
+            id="demo-multiple-checkbox"
+            input={<Input style={{width:'100%',position: 'absolute'}} label="Tag"/>}
+            MenuProps={MenuProps}
+            renderValue={(selected) => (
               <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-                {selected.map((value) => (
+                {/* {selected.map((value) => (
                   <Chip style={{fontSize:'.7em'}} key={value} label={value}/>
-                ))}
+                ))} */}
               </Box>
             )}
-          MenuProps={MenuProps}
-          >
-        </Select>
-    </MenuItem>
-    </FormControl> 
-
-    
-  ))
-  /* Funcion de Peticion Regiones. Solo se hará la llamada de esta función según el controlador del select*/
-  const peticionRegiones=async()=>{
-    await axios.get( process.env.REACT_APP_API_ENDPOINT+'ListarRegion',{
-      headers: {'Authorization': `Bearer ${token}`},
-    })
-    .then(response=>{
-      setRegion(response.data.data);
-      console.log(response.data)
-      console.log(response.data.data)
-    }).catch(error=>{
-      console.log(error.response.data.message);
-      console.log(error.response.status);
-      console.log(error.response.headers); 
-    })
-  }
-  /*Este contralador de select envía el estado 'true' o 'false' según corresponda a las acciones del usuario.*/
-  const [op, setOp] = React.useState(false);
-  const [ope, setOpe] = React.useState(false);
-
-  const CloseCanal =()=>{
-    setOpe(false);
-    if(selectedOptions2.length >= 1){
-      peticionRegiones()
+            >{region.map((subregion)=>(
+              <MenuItem key={subregion.id} value={subregion.nombre}>
+                <Checkbox checked={selectedSubregiones.indexOf(subregion.nombre) > -1} />
+                <ListItemText sx={{fontSize:'1em'}} primary={subregion.nombre} />
+              </MenuItem>
+            ))
+            }
+          </Select>
+      </MenuItem>
+    ))
+    /* Funcion de Peticion Regiones. Solo se hará la llamada de esta función según el controlador del select*/
+    const peticionRegiones=async()=>{
+      await axios.get( process.env.REACT_APP_API_ENDPOINT+'ListarRegion',{
+        headers: {'Authorization': `Bearer ${token}`},
+      })
+      .then(response=>{
+        setRegion(response.data.data);
+        console.log(response.data)
+        console.log(response.data.data)
+      }).catch(error=>{
+        console.log(error.response.data.message);
+        console.log(error.response.status);
+        console.log(error.response.headers); 
+      })
     }
-  }
-  const OpenCanal = () => {
-    setOpe(true);
-  };
-  const handleClosee = () => {
-    setOp(false);
-    if(selectedOptions1.length >= 1){
-      peticionCanales()
-    }
-    
-  };
 
-  const handleOpen = () => {
-    setOp(true);
-  };
+    /*Mis Selecciones*/
+    const GuardarSelecciones =()=>{
+      setChipData(periodos)
+    }
+
 /*prueba */
 
 const icon = <CheckBoxOutlineBlank fontSize="small" />;
@@ -389,21 +416,22 @@ const checkedIcon = <CheckBox fontSize="small" />
               sx={{display: 'flex', justifyContent: 'center', flexWrap: 'wrap', listStyle: 'none', p:' 0 0 5%', m: 0, overflowY:'scroll'}}
               component="ul"
             >
-              {chipData.map((data) => {
-                let icon;
-                if (data.label === 'React') {
-                  icon = <TagFaces/>;
-                }
-                return (
-                  <ListItem style={{width:'auto',paddingLeft:'1%',paddingRight:'1%'}} key={data.key}>
-                    <Chip style={{background:'#F6B232', color:'#fff'}}
-                      icon={icon}
-                      label={data.label}
-                      onDelete={data.label === 'React' ? undefined : handleDelete(data)}
-                    />
-                  </ListItem>
-                );
-              })}
+              {/* {chipData.map((data) => {
+                console.log(data)
+                // let icon;
+                // if (data.nombre === 'React') {
+                //   icon = <TagFaces/>;
+                // }
+                // return (
+                //   <ListItem style={{width:'auto',paddingLeft:'1%',paddingRight:'1%'}} key={data.key}>
+                //     <Chip style={{background:'#F6B232', color:'#fff'}}
+                //       icon={icon}
+                //       label={data.label}
+                //       onDelete={data.label === 'React' ? undefined : handleDelete(data)}
+                //     />
+                //   </ListItem>
+                // );
+              })}  */}
             </Paper>
           </AccordionDetails>
         </Accordion>
@@ -647,7 +675,9 @@ const checkedIcon = <CheckBox fontSize="small" />
                         id="demo-multiple-checkbox"
                         input={<OutlinedInput label="Tag"/>}
                           renderValue={(selected) =>{ 
-                            if(selected.length>=3 && selected.length< data.length){
+                            ControlSelectedPeriodos(selected);
+
+                            if(selected.length>=3 && selected.length<data.length){
                               return(<ListItemText sx={{fontSize:'1em'}} primary={`${selected.length} Opciones Marcadas`}/>)
                             }else if(selected.length === data.length){
                               return(<ListItemText sx={{fontSize:'1em'}} primary={`Todas las Opciones Marcadas (${selected.length})`}/>)
@@ -660,8 +690,7 @@ const checkedIcon = <CheckBox fontSize="small" />
                               </Box>
                               )
                             }
-                          } 
-                          }
+                          }}
                         MenuProps={MenuProps}
                         >
                           <MenuItem value="all">
@@ -669,7 +698,6 @@ const checkedIcon = <CheckBox fontSize="small" />
                             <ListItemText sx={{fontSize:'1em'}} primary={'Marcar Todas'} />
                           </MenuItem>
                           {OptionPeriodo}
-
                       </Select>
                     </FormControl>
                   </Box>
@@ -701,7 +729,6 @@ const checkedIcon = <CheckBox fontSize="small" />
                           <ListItemText sx={{fontSize:'1em'}} primary={'MI CADENA'} />
                         </MenuItem>
                           {OptionCanales}
-
                       </Select>
                     </FormControl>
                   </Box>
@@ -744,9 +771,8 @@ const checkedIcon = <CheckBox fontSize="small" />
                   </Box>
 
                 </div>
-                <div>{periodos}</div>
               </article>
-              <button id="process">Procesar</button>
+              <button onClick={GuardarSelecciones} id="process">Procesar</button>
           </section>
         </div>
       </Main>
