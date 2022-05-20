@@ -87,14 +87,14 @@ const styles= useStyles();
     didOpen: (toast) => {
       toast.addEventListener('mouseenter', Swal.stopTimer)
       toast.addEventListener('mouseleave', Swal.resumeTimer)
-     }
+    }
   });
   const peticionGet=async()=>{
 
     await axios.get( process.env.REACT_APP_API_ENDPOINT+'ListarUsuarios',{
-       headers: {
-         'Authorization': `Bearer ${token}`
-       },
+      headers: {
+        'Authorization': `Bearer ${token}`
+      },
     })
     .then(response=>{
       setData(response.data.data);
@@ -142,10 +142,10 @@ const styles= useStyles();
     id_perfil:consolaSeleccionada.id_perfil,    
   } 
   const peticionPost=()=>{
-       axios.post(process.env.REACT_APP_API_ENDPOINT+'UpdateUsuarios',datosEnviar,{
-         headers: {
-           'Authorization': `Bearer ${token}`
-         }
+      axios.post(process.env.REACT_APP_API_ENDPOINT+'UpdateUsuarios',datosEnviar,{
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
       })
       .then(response=>{
         abrirCerrarModalEditar()
@@ -365,6 +365,7 @@ const styles= useStyles();
             .forEach(
               (c) => (thisRow[c.field] = params.getValue(params.id, c.field)),
             );
+            console.log(thisRow)
             seleccionarDelete(thisRow, 'Eliminar')             
           }}/>
         </Tooltip>
