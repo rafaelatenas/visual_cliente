@@ -28,10 +28,11 @@
     padding: 0 !important;
 }
 .MuiTypography-body1{
-    font-size: .875rem !important;
+    font-size: .75em !important;
 }
 .MuiFormControl-root.MuiFormControl-fullWidth.MuiTextField-root.css-wb57ya-MuiFormControl-root-MuiTextField-root , .MuiFormControl-root.css-q8hpuo-MuiFormControl-root {
     overflow: visible !important;
+    margin-top: 2%;
 }
 .reporte{
     border-radius: 1.5em;
@@ -69,7 +70,8 @@
 }
 .MuiPaper-root.MuiPaper-elevation.MuiPaper-rounded.MuiPaper-elevation1.MuiMenu-paper.MuiPaper-root.MuiPaper-elevation.MuiPaper-rounded.MuiPaper-elevation8.MuiPopover-paper.css-1poimk-MuiPaper-root-MuiMenu-paper-MuiPaper-root-MuiPopover-paper::-webkit-scrollbar:vertical {
     width: 15px;
-    padding-left: 2px;
+    max-width: 40px;
+    padding-left: 2%;
 }
 .MuiPaper-root.MuiPaper-elevation.MuiPaper-rounded.MuiPaper-elevation1.MuiMenu-paper.MuiPaper-root.MuiPaper-elevation.MuiPaper-rounded.MuiPaper-elevation8.MuiPopover-paper.css-1poimk-MuiPaper-root-MuiMenu-paper-MuiPaper-root-MuiPopover-paper::-webkit-scrollbar-button:increment,
 .tableContainer::-webkit-scrollbar-button {
@@ -91,6 +93,11 @@
     height: 100% !important;
     overflow-y: scroll !important;
 }
+li.MuiListItem-root.MuiListItem-gutters {
+    width: auto !important;
+    padding: 2% !important;
+}
+
 @media screen and (min-width: 992px) {
     
     .container-of-table {
