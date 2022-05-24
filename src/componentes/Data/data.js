@@ -188,26 +188,17 @@ const id = openo ? 'simple-popover' : undefined;
     setOp(true);
   };
 
-
-  const isAllSelected = data.length > 0 && selectedOptions1.length === data.length;
   /*Función onChange del combo Períodos*/
   const handlePeriodos = (event) => {
-    const value = event.target.value
-    if (value[0] === "all") {
-      setSelectedOptions1(data)
-    }else{
-      setSelectedOptions1(value);
-        for (let w = 0; w < value.length; w++) {
-          data.map((item)=>{console.log(item.Semana === value[w])})
-          const elementvalue = value[w];
-          if(Array.from(elementvalue).length > 30 && Array.from(elementvalue).length < 40){
-            setPeriodos(value)
-          }else if(Array.from(elementvalue).length > 5 && Array.from(elementvalue).length < 15){
-            setPeriodos(value)
-          }
-      }
+    const value = event.target.value;
+    console.log(value)
+    if (value[value.length - 1] === "all") {
+      console.log(selected.length)
+      setSelected(selected.length === data.length ? [] : data);
+      return;
     }
-  }
+    setSelected(value);
+  };
 
   /*Funciones de Listar CANALES 😄*/
     /*Funcion onChange del combo Canales*/
@@ -348,6 +339,20 @@ const id = openo ? 'simple-popover' : undefined;
       </div>
     )
 
+
+
+
+    const classes = useStyles();
+    const [selected, setSelected] = useState([]);
+    const isAllSelectedede = data.length > 0 && selected.length === data.length;
+
+    const probar = (selected, option)=>{
+      if(isAllSelectedede===true){
+        return(selected.indexOf(option.nombre) > -1)
+      }else{
+        return(selected.indexOf(option) > -1)
+      }
+    }
 
 
   return (
@@ -667,48 +672,109 @@ const id = openo ? 'simple-popover' : undefined;
                 <div className="cards-of-data">
                   <Box style={{border:'.1em solid rgb(87 87 86/11%)',background:'#f7f4f4', borderRadius:'1.5em', width:'15%', height:'90%', display:'flex', flexDirection:'column', alignItems:'center'}}>
                     <InputLabel style={{width:'auto', padding:'10% 0 5%'}}>PERÍODOS</InputLabel>
-                    <FormControl sx={{width: '100%'}}>
-                    <InputLabel id="demo-simple-select-label">{tiempoReporte}</InputLabel>
-                      <Select 
+                    <FormControl sx={{width: '100%'}} className={classes.formControl}>
+                      <InputLabel id="mutiple-select-label">{tiempoReporte}</InputLabel>
+                      <Select
+                        labelId="mutiple-select-label"
                         multiple
-                        value={selectedOptions1}
-                        name={'nombre'}
+                        value={selected}
                         open={op}
                         onChange={handlePeriodos}
                         onClose={handleClosee}
                         onOpen={handleOpen}
-                        labelId="demo-multiple-checkbox-label"
-                        id="demo-multiple-checkbox"
-                        input={<OutlinedInput label="Tag"/>}
-                          renderValue={(selected) =>{ 
-                            if(selected.length>=3 && selected.length<data.length){
-                              return(<ListItemText sx={{fontSize:'1em'}} primary={`${selected.length} Opciones Marcadas`}/>)
-                            }else if(selected.length === data.length){
-                              return(<ListItemText sx={{fontSize:'1em'}} primary={`Todas las Opciones Marcadas (${selected.length})`}/>)
-                            }else if(selected.length<3){
-                              return(
-                              <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-                                {selected.map((value) => (
-                                  <Chip style={{fontSize:'.7em'}} key={value} label={value}/>
-                                ))}
-                              </Box>
-                              )
-                            }
-                          }}
+                        renderValue={(selected) =>{ 
+                          if(selected.length>=3 && selected.length<data.length){
+                            return(<ListItemText sx={{fontSize:'1em'}} primary={`${selected.length} Opciones Marcadas`}/>)
+                          }else if(selected.length === data.length){
+                            return(<ListItemText sx={{fontSize:'1em'}} primary={`Todas las Opciones Marcadas (${selected.length})`}/>)
+                          }else if(selected.length<3){
+                            return(
+                            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                              {selected.map((value) => (
+                                <Chip style={{fontSize:'.7em'}} key={value} label={value}/>
+                              ))}
+                            </Box>
+                            )
+                          }
+                        }}
                         MenuProps={MenuProps}
+                      >
+                        <MenuItem value="all"
+                          classes={{root: isAllSelectedede ? classes.selectedAll : ""}}
                         >
-                          <MenuItem value="all">
-                            <Checkbox  checked={isAllSelected}></Checkbox>
-                            <ListItemText sx={{fontSize:'1em'}} primary={'Marcar Todas'} />
+                          <ListItem>
+                            <Checkbox
+                              classes={{ indeterminate: classes.indeterminateColor }}
+                              checked={isAllSelectedede}
+                              indeterminate={ selected.length > 0 && selected.length < data.length}
+                            />
+                          </ListItem>
+                          <ListItemText primary="Marcar Todo" classes={{ primary: classes.selectAllText }}/>
+                        </MenuItem>
+                        {data.map((option) => (
+                          <MenuItem key={option.id} value={option.nombre}>
+                            <ListItem>
+                              <Checkbox checked={(selected.indexOf(option.nombre) > -1) || (selected.indexOf(option) > -1)} />
+                            </ListItem>
+                            <ListItemText primary={option.nombre} />
                           </MenuItem>
-                          {OptionPeriodo}
+                        ))}
                       </Select>
                     </FormControl>
+                    
                   </Box>
                   
                   <Box style={{border:'.1em solid rgb(87 87 86/11%)',background:'#f7f4f4', borderRadius:'1.5em', width:'15%', height:'90%', display:'flex', flexDirection:'column', alignItems:'center'}}>
                     <InputLabel style={{width:'auto', padding:'10% 0 5%'}}>CANALES</InputLabel>
-                    <FormControl style={{overflow:'visible'}} sx={{width: '100%'}}>
+                    <FormControl sx={{width: '100%'}} className={classes.formControl}>
+                      <InputLabel id="mutiple-select-label">Canales</InputLabel>
+                      <Select
+                        labelId="mutiple-select-label"
+                        multiple
+                        open={ope}
+                        onClose={CloseCanal}
+                        onOpen={OpenCanal}
+                        value={selectedOptions2}
+                        renderValue={(selected) =>{ 
+                          if(selected.length>=3 && selected.length<data.length){
+                            return(<ListItemText sx={{fontSize:'1em'}} primary={`${selected.length} Opciones Marcadas`}/>)
+                          }else if(selected.length === data.length){
+                            return(<ListItemText sx={{fontSize:'1em'}} primary={`Todas las Opciones Marcadas (${selected.length})`}/>)
+                          }else if(selected.length<3){
+                            return(
+                            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                              {selected.map((value) => (
+                                <Chip style={{fontSize:'.7em'}} key={value} label={value}/>
+                              ))}
+                            </Box>
+                            )
+                          }
+                        }}
+                        MenuProps={MenuProps}
+                      >
+                        <MenuItem value="all"
+                          classes={{root: isAllSelectedede ? classes.selectedAll : ""}}
+                        >
+                          <ListItem>
+                            <Checkbox
+                              classes={{ indeterminate: classes.indeterminateColor }}
+                              checked={isAllSelectedede}
+                              indeterminate={ selected.length > 0 && selected.length < data.length}
+                            />
+                          </ListItem>
+                          <ListItemText primary="Marcar Todo" classes={{ primary: classes.selectAllText }}/>
+                        </MenuItem>
+                        {data.map((option) => (
+                          <MenuItem key={option.id} value={option.nombre}>
+                            <ListItem>
+                              <Checkbox checked={(selected.indexOf(option.nombre) > -1) || (selected.indexOf(option) > -1)} />
+                            </ListItem>
+                            <ListItemText primary={option.nombre} />
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
+                    {/* <FormControl style={{overflow:'visible'}} sx={{width: '100%'}}>
                     <InputLabel style={{overflow:'visible'}} id="demo-simple-select-label">Canales</InputLabel>
                       <Select 
                         multiple
@@ -734,7 +800,7 @@ const id = openo ? 'simple-popover' : undefined;
                         </MenuItem>
                           {OptionCanales}
                       </Select>
-                    </FormControl>
+                    </FormControl> */}
                   </Box>
 
                   <Box style={{border:'.1em solid rgb(87 87 86/11%)',background:'#f7f4f4', borderRadius:'1.5em', width:'15%', height:'90%', display:'flex', flexDirection:'column', alignItems:'center'}}>
