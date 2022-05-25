@@ -2,7 +2,7 @@ import * as React from 'react';
 import './data.css'
 import { styled, useTheme } from '@mui/material/styles';
 import { Box,Drawer,CssBaseline,Toolbar, List,Typography,Divider,IconButton, ListItem, ListItemText, ClickAwayListener, Input } from '@material-ui/core';
-import { Menu, TagFaces,ExpandMore, Inbox,Mail, ArrowBack, Search, SettingsRemoteOutlined, SelectAll, PersonalVideoSharp } from '@material-ui/icons';
+import { Menu, TagFaces,ExpandMore, Inbox,Mail, ArrowBack, Search, SettingsRemoteOutlined, SelectAll, PersonalVideoSharp, ContactsOutlined } from '@material-ui/icons';
 import { Accordion, AccordionDetails, AccordionSummary, Autocomplete, Avatar, Chip, FormControlLabel, InputAdornment, ListSubheader, MenuItem, Stack, Tooltip } from '@mui/material';
 import { Paper, Button} from '@mui/material';
 import { CheckBox, CheckBoxOutlineBlank} from '@material-ui/icons';
@@ -113,8 +113,6 @@ export default function PersistentDrawerLeft() {
     setAnchorEl(null);
   };
 
-
-  
 /* Periodos y DataSemanal*/
 const [tiempoReporte, settiempoReporte] = React.useState([]);
 const seleccionarPeriodo=(parametro)=>{
@@ -130,6 +128,7 @@ const [selectedOptions2, setSelectedOptions2] = useState([]);
 /*Regiones*/
 const [region, setRegion]=useState([]);
 const [selectedOptions3, setSelectedOptions3] = useState([]);
+console.log(selectedOptions3)
   /*SubRegionres*/
   const [selectedSubregiones, setSelectedSubregiones] = useState([]);
 
@@ -223,7 +222,6 @@ const id = openo ? 'simple-popover' : undefined;
         console.log(error.response.headers); 
       })
     }
-  
     const OptionCanales = canal.map((item) => (
       <MenuItem key={item.id} value={item.id}>
         <Checkbox checked={selectedOptions2.indexOf(item.id) > -1} />
@@ -249,40 +247,88 @@ const id = openo ? 'simple-popover' : undefined;
     const handleRegiones = (event) => {
       const value =event.target.value;
       setSelectedOptions3(value);
+      console.log(value)
     };
+    
+    const [openRegiones, setOpenRegiones] = React.useState(false);
+    const OpenRegion = () => {
+      setOpenRegiones(true);
+    };
+    const CloseRegion = () => {
+      setOpenRegiones(false);
+    };
+
       /*Funcion onChange del combo SubRegiones */
+    const [SubRegion, setSubRegion]= React.useState([])
+    const peticionSubRegiones=async(value)=>{
+      await axios.get( process.env.REACT_APP_API_ENDPOINT+'ListarSubRegion/'+value,{
+        headers: {
+          'Authorization': `Bearer ${token}`
+        },
+      })
+      .then(response=>{
+        setSubRegion(response.data.data);
+        console.log(response.data)
+        console.log(response.data.data)
+      }).catch(error=>{
+        console.log(error.response.data.message);
+        console.log(error.response.status);
+        console.log(error.response.headers); 
+      })
+    }
     const handleSubRegiones = (event) => {
       const value =event.target.value;
       setSelectedSubregiones(value);
     };
     
     const isAllRegion = data.length > 0 && selectedOptions1.length === data.length;
-    const OptionRegiones = region.map((item) => (
+    const OptionSubRegion = SubRegion.map((item)=>(
       <MenuItem key={item.id} value={item.id}>
-        <Checkbox
-          classes={{ indeterminate: classes.indeterminateColor }}
-         // checked={isAllRegion}
-          indeterminate={ selectedOptions3.length > 0 && selectedOptions3.length < region.length}
-          checked={(selectedOptions3.indexOf(item.id) > -1) ||(selectedOptions3.indexOf(item) > -1)}
-        />
-        <ListItemText style={{overflow:'visible'}} id="demo-simple-select-label">{item.nombre}</ListItemText>
-        
-        <Select 
-          multiple
-          value={selectedSubregiones} 
-          onChange={handleSubRegiones}
-          labelId="demo-multiple-checkbox-label"
-          id="demo-multiple-checkbox"
-          input={<Input style={{width:'100%',position: 'absolute'}} label="Tag"/>}
-          MenuProps={MenuProps}
-          >
-            <MenuItem key={item.id} value={item.nombre}>
-              <Checkbox id={item.id} checked={selectedSubregiones.indexOf(item.nombre) > -1} />
-              <ListItemText sx={{fontSize:'1em'}} primary={item.nombre} />
-            </MenuItem>
-        </Select>
+        <Checkbox checked={selectedOptions2.indexOf(item.id) > -1} />
+        <ListItemText sx={{fontSize:'1em'}} primary={item.nombre} />
       </MenuItem>
     ))
+    const OptionRegiones = region.map((item) => {
+      if(item.id!==0){
+        return(
+          region.map((itemSub) => (
+            <MenuItem key={itemSub.id} value={itemSub.id}>
+              <Checkbox
+                // classes={{ indeterminate: classes.indeterminateColor }}
+              // checked={isAllRegion}
+                // indeterminate={ selectedOptions3.length > 0 && selectedOptions3.length < region.length}
+                checked={(selectedOptions3.indexOf(item.id) > -1) ||(selectedOptions3.indexOf(item) > -1)}
+              />
+              <ListItemText style={{overflow:'visible'}} id="demo-simple-select-label">{item.nombre}</ListItemText>
+              <Select 
+                multiple
+                value={selectedSubregiones} 
+                onChange={handleSubRegiones}
+                labelId="demo-multiple-checkbox-label"
+                id="demo-multiple-checkbox"
+                input={<Input style={{width:'100%',position: 'absolute'}} label="Tag"/>}
+                MenuProps={MenuProps}
+              >
+                {OptionSubRegion}
+              </Select>
+            </MenuItem>
+          )
+        ))
+      }
+      return(
+        <MenuItem key={item.id} value={item.id}>
+          <Checkbox
+            // classes={{ indeterminate: classes.indeterminateColor }}
+          // checked={isAllRegion}
+            // indeterminate={ selectedOptions3.length > 0 && selectedOptions3.length < region.length}
+            checked={(selectedOptions3.indexOf(item.id) > -1) ||(selectedOptions3.indexOf(item) > -1)}
+          />
+          <ListItemText style={{overflow:'visible'}} id="demo-simple-select-label">{item.nombre}</ListItemText>
+          <Divider style={{width:'100%',position: 'absolute',top:'97%', height:'3%', background:'#00000061'}}/>
+        </MenuItem>
+        )
+      
+    })
   
     /* Funcion de Peticion Regiones. Solo se hará la llamada de esta función según el controlador del select*/
     const peticionRegiones=async()=>{
@@ -302,20 +348,28 @@ const id = openo ? 'simple-popover' : undefined;
 
     /*Mis Selecciones*/
     const [chipData, setChipData] = React.useState([{
-      nombre:'',
-      id:''
+      nombre:[],
+      id:[]
     }]);
     console.log(chipData)
     const [periodos, setPeriodos] = React.useState({})
-    const [canales, setCanales] = React.useState({})
+    const [disable, setDisable] = React.useState(true)
     const handleDelete = (chipToDelete) => () => {
       console.log(chipToDelete)
       setChipData((chips) => chips.filter((chip) => chip.key !== chipToDelete.key));
     };
-
+    
+    const ids = {id:selectedOptions1.concat(selectedOptions2,selectedOptions3).join('*')}
+    console.log(ids)
+    const handleChip=e=>{
+      const {name, value}=e.target;
+      setChipData({[name]: value,
+      id:ids.id})
+    }
+    console.log(ids.id === [])
     const GuardarSelecciones =()=>{
-      setChipData(periodos)
       abrirCerrarModalSelect()
+      (ids.id === [])?setDisable(false):setDisable(true)
     }
     const [modalSelect, setModalSelect]=useState(false);
 
@@ -327,7 +381,7 @@ const id = openo ? 'simple-popover' : undefined;
         <h2 style={{textAlign:'center'}}>Crear Filtro de Selección</h2>
         <div style={{display: 'flex', width: '100%', alignItems: 'center', justifyContent: 'space-around'}} className='agruparEdit'>
           <div style={{width:'40%'}} className='grupoEdit'>
-            <TextField name="MisSelects" className={styles.inputMaterial} type='text' label="Nombre del Filtro" placeholder='Escriba el nombre de sus Selecciones'/>
+            <TextField name="nombre" className={styles.inputMaterial} type='text' onChange={handleChip} value={chipData && chipData.nombre} label="Nombre del Filtro" placeholder='Escriba el nombre de sus Selecciones'/>
           </div>
           <div align="bottom">
             <Button color="primary" onClick={()=>GuardarSelecciones()}>Guardar</Button>
@@ -337,7 +391,7 @@ const id = openo ? 'simple-popover' : undefined;
       </div>
     )
 
-    const DeletePeriodo =()=>{
+    const DeletePeriodo =()=>{ 
       if(selectedOptions1 !== []){
         setSelectedOptions1([])
       }
@@ -696,7 +750,6 @@ const id = openo ? 'simple-popover' : undefined;
                                 for (let h = 0; h < data.length; h++) {
                                 const element = data[h];
                                   if(element.id === value){
-                                    console.log(element)
                                     return(<Chip style={{fontSize:'.7em'}} key={value} label={element.nombre}/>)
                                   }
                                 }
@@ -741,7 +794,6 @@ const id = openo ? 'simple-popover' : undefined;
                                 for (let h = 0; h < canal.length; h++) {
                                 const element = canal[h];
                                   if(element.id === value){
-                                    console.log(element)
                                     return(<Chip style={{fontSize:'.7em'}} key={value} label={element.nombre}/>)
                                   }else if(value === parseInt(ID_Cliente)){
                                     return(<Chip style={{fontSize:'.7em'}} key={value} label="MI CADENA"/>)
@@ -770,9 +822,9 @@ const id = openo ? 'simple-popover' : undefined;
                       <Select
                         labelId="mutiple-select-label"
                         multiple
-                        // open={ope}
-                        // onClose={CloseCanal}
-                        // onOpen={OpenCanal}
+                        open={openRegiones}
+                        onClose={CloseRegion}
+                        onOpen={OpenRegion}
                         value={selectedOptions3}
                         onChange={handleRegiones}
                         renderValue={(selected) => (
@@ -781,7 +833,6 @@ const id = openo ? 'simple-popover' : undefined;
                                 for (let h = 0; h < region.length; h++) {
                                 const element = region[h];
                                   if(element.id === value){
-                                    console.log(element)
                                     return(<Chip style={{fontSize:'.7em'}} key={value} label={element.nombre}/>)
                                   }
                                 }
