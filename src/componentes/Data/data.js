@@ -291,8 +291,7 @@ const id = openo ? 'simple-popover' : undefined;
     const OptionRegiones = region.map((item) => {
       if(item.id!==0){
         return(
-          region.map((itemSub) => (
-            <MenuItem key={itemSub.id} value={itemSub.id}>
+            <MenuItem key={item.id} value={item.id}>
               <Checkbox
                 // classes={{ indeterminate: classes.indeterminateColor }}
               // checked={isAllRegion}
@@ -312,8 +311,7 @@ const id = openo ? 'simple-popover' : undefined;
                 {OptionSubRegion}
               </Select>
             </MenuItem>
-          )
-        ))
+      )
       }
       return(
         <MenuItem key={item.id} value={item.id}>
@@ -326,7 +324,7 @@ const id = openo ? 'simple-popover' : undefined;
           <ListItemText style={{overflow:'visible'}} id="demo-simple-select-label">{item.nombre}</ListItemText>
           <Divider style={{width:'100%',position: 'absolute',top:'97%', height:'3%', background:'#00000061'}}/>
         </MenuItem>
-        )
+      )
       
     })
   
@@ -396,10 +394,6 @@ const id = openo ? 'simple-popover' : undefined;
         setSelectedOptions1([])
       }
     }
-
-
-
-
 
 
   return (
