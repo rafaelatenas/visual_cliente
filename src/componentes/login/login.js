@@ -1,3 +1,4 @@
+/* eslint-disable react/no-direct-mutation-state */
 import React from 'react';
 import './login.css';
 import axios from 'axios';
@@ -6,7 +7,10 @@ import withReactContent from 'sweetalert2-react-content'
 import { TextField, FormControl, InputLabel, OutlinedInput} from '@mui/material';
 import { Visibility, VisibilityOff} from '@material-ui/icons';
 import { IconButton, Button} from '@mui/material';
+import ReCAPTCHA from 'react-google-recaptcha';
 
+const RECAPTCHA_SERVER_KEY =process.env.REACT_APP_SECRET_KEY
+console.log(process.env)
 class Login extends React.Component {
   constructor (props) {
     super(props);
@@ -16,7 +20,9 @@ class Login extends React.Component {
       formErrors: {Email: '', Password: ''},
       emailValid: false,
       passwordValid: false,
-      formValid: false
+      formValid: false,
+      expired: false,
+      humanKey:''
     }
   }
 
@@ -63,7 +69,6 @@ class Login extends React.Component {
     handleMouseDownPassword = () => {
       this.setState({showPassword: this.state.showPassword})
     };
-       
     enviarDatos=(e)=>{ 
       const MySwal = withReactContent(Swal)
       const toast = MySwal.mixin({
@@ -80,7 +85,7 @@ class Login extends React.Component {
       e.preventDefault();
       const {Email,Password}=this.state;
       var datosEnviar={email:Email,password:Password} 
-               
+
       axios.post(process.env.REACT_APP_API_ENDPOINT+"login",datosEnviar).then(result => {
         var nombre=result.data.NombresUsuarios;
         var apellidos=result.data.ApellidosUsuarios;  
@@ -112,8 +117,58 @@ class Login extends React.Component {
             title:''+err.response.data.message+'',
             confirmButtonText: `Ok`,
           })    
-        })
+      })
     }
+    /* Validación Google */
+    handleChange = value => {
+      console.log("Captcha value:", value);
+      this.setState({humanKey: value});
+      // if value is null recaptcha expired
+      if (value === null) {
+        this.setState({ expired: "true" })
+      }else{
+        this.isHuman()
+      }
+    }
+
+    isHuman=async()=>{
+      await axios.post( process.env.REACT_APP_PUBLIC_URL,{
+        method: "post",
+        headers: {
+          "Access-Control-Allow-Origin":"*",
+          Accept: "application/json",
+          "Content-Type": "application/x-www-form-urlencoded; charset=utf-8"
+        },
+        body: `secret=${RECAPTCHA_SERVER_KEY}&response=${this.state.humanKey}`
+    })
+      .then(res => res.json())
+      .then(json => json.success)
+      .catch(err => {
+        throw new Error(`Error in Google Siteverify API. ${err.message}`)
+      })
+    }
+    // Validate Human
+   // isHuman = await fetch(`https://www.google.com/recaptcha/api/siteverify`, {
+    //   method: "post",
+    //   headers: {
+    //     Accept: "application/json",
+    //     "Content-Type": "application/x-www-form-urlencoded; charset=utf-8"
+    //   },
+    //   body: `secret=${RECAPTCHA_SERVER_KEY}&response=${humanKey}`
+    // })
+    //   .then(res => res.json())
+    //   .then(json => json.success)
+    //   .catch(err => {
+    //     throw new Error(`Error in Google Siteverify API. ${err.message}`)
+    //   })
+
+    // if (humanKey === null || !isHuman) {
+    //   throw new Error(`YOU ARE NOT A HUMAN.`)
+    // }
+
+    // // The code below will run only after the reCAPTCHA is succesfully validated.
+    // console.log("SUCCESS!")
+        
 
 	render() {
     return (
@@ -134,7 +189,14 @@ class Login extends React.Component {
             <Button variant="outlined" disabled={!this.state.formValid} onClick={this.enviarDatos}>Confirmar</Button>
           </FormControl>
         </div>
+        <ReCAPTCHA 
+        onChange={this.handleChange}
+        sitekey={process.env.REACT_APP_PUBLIC_KEY}
+        badge='bottomleft'
+        />
       </section>
+      
+
     )
   };
 }

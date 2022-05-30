@@ -1,24 +1,17 @@
 import * as React from 'react';
 import './data.css'
 import { styled, useTheme } from '@mui/material/styles';
-import { Box,Drawer,CssBaseline,Toolbar, List,Typography,Divider,IconButton, ListItem, ListItemText, ClickAwayListener, Input } from '@material-ui/core';
-import { Menu, TagFaces,ExpandMore, Inbox,Mail, ArrowBack, Search, SettingsRemoteOutlined, SelectAll, PersonalVideoSharp, ContactsOutlined } from '@material-ui/icons';
-import { Accordion, AccordionDetails, AccordionSummary, Autocomplete, Avatar, Chip, FormControlLabel, InputAdornment, ListSubheader, MenuItem, Stack, Tooltip } from '@mui/material';
-import { Paper, Button} from '@mui/material';
-import { CheckBox, CheckBoxOutlineBlank} from '@material-ui/icons';
-import { TextField } from '@mui/material';
+import { Box,Drawer,CssBaseline,Toolbar, List,Typography,Divider,IconButton, ListItem, ListItemText, Input } from '@material-ui/core';
+import { Menu,ExpandMore, ArrowBack, Save} from '@material-ui/icons';
+import { Accordion, AccordionDetails, AccordionSummary, Avatar, Chip,  MenuItem, Stack, Tooltip } from '@mui/material';
+import { Paper, Button, TextField, FormControl, Select, InputLabel, Checkbox} from '@mui/material';
 import Header from '../componentes_data/header'
-import { Checkbox } from '@mui/material';
-import { InputLabel } from '@mui/material';
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
 import CardActions from '@material-ui/core/CardActions';
 import Link from '@material-ui/core/Link';
 import Popover from '@mui/material/Popover';
 import { useState } from 'react';
-import { FormControl } from '@mui/material';
-import { Select } from '@mui/material';
-import { OutlinedInput } from '@mui/material';
 import { makeStyles } from '@material-ui/core/styles';
 import {Modal} from '@material-ui/core';
 import axios from 'axios';
@@ -50,14 +43,6 @@ const useStyles = makeStyles((theme) => ({
     width: '95%'
   }}))
 
-function getStyles(name, periodos, theme) {
-  return {
-    fontWeight:
-      periodos.indexOf(name) === -1
-        ? theme.typography.fontWeightRegular
-        : theme.typography.fontWeightMedium,
-  };
-}
 var ID_Cliente = sessionStorage.getItem('Id_Cliente')
 
 const drawerWidth = 15;
@@ -91,7 +76,7 @@ const DrawerHeader = styled('div')(({ theme }) => ({
   width:'100%'
 }));
 
-export default function PersistentDrawerLeft() {
+export default function DATA() {
   const styles= useStyles();
   const theme = useTheme();
   /*Control del Drawer*/
@@ -121,6 +106,7 @@ const seleccionarPeriodo=(parametro)=>{
 const classes = useStyles();
 const [data, setData]=useState([]);
 const [selectedOptions1, setSelectedOptions1] = useState([]);
+const [ChipPeriodo, setChipPeriodo] = useState([]);
 
 /*Canales*/
 const [canal, setCanal]=useState([]);
@@ -346,28 +332,45 @@ const id = openo ? 'simple-popover' : undefined;
 
     /*Mis Selecciones*/
     const [chipData, setChipData] = React.useState([{
-      nombre:[],
-      id:[]
+      nombre:'',
+      id:''
     }]);
     console.log(chipData)
     const [periodos, setPeriodos] = React.useState({})
     const [disable, setDisable] = React.useState(true)
     const handleDelete = (chipToDelete) => () => {
-      console.log(chipToDelete)
-      setChipData((chips) => chips.filter((chip) => chip.key !== chipToDelete.key));
+      setChipData((chips) => (chips.nombre !== chipToDelete.key));
     };
+    console.log(selectedOptions1.length === data.length)
+      const ids = {id:selectedOptions1.concat(selectedOptions2,selectedOptions3).join('*')}
     
-    const ids = {id:selectedOptions1.concat(selectedOptions2,selectedOptions3).join('*')}
-    console.log(ids)
+    console.log(selectedOptions1)
+    if(selectedOptions1.length === data.length){
+      let result = selectedOptions1.reduce((acc,cur) => {
+        let { id, ...rest } = cur;
+        let ex = acc.find(x => x.id === id);
+        console.log(!ex)
+        if(!ex){
+          ex = { id, value: [] };
+          acc.push(ex);
+        }
+        console.log(id)
+        ex.value.push(id);
+        console.log(ex)
+
+        return acc;
+    }, [])
+    console.log(result)
+    }
+    
+    
     const handleChip=e=>{
       const {name, value}=e.target;
       setChipData({[name]: value,
       id:ids.id})
     }
-    console.log(ids.id === [])
     const GuardarSelecciones =()=>{
       abrirCerrarModalSelect()
-      (ids.id === [])?setDisable(false):setDisable(true)
     }
     const [modalSelect, setModalSelect]=useState(false);
 
@@ -395,7 +398,7 @@ const id = openo ? 'simple-popover' : undefined;
       }
     }
 
-
+    let icon;
   return (
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />
@@ -462,24 +465,18 @@ const id = openo ? 'simple-popover' : undefined;
             <Typography style={{margin:'0'}}>Mis Selecciones</Typography>
           </AccordionSummary>
           <AccordionDetails style={{overfolwY:'scroll'}}>
-            {/* <Paper
+            <Paper
               sx={{display: 'flex', justifyContent: 'center', flexWrap: 'wrap', listStyle: 'none', p:' 0 0 5%', m: 0}}
               component="ul"
             >
-              {chipData.map((data) => {
-                console.log(data)
-                let icon;
-                return (
-                  <ListItem style={{width:'auto',paddingLeft:'1%',paddingRight:'1%'}} key={data}>
+                  <ListItem style={{width:'auto',paddingLeft:'1%',paddingRight:'1%'}} key={chipData.nombre}>
                     <Chip style={{background:'#F6B232', color:'#fff'}}
                       icon={icon}
-                      label={data}
-                      onDelete={data === 'React' ? undefined : handleDelete(data)}
+                      label={chipData.nombre}
+                      onDelete={handleDelete(chipData)}
                     />
                   </ListItem>
-                );
-              })}
-            </Paper> */}
+            </Paper>
           </AccordionDetails>
         </Accordion>
         <Divider style={{width:'90%', background: 'rgb(0 0 0 / 38%)'}}/>
@@ -717,7 +714,7 @@ const id = openo ? 'simple-popover' : undefined;
       <Main open={open}>
         <div className="Contenedordata"> 
           <section className="container-of-table">
-            <Header></Header>
+            <Header/>
               <article className="table-of-data">
                 <div className="cards-of-data">
                   <Box style={{border:'.1em solid rgb(87 87 86/11%)',background:'#f7f4f4', borderRadius:'1.5em', width:'15%', height:'90%', display:'flex', flexDirection:'column', alignItems:'center'}}>
@@ -740,7 +737,7 @@ const id = openo ? 'simple-popover' : undefined;
                           }else if(selected.length<3){
                             return(
                             <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-                              {selected.map((value) =>{ 
+                              {selected.map((value) =>{  
                                 for (let h = 0; h < data.length; h++) {
                                 const element = data[h];
                                   if(element.id === value){
@@ -767,7 +764,6 @@ const id = openo ? 'simple-popover' : undefined;
                           {OptionPeriodo}
                       </Select>
                     </FormControl>
-                    
                   </Box>
                   
                   <Box style={{border:'.1em solid rgb(87 87 86/11%)',background:'#f7f4f4', borderRadius:'1.5em', width:'15%', height:'90%', display:'flex', flexDirection:'column', alignItems:'center'}}>
@@ -875,7 +871,8 @@ const id = openo ? 'simple-popover' : undefined;
 
                 </div>
               </article>
-              <button onClick={abrirCerrarModalSelect} id="process">Procesar</button>
+              <button onClick={abrirCerrarModalSelect}><Save/>Guardar</button>
+              <button id="process">Procesar</button>
           </section>
         </div>
       </Main>

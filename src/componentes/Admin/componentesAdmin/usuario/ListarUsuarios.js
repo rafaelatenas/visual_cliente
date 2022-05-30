@@ -282,7 +282,7 @@ const styles= useStyles();
 
   function CustomToolbar() {
     return (
-      <GridToolbarContainer>
+      <GridToolbarContainer style={{marginTop:'1.2%'}}>
         <GridToolbarDensitySelector/>
         <GridToolbarExportContainer>
           <button style={{curso:'pointer'}} onClick={()=>downloadexcel()}>Descargar Excel</button>
@@ -293,10 +293,10 @@ const styles= useStyles();
 
   const colums = [
     { field: 'id_usuario', headerName: 'ID Usuario',headerAlign:'center',align: 'center'},
-    { field: 'usuario', headerName: 'Usuario',headerAlign:'center',align: 'center', width:'160'},
-    { field: 'nombres', headerName: 'Nombres',headerAlign:'center',align: 'center',width:'160'},
-    { field: 'apellidos', headerName: 'Apellidos',headerAlign:'center',align: 'center',width:'160'},
-    { field: 'correo', headerName: 'Correo',headerAlign:'center',align: 'center',width:'200'},
+    { field: 'usuario', headerName: 'Usuario',headerAlign:'center',align: 'center'},
+    { field: 'nombres', headerName: 'Nombres',headerAlign:'center',align: 'center'},
+    { field: 'apellidos', headerName: 'Apellidos',headerAlign:'center',align: 'center'},
+    { field: 'correo', headerName: 'Correo',headerAlign:'center',align: 'center'},
     { field: 'fecha_creacion' , headerName: 'Fecha  de Creación',headerAlign:'center',align: 'center'},
     {
       field: 'Ind_Us_Activo',

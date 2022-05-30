@@ -136,6 +136,16 @@ li.MuiListItem-root.MuiListItem-gutters {
         align-items: center;
         -webkit-box-shadow: 0px 12px 10px 6px rgb(0 0 0 / 15%);
     }
+    #save{
+        grid-row: 3/4;
+        grid-column: 2/3;
+        border: none;
+        border-radius: 1em;
+        background: #F6B232;
+        height: 40%;
+        width: 65%;
+        font-size: 17px;
+    }
     #process {
         grid-row: 3/4;
         grid-column: 2/3;

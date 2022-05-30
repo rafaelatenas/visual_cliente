@@ -223,15 +223,41 @@
 .MuiDataGrid-columnHeadersInner.css-1s0hp0k-MuiDataGrid-columnHeadersInner {
     width: 100%;
 }
+
+.MuiDataGrid-columnHeader.MuiDataGrid-columnHeader--alignCenter,
+    .MuiDataGrid-columnHeader.MuiDataGrid-columnHeader--alignCenter.MuiDataGrid-columnHeader--sortable,
+    .MuiDataGrid-columnHeader.MuiDataGrid-columnHeader--alignCenter.MuiDataGrid-columnHeader--sortable {
+        font-size: 1em !important;
+        width: 11% !important;
+        max-width: 300px !important;
+    }
+    .MuiDataGrid-cell.MuiDataGrid-cell--textCenter {
+        width: 11% !important;
+    }
+    .MuiDataGrid-cell.MuiDataGrid-cell--textCenter {
+        font-size: 0.85em !important;
+        width: 9.5vw !important;
+        max-width: 10vw !important;
+
+    }
 @media screen and (min-width: 1500px) and (min-height:800px) {
+    .MuiDataGrid-columnHeader.MuiDataGrid-columnHeader--alignCenter,
     .MuiDataGrid-columnHeader.MuiDataGrid-columnHeader--alignCenter.MuiDataGrid-columnHeader--sortable,
     .MuiDataGrid-columnHeader.MuiDataGrid-columnHeader--alignCenter.MuiDataGrid-columnHeader--sortable {
         font-size: 1.2em !important;
+        width: 11% !important;
+        max-width: 300px !important;
     }
     .MuiDataGrid-cell.MuiDataGrid-cell--textCenter {
-        font-size: 1.2em !important;
+        width: 11% !important;
     }
-	.prueba :first-child{
-		width: 10% !important;
-	}
+    .MuiDataGrid-cell.MuiDataGrid-cell--textCenter {
+        font-size: 0.95em !important;
+        width: 9.5vw !important;
+        max-width: 16vw !important;
+
+    } 
+    .MuiDataGrid-row {
+        width: 100% !important;
+    }
 }
