@@ -8,25 +8,25 @@ import { TextField, FormControl, InputLabel, OutlinedInput} from '@mui/material'
 import { Visibility, VisibilityOff} from '@material-ui/icons';
 import { IconButton, Button} from '@mui/material';
 import ReCAPTCHA from 'react-google-recaptcha';
-
 const RECAPTCHA_SERVER_KEY =process.env.REACT_APP_SECRET_KEY
-console.log(process.env)
-class Login extends React.Component {
-  constructor (props) {
-    super(props);
-    this.state = {
-      Email: '',
-      Password: '',
-      formErrors: {Email: '', Password: ''},
-      emailValid: false,
-      passwordValid: false,
-      formValid: false,
-      expired: false,
-      humanKey:''
-    }
-  }
+const recaptchaRef = React.createRef();
 
-  validateField(fieldName, value) {
+class Login extends React.Component {
+    constructor (props) {
+      super(props);
+      this.state = {
+        Email: '',
+        Password: '',
+        formErrors: {Email: '', Password: ''},
+        emailValid: false,
+        passwordValid: false,
+        formValid: false,
+        expired: false,
+        humanKey:''
+      }
+    }
+
+    validateField(fieldName, value) {
     let fieldValidationErrors = this.state.formErrors;
     let emailValid = this.state.emailValid;
     let passwordValid = this.state.passwordValid;
@@ -127,48 +127,32 @@ class Login extends React.Component {
       if (value === null) {
         this.setState({ expired: "true" })
       }else{
-        this.isHuman()
+        //this.isHuman()
       }
     }
 
-    isHuman=async()=>{
-      await axios.post( process.env.REACT_APP_PUBLIC_URL,{
-        method: "post",
-        headers: {
-          "Access-Control-Allow-Origin":"*",
-          Accept: "application/json",
-          "Content-Type": "application/x-www-form-urlencoded; charset=utf-8"
-        },
-        body: `secret=${RECAPTCHA_SERVER_KEY}&response=${this.state.humanKey}`
-    })
-      .then(res => res.json())
-      .then(json => json.success)
-      .catch(err => {
-        throw new Error(`Error in Google Siteverify API. ${err.message}`)
+    onFormSubmit=(e)=>{
+      e.preventDefault();
+      var responseKey = recaptchaRef.current.getValue();
+      var responseID = recaptchaRef.current.getWidgetId();
+      this.isHuman(responseKey,responseID)
+    }
+
+    isHuman=async(responseKey,responseID)=>{
+      let headersList = {
+        "Access-Control-Allow-Origin":"*",
+        Accept: "application/json",
+        "Content-Type": "application/x-www-form-urlencoded; charset=utf-8"
+      }
+      let reqOptions = {
+        url: process.env.REACT_APP_PUBLIC_URL+`secret=${RECAPTCHA_SERVER_KEY}&response=${responseKey}&remoteip=${responseID}`,
+        method: "POST",
+        headers: headersList,
+      }
+      axios.request(reqOptions).then(function (response) {
+        console.log(response.data)
       })
     }
-    // Validate Human
-   // isHuman = await fetch(`https://www.google.com/recaptcha/api/siteverify`, {
-    //   method: "post",
-    //   headers: {
-    //     Accept: "application/json",
-    //     "Content-Type": "application/x-www-form-urlencoded; charset=utf-8"
-    //   },
-    //   body: `secret=${RECAPTCHA_SERVER_KEY}&response=${humanKey}`
-    // })
-    //   .then(res => res.json())
-    //   .then(json => json.success)
-    //   .catch(err => {
-    //     throw new Error(`Error in Google Siteverify API. ${err.message}`)
-    //   })
-
-    // if (humanKey === null || !isHuman) {
-    //   throw new Error(`YOU ARE NOT A HUMAN.`)
-    // }
-
-    // // The code below will run only after the reCAPTCHA is succesfully validated.
-    // console.log("SUCCESS!")
-        
 
 	render() {
     return (
@@ -180,23 +164,22 @@ class Login extends React.Component {
               <InputLabel htmlFor="outlined-adornment-password">Password</InputLabel>
               <OutlinedInput id="outlined-adornment-password" type={this.state.showPassword ? 'text' : 'password'} name='Password' value={this.state.Password} onChange={this.handleUserInput}
                 endAdornment={
-                  <IconButton aria-label="toggle password visibility" onClick={this.handleClickShowPassword} onMouseDown={this.handleMouseDownPassword} edge="end">
-                    {this.state.showPassword ? <VisibilityOff/> : <Visibility/>}
-                  </IconButton>
+                <IconButton aria-label="toggle password visibility" onClick={this.handleClickShowPassword} onMouseDown={this.handleMouseDownPassword} edge="end">
+                  {this.state.showPassword ? <VisibilityOff/> : <Visibility/>}
+                </IconButton>
                 }
               />
             </FormControl>
-            <Button variant="outlined" disabled={!this.state.formValid} onClick={this.enviarDatos}>Confirmar</Button>
+            <Button variant="outlined" disabled={!this.state.formValid} onClick={this.onFormSubmit}>Confirmar</Button>
           </FormControl>
         </div>
         <ReCAPTCHA 
-        onChange={this.handleChange}
-        sitekey={process.env.REACT_APP_PUBLIC_KEY}
-        badge='bottomleft'
+          onChange={this.handleChange}
+          sitekey={process.env.REACT_APP_PUBLIC_KEY}
+          badge='bottomleft'
+          ref={recaptchaRef}
         />
       </section>
-      
-
     )
   };
 }
