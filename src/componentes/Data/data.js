@@ -341,30 +341,22 @@ const id = openo ? 'simple-popover' : undefined;
     const handleDelete = (chipToDelete) => () => {
       setChipData((chips) => (chips.nombre !== chipToDelete.key));
     };
-    console.log(selectedOptions1.length === data.length)
-      const ids = {id:selectedOptions1.concat(selectedOptions2,selectedOptions3).join('*')}
-    
+    let ids;
     console.log(selectedOptions1)
     if(selectedOptions1.length === data.length){
       let result = selectedOptions1.reduce((acc,cur) => {
-        let { id, ...rest } = cur;
+        let {id} = cur;
         let ex = acc.find(x => x.id === id);
-        console.log(!ex)
-        if(!ex){
-          ex = {id};
-          //acc.push(ex);
-        }
-        console.log(id)
-        ex.value.push(id);
-        console.log(ex)
-
-        return acc;
-    }, [])
-    console.log(result)
+          if(!ex){ex = id;acc.push(ex);}
+          return acc;
+      }, [])
+      ids={id:result.concat(selectedOptions2,selectedOptions3).join('*')}
+      console.log(ids)
+    }else{
+      ids={id:selectedOptions1.concat(selectedOptions2,selectedOptions3).join('*')}
+      console.log(ids)
     }
-    
-    
-    const handleChip=e=>{
+    const handleChip=(e,ids)=>{
       const {name, value}=e.target;
       setChipData({[name]: value,
       id:ids.id})
@@ -373,7 +365,6 @@ const id = openo ? 'simple-popover' : undefined;
       abrirCerrarModalSelect()
     }
     const [modalSelect, setModalSelect]=useState(false);
-
     const abrirCerrarModalSelect=()=>{
       setModalSelect(!modalSelect);
     }
@@ -391,13 +382,11 @@ const id = openo ? 'simple-popover' : undefined;
         </div>
       </div>
     )
-
     const DeletePeriodo =()=>{ 
       if(selectedOptions1 !== []){
         setSelectedOptions1([])
       }
     }
-
     let icon;
   return (
     <Box sx={{ display: 'flex' }}>
