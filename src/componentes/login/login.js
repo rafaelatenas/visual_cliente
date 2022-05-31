@@ -170,7 +170,7 @@ class Login extends React.Component {
                 }
               />
             </FormControl>
-            <Button variant="outlined" disabled={!this.state.formValid} onClick={this.onFormSubmit}>Confirmar</Button>
+            <Button variant="outlined" disabled={!this.state.formValid} onClick={this.enviarDatos}>Confirmar</Button>
           </FormControl>
         </div>
         <ReCAPTCHA 

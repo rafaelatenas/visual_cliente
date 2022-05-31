@@ -351,8 +351,8 @@ const id = openo ? 'simple-popover' : undefined;
         let ex = acc.find(x => x.id === id);
         console.log(!ex)
         if(!ex){
-          ex = { id, value: [] };
-          acc.push(ex);
+          ex = {id};
+          //acc.push(ex);
         }
         console.log(id)
         ex.value.push(id);

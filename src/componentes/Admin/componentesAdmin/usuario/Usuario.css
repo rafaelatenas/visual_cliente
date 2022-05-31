@@ -244,7 +244,7 @@
     .MuiDataGrid-columnHeader.MuiDataGrid-columnHeader--alignCenter,
     .MuiDataGrid-columnHeader.MuiDataGrid-columnHeader--alignCenter.MuiDataGrid-columnHeader--sortable,
     .MuiDataGrid-columnHeader.MuiDataGrid-columnHeader--alignCenter.MuiDataGrid-columnHeader--sortable {
-        font-size: 1.2em !important;
+        font-size: 1em !important;
         width: 11% !important;
         max-width: 300px !important;
     }
