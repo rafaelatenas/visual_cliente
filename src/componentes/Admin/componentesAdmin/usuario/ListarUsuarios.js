@@ -90,7 +90,6 @@ const styles= useStyles();
     }
   });
   const peticionGet=async()=>{
-
     await axios.get( process.env.REACT_APP_API_ENDPOINT+'ListarUsuarios',{
       headers: {
         'Authorization': `Bearer ${token}`
@@ -113,9 +112,9 @@ const styles= useStyles();
   /*Muestra los usuarios por ID*/
   const peticionGetID=async(ID)=>{
     await axios.get( process.env.REACT_APP_API_ENDPOINT+'ListarUsuariosId/'+ID,{
-       headers: {
-         'Authorization': `Bearer ${token}`
-       },
+      headers: {
+        'Authorization': `Bearer ${token}`
+      },
     })
     .then(response=>{
       setConsolaSeleccionada(response.data.data[0]);
@@ -142,58 +141,50 @@ const styles= useStyles();
     id_perfil:consolaSeleccionada.id_perfil,    
   } 
   const peticionPost=()=>{
-      axios.post(process.env.REACT_APP_API_ENDPOINT+'UpdateUsuarios',datosEnviar,{
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
+    axios.post(process.env.REACT_APP_API_ENDPOINT+'UpdateUsuarios',datosEnviar,{
+      headers: {'Authorization': `Bearer ${token}`}
+    })
+    .then(response=>{
+      abrirCerrarModalEditar()
+      toast.fire({
+        icon: 'success',
+        title: ''+response.data.message+'',
+        confirmButtonText: `Ok`,
       })
-      .then(response=>{
-        abrirCerrarModalEditar()
-        toast.fire({
-          icon: 'success',
-          title: ''+response.data.message+'',
-          confirmButtonText: `Ok`,
-        })
-        setTimeout(() => {
-          window.location.href = '/management/panel/createUser'
-        }, 2000);
-      }).catch(error=>{
-        console.log(error.response.data.message);
-        console.log(error.response.status);
-        console.log(error.response.headers); 
-        toast.fire({
-          icon: 'error',
-          title: ''+error.response.data.message+'',
-          confirmButtonText: `Ok`,
-        }) 
-      })
+      setTimeout(() => {window.location.href = '/management/panel/createUser'}, 2000);
+    }).catch(error=>{
+      console.log(error.response.data.message);
+      console.log(error.response.status);
+      console.log(error.response.headers); 
+      toast.fire({
+        icon: 'error',
+        title: ''+error.response.data.message+'',
+        confirmButtonText: `Ok`,
+      }) 
+    })
   }
 /*Petición POST a la API INACTIVAR USUARIOS para cumplir la funcion de "Eliminar"*/
   const peticionDelete=async()=>{
     const ID = consolaDelete.id_usuario
-       await axios.get(process.env.REACT_APP_API_ENDPOINT+'InactivarUsuario/'+ID)
-       .then(response=>{
-        abrirCerrarModalEliminar();
-         toast.fire({
-           icon: 'success',
-           title: ''+response.data.message+'',
-           confirmButtonText: `Ok`,
-         })  
-         console.log(response.data.message);
-         setTimeout(() => {
-           window.location.href = '/management/panel/createUser'
-         }, 11000);
-        
-       }).catch(error=>{
-        console.log(error.response.data.message);
-        console.log(error.response.status);
-        console.log(error.response.headers); 
-        toast.fire({
-          icon: 'error',
-          title: ''+error.response.data.message+'',
-          confirmButtonText: `Ok`,
-        }) 
-      })
+    await axios.get(process.env.REACT_APP_API_ENDPOINT+'InactivarUsuario/'+ID)
+    .then(response=>{
+      abrirCerrarModalEliminar();
+      toast.fire({
+        icon: 'success',
+        title: ''+response.data.message+'',
+        confirmButtonText: `Ok`,
+      })  
+      setTimeout(() => {window.location.href = '/management/panel/createUser'}, 11000);
+    }).catch(error=>{
+      console.log(error.response.data.message);
+      console.log(error.response.status);
+      console.log(error.response.headers); 
+      toast.fire({
+        icon: 'error',
+        title: ''+error.response.data.message+'',
+        confirmButtonText: `Ok`,
+      }) 
+    })
   }
 
   const seleccionarConsola=(caso)=>{
@@ -218,7 +209,7 @@ const styles= useStyles();
   const alertTohandleChange =(e)=>{
     Swal.fire(
       {icon: 'warning',
-      title: 'El Usuario debe contener el mismo valor de Correo Electrónico',
+      title: 'El campo Usuario debe contener el mismo valor del campo Correo Electrónico',
       confirmButtonText: 'Entendido',
     })
   }
@@ -257,7 +248,7 @@ const styles= useStyles();
   )
 /*Cuerpo del Modal de Borrado*/
   const bodyEliminar=(
-    <div style={{textAlign:'center', display:'flex', justifyContent:'center', flexDirection:'column'}} className={styles.modal}>
+    <div style={{textAlign:'center', display:'flex', justifyContent:'center', flexDirection:'column',height:'35%'}} className={styles.modal}>
       <p>¿Estás seguro que deseas eliminar al Usuario: <b>{consolaDelete && consolaDelete.usuario}</b>?</p>
       <div align="right">
         <Button id={consolaDelete.id_usuario} color="secondary" onClick={()=>peticionDelete(consolaDelete.id_usuario)}>Sí</Button>
@@ -297,9 +288,12 @@ const styles= useStyles();
     { field: 'nombres', headerName: 'Nombres',headerAlign:'center',align: 'center'},
     { field: 'apellidos', headerName: 'Apellidos',headerAlign:'center',align: 'center'},
     { field: 'correo', headerName: 'Correo',headerAlign:'center',align: 'center'},
-    { field: 'fecha_creacion' , headerName: 'Fecha  de Creación',headerAlign:'center',align: 'center'},
-    {
-      field: 'Ind_Us_Activo',
+    { field: 'fecha_creacion',
+      headerName: 'Fecha  de Creación',
+      headerAlign:'center',
+      align: 'center',
+    },
+    { field: 'Ind_Us_Activo',
       headerName: 'Usuario Confirmado',
       headerAlign:'center',
       align:'center',
@@ -318,8 +312,7 @@ const styles= useStyles();
             }
       }     
     },
-    {
-      field: 'Ind_Activo',
+    { field: 'Ind_Activo',
       headerName: 'Usuario Activo',
       headerAlign:'center',
       align:'center',
@@ -337,11 +330,10 @@ const styles= useStyles();
             }else{
               return<Close></Close>
             }
-    }
+      }
     },
-    {
-      field: 'action',
-      headerName: 'Action',
+    { field: 'Acciones',
+      headerName: 'Acciones',
       headerAlign:'center',
       sortable: false,
       align:'center',
@@ -373,20 +365,17 @@ const styles= useStyles();
         ]
       },
     },
-    
   ]
 
   return (
     <div className="App">
       <div style={{ display:'flex', height:'100%',width:'100%'}}>
-        <div style={{flexGrow:4}}>
+        <div style={{flexGrow:1}}>
           <DataGrid
             columns={colums}
             rows={data}
             getRowId={(row) => row.id_usuario}
-            components={{
-              Toolbar: CustomToolbar,
-            }}
+            components={{Toolbar: CustomToolbar,}}
           ></DataGrid>
         </div>
       </div>

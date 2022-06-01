@@ -166,20 +166,20 @@ const styles= useStyles();
 /*Petición POST a la API INACTIVAR USUARIOS para cumplir la funcion de "Eliminar"*/
   const peticionDelete=async()=>{
     const ID = consolaDelete.id_usuario
-       await axios.get(process.env.REACT_APP_API_ENDPOINT+'InactivarUsuario/'+ID)
-       .then(response=>{
+      await axios.get(process.env.REACT_APP_API_ENDPOINT+'InactivarUsuario/'+ID)
+      .then(response=>{
         abrirCerrarModalEliminar();
-         toast.fire({
-           icon: 'success',
-           title: ''+response.data.message+'',
-           confirmButtonText: `Ok`,
-         })  
-         console.log(response.data.message);
-         setTimeout(() => {
-           window.location.href = '/management/panel/createUser'
-         }, 11000);
+        toast.fire({
+          icon: 'success',
+          title: ''+response.data.message+'',
+          confirmButtonText: `Ok`,
+        })  
+        console.log(response.data.message);
+        setTimeout(() => {
+          window.location.href = '/management/panel/createUser'
+        }, 11000);
         
-       }).catch(error=>{
+      }).catch(error=>{
         console.log(error.response.data.message);
         console.log(error.response.status);
         console.log(error.response.headers); 
@@ -308,7 +308,7 @@ const styles= useStyles();
 
   function CustomToolbar() {
     return (
-      <GridToolbarContainer>
+      <GridToolbarContainer style={{marginTop:'1.2%'}}>
         <GridToolbarDensitySelector/>
         <GridToolbarExportContainer>
           <button style={{curso:'pointer'}} onClick={()=>downloadexcel()}>Descargar CSV</button>
