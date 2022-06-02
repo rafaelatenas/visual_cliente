@@ -2,31 +2,16 @@ import { Close, CloseRounded, ExitToApp, HomeOutlined, Settings } from '@materia
 import React from 'react';
 import { Link } from 'react-router-dom';
 import angle_down from '../../landing/favicon/angle-down-solid.svg';
-import cerrar from '../../landing/favicon/arrow-right-log-out-solid.svg';
 import gear from '../../landing/favicon/gear-solid.svg';
 import user from '../../landing/favicon/user-solid.svg';
 import atenas_logo from '../../landing/Images/ats_logo-blanco-elises-.png';
 import logo_atenas from '../../landing/Images/ats_logo-elise-blanca.png';
+import { Button } from '@mui/material';
 import Carousel from './carrusel';
-import { makeStyles } from '@material-ui/core/styles';
-import { styled, useTheme } from '@mui/material/styles';
 import './home.css';
 import './movil';
 
-const useStyles = makeStyles((theme) => ({
-    boton: {
-        width: '50%',
-        height: 'auto',
-        display: 'flex',
-        justifyContent: 'space-around',
-    },
-    inputMaterial:{
-        width: '95%'
-    }}))
-
 class Home extends React.Component {
-    styles=()=>{useStyles()};
-
     componentDidMount(){
         var elements_menu = [
             0,
@@ -189,8 +174,6 @@ class Home extends React.Component {
         const slide = document.querySelectorAll(".slide")
         var texto_modal = document.getElementById('texto_modal')
         var modal = document.getElementById('modal')
-        console.dir(texto_modal)
-
         for (const iterador_slide of slide) {
             iterador_slide.addEventListener('click', () => {
                 setTimeout(() => {
@@ -260,18 +243,19 @@ class Home extends React.Component {
     PowerBi=(e)=>{
         var modal = document.getElementById('modal');
         modal.style.display='block'
-        console.log(window.frames)
+        console.log(window)
         let iframe = '';
         switch (e.target.id) {
             case 'wopBi':
-                iframe +='<iframe id="iframeWOP" style="filter:invert" width="800px" height="600px" title="Inline Frame Example" src="https://app.powerbi.com/reportEmbed?reportId=593bcb73-4e32-4982-9a0e-ece34c4bcca6&autoAuth=true&ctid=60d43e61-27f8-4543-b6ff-2b0d08f50018&config=eyJjbHVzdGVyVXJsIjoiaHR0cHM6Ly93YWJpLXBhYXMtMS1zY3VzLXJlZGlyZWN0LmFuYWx5c2lzLndpbmRvd3MubmV0LyJ9"> </iframe>'
+                iframe +='<iframe id="iframeWOP" width="800px" height="600px" title="Frame WOP Url" frameborder="0" src="https://app.powerbi.com/reportEmbed?reportId=593bcb73-4e32-4982-9a0e-ece34c4bcca6&autoAuth=true&ctid=60d43e61-27f8-4543-b6ff-2b0d08f50018&config=eyJjbHVzdGVyVXJsIjoiaHR0cHM6Ly93YWJpLXBhYXMtMS1zY3VzLXJlZGlyZWN0LmFuYWx5c2lzLndpbmRvd3MubmV0LyJ9"> </iframe>'
                 break;
             case 'manejadorBi':
-                iframe +='<iframe id="iframeWOP" width="800px" height="600px" title="Inline Frame Example" src="https://app.powerbi.com/reportEmbed?reportId=593bcb73-4e32-4982-9a0e-ece34c4bcca6&autoAuth=true&ctid=60d43e61-27f8-4543-b6ff-2b0d08f50018&config=eyJjbHVzdGVyVXJsIjoiaHR0cHM6Ly93YWJpLXBhYXMtMS1zY3VzLXJlZGlyZWN0LmFuYWx5c2lzLndpbmRvd3MubmV0LyJ9"> </iframe>'
+                iframe +='<iframe id="iframeWOP" width="800px" height="600px" title="Frame WOP Url" frameborder="0" src="https://app.powerbi.com/reportEmbed?reportId=593bcb73-4e32-4982-9a0e-ece34c4bcca6&autoAuth=true&ctid=60d43e61-27f8-4543-b6ff-2b0d08f50018&config=eyJjbHVzdGVyVXJsIjoiaHR0cHM6Ly93YWJpLXBhYXMtMS1zY3VzLXJlZGlyZWN0LmFuYWx5c2lzLndpbmRvd3MubmV0LyJ9"> </iframe>'
                 break
             default:
                 break;
         }
+        console.dir(modal)
 
         modal.innerHTML = iframe;
     }
@@ -283,20 +267,18 @@ class Home extends React.Component {
                         <img className='logo-atenas' src={logo_atenas} alt="Logo Atenas"></img>
                         <img className='Logo-atenas' src={atenas_logo} alt="Logo Atenas"></img>
                         <div id="opciones_usuario" className='opcionesUsuario'>
-                            <button className='union'>
+                            <Button className='union'>
                                 <img src={user} alt="Opciones de Usuario"></img>
                                 <img src={gear} alt="Opciones de Usuario"></img>
-                            </button>
+                            </Button>
                         </div>
                         <div id="contenedoropciones" className="contenedoropcionesUsuario">
-                            <button style={{display:'flex',width: '70%', height:'auto', alignItems:'center'}}>
-                                <ExitToApp style={{fill:'#575756', fontSize:'2.5em'}}></ExitToApp>
+                            <Button startIcon={<ExitToApp style={{fill:'#575756', fontSize:'2.5em'}}/>} style={{display:'flex',width: '70%', height:'auto', alignItems:'center'}}>
                                 <Link to={"/"}>Salir</Link>
-                            </button>
-                            <button style={{display:'flex',width: '70%', height:'auto',alignItems:'center'}}>
-                                <Settings style={{fill:'#575756', fontSize:'2.5em'}}></Settings>
-                                <Link to={"CambiarC/CambiarC"}>Cambiar Clave</Link>
-                            </button>
+                            </Button>
+                            <Button startIcon={<Settings style={{fill:'#575756', fontSize:'2.5em'}}/>} style={{display:'flex',width: '70%', height:'auto',alignItems:'center'}}>
+                                <Link to={"CambiarC/CambiarC"}>Contraseña</Link>
+                            </Button>
                         </div>
                             
                         <div className='content-usuario'>
@@ -392,7 +374,6 @@ class Home extends React.Component {
             </>
         )
     }
-    
 }
 
 export default Home;

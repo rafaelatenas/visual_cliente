@@ -161,7 +161,7 @@ class Login extends React.Component {
           <FormControl>
             <TextField style={{top:'15%',overflow:'visible', borderRadius:'2em', background:'#fff'}} id="input-textfield1" label="Correo" type='text' name='Email' value={this.state.Email} onChange={this.handleUserInput}/>
             <FormControl style={{height:'auto',overflow:'visible',width: '100%',top:'35%'}}>
-              <InputLabel htmlFor="outlined-adornment-password">Password</InputLabel>
+              <InputLabel htmlFor="outlined-adornment-password">Contraseña</InputLabel>
               <OutlinedInput id="outlined-adornment-password" type={this.state.showPassword ? 'text' : 'password'} name='Password' value={this.state.Password} onChange={this.handleUserInput}
                 endAdornment={
                 <IconButton aria-label="toggle password visibility" onClick={this.handleClickShowPassword} onMouseDown={this.handleMouseDownPassword} edge="end">

@@ -3,6 +3,8 @@ import './Usuario.css';
 import MenuAdmin from "../menuAdmin";
 import ListarUsuarios from "./ListarUsuarios";
 import CrearUsuario from "./crearUsuario";
+import {PersonAdd, RecentActorsOutlined } from "@material-ui/icons";
+import { Stack } from "@mui/material";
 
 class Usuario extends React.Component{
   componentDidMount(){
@@ -69,14 +71,24 @@ class Usuario extends React.Component{
         <aside style={{display:"none"} } id="BoxActualizar"></aside>
         <MenuAdmin/>
         <section id="pantalla" className="contenedor-opciones">
-          <article className="boton crear"></article>
-            <aside id="boxCrear" className="contenedor contenedor-creacion">
-              <CrearUsuario></CrearUsuario>
-            </aside>
-          <article id="consulta" className="boton consultar"></article>
-            <aside className="contenedor contenedor-consultas">
-                <ListarUsuarios/>
-            </aside>
+
+          <article className="boton crear" style={{display:'inline-flex',alignItems:'center'}}>
+            <Stack style={{flexDirection:'row', alignItems:'center',width:'16%', justifyContent:'space-evenly'}}>
+              <PersonAdd style={{fontSize:"2.5em"}}/>Crear Nuevo Usuario
+            </Stack>
+          </article>
+          <aside id="boxCrear" className="contenedor contenedor-creacion">
+            <CrearUsuario></CrearUsuario>
+          </aside>
+
+          <article id="consulta" className="boton consultar" style={{display:'inline-flex',alignItems:'center'}}>
+            <Stack style={{flexDirection:'row', alignItems:'center',width:'15%', justifyContent:'space-evenly'}}>
+              <RecentActorsOutlined style={{fontSize:"2.5em"}}/>Lista de Usuarios
+            </Stack>
+          </article>
+          <aside className="contenedor contenedor-consultas">
+            <ListarUsuarios/>
+          </aside>
         </section>
       </div>
     )

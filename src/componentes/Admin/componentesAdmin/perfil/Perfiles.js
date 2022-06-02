@@ -4,7 +4,6 @@ import MenuAdmin from "../menuAdmin";
 import ListarPerfiles from "./ListarPerfiles";
 import CrearPerfil from "./crearPerfil";
 
-
 class Perfiles extends React.Component{
     componentDidMount(){
     // Inicio de animación y efecto de despliegue de las opciones de administrador
@@ -14,30 +13,30 @@ class Perfiles extends React.Component{
             botones[j].addEventListener('click',()=>{
             const HeightCreacion = contenedores[j].clientHeight === 0
             switch (HeightCreacion) {
-            case true:
-                setTimeout(() => {
-                botones[j].style.borderBottomRightRadius= '0em';
-                botones[j].style.borderBottomLeftRadius= '0em';
-                }, 100);
-                contenedores[j].style.borderTopRightRadius= '0em'
-                contenedores[j].style.borderTopLeftRadius= '0em'
-                contenedores[j].style.borderBottomRightRadius= '0.3em'
-                contenedores[j].style.borderBottomLeftRadius= '0.3em'
-                contenedores[j].animate([
-                {height:'75%'},
-                ],{fill:'forwards',duration: 1400});
-                break;
-            case false:
-                setTimeout(() => {
-                botones[j].style.borderBottomRightRadius= '0.3em';
-                botones[j].style.borderBottomLeftRadius= '0.3em';
-                }, 1400);
-                contenedores[j].animate([
-                {height:'0%'},
-                ],{fill:'forwards',duration: 1400});
-                break;
-            default:
-            break;
+                case true:
+                    setTimeout(() => {
+                        botones[j].style.borderBottomRightRadius= '0em';
+                        botones[j].style.borderBottomLeftRadius= '0em';
+                    }, 100);
+                    contenedores[j].style.borderTopRightRadius= '0em'
+                    contenedores[j].style.borderTopLeftRadius= '0em'
+                    contenedores[j].style.borderBottomRightRadius= '0.3em'
+                    contenedores[j].style.borderBottomLeftRadius= '0.3em'
+                    contenedores[j].animate([
+                    {height:'75%'},
+                    ],{fill:'forwards',duration: 1400});
+                    break;
+                case false:
+                    setTimeout(() => {
+                        botones[j].style.borderBottomRightRadius= '0.3em';
+                        botones[j].style.borderBottomLeftRadius= '0.3em';
+                    }, 1400);
+                    contenedores[j].animate([
+                    {height:'0%'},
+                    ],{fill:'forwards',duration: 1400});
+                    break;
+                default:
+                    break;
             }
             const contenedorConsulta = document.querySelector('.contenedor-consultas')
             const botonConsulta = document.querySelector('.consultar')
@@ -45,8 +44,8 @@ class Perfiles extends React.Component{
             const botonCreacion = document.querySelector('.crear')
             if (contenedorCreacion.clientHeight > 0) {
                 setTimeout(() => {
-                botonCreacion.style.borderBottomRightRadius= '0.3em';
-                botonCreacion.style.borderBottomLeftRadius= '0.3em';
+                    botonCreacion.style.borderBottomRightRadius= '0.3em';
+                    botonCreacion.style.borderBottomLeftRadius= '0.3em';
                 }, 1400);
                 contenedorCreacion.animate([
                 {height:'0%'},
@@ -54,9 +53,9 @@ class Perfiles extends React.Component{
             }
             if (contenedorConsulta.clientHeight > 0) {
                 setTimeout(() => {
-                botonConsulta.style.borderBottomRightRadius= '0.3em';
-                botonConsulta.style.borderBottomLeftRadius= '0.3em';
-                            }, 1400);
+                    botonConsulta.style.borderBottomRightRadius= '0.3em';
+                    botonConsulta.style.borderBottomLeftRadius= '0.3em';
+                }, 1400);
                 contenedorConsulta.animate([
                     {height:'0%'},
                 ],{fill:'forwards',duration: 1400});

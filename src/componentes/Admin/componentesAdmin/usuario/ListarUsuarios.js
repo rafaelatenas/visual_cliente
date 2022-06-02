@@ -17,7 +17,7 @@ const useStyles = makeStyles((theme) => ({
   modal: {
     position: 'absolute',
     width: '35%',
-    height: '60%',
+    height: '35%%',
     padding:'2%',
     border: '1.3px solid #000',
     background: '#ffefd5',
@@ -216,7 +216,7 @@ const styles= useStyles();
   }
 /*Cuerpo del Modal de Edición*/
   const bodyEditar=(
-    <div style={{width:'60%'}} className={styles.modal}>
+    <div style={{width:'40%'}} className={styles.modal}>
       <h3 style={{textAlign:'center'}}>Editar Datos de Usuario</h3>
       <div style={{display: 'flex', width: '100%', alignItems: 'center', justifyContent: 'space-around'}} className='agruparEdit'>
         <div style={{width:'40%'}} className='grupoEdit'>

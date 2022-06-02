@@ -54,7 +54,7 @@
     height: 100%;
 }
 .sidebar-navigation ul li .tooltip,
- .header-logo .tooltipH {
+.header-logo .tooltipH {
     display: inline-block;
     position: absolute;
     background-color: #313443;
@@ -70,7 +70,7 @@
 }
 
 .sidebar-navigation ul li .tooltip:before,
- .header-logo .tooltipH:before {
+.header-logo .tooltipH:before {
     content: '';
     
     display: block;
