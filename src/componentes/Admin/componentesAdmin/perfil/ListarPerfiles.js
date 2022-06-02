@@ -238,16 +238,16 @@ const styles= useStyles();
       <h3 style={{textAlign:'center'}}>Editar Datos de Usuario</h3>
       <div style={{display: 'flex', width: '100%', alignItems: 'center', justifyContent: 'space-around'}} className='agruparEdit'>
         <div style={{width:'40%'}} className='grupoEdit'>
-        <TextField name="ID_Cliente" className={styles.inputMaterial} type='number' label="ID Cliente" onChange={handleChange}  value={consolaSeleccionada && consolaSeleccionada.Id_Cliente}/>
-        <br />
-        <TextField name="Cliente" className={styles.inputMaterial} label="Cliente" onChange={handleChange} value={consolaSeleccionada && consolaSeleccionada.Cliente}/>
-        <br />
-        <TextField name="Direccion" className={styles.inputMaterial} label="Direccion" onChange={handleChange} value={consolaSeleccionada && consolaSeleccionada.Direccion}/>
-        <br />
-        <TextField name="Telefono" className={styles.inputMaterial} label="Teléfono" onChange={handleChange} value={consolaSeleccionada && consolaSeleccionada.Telefono}/>
-        <br />
-        <TextField name="Rif" className={styles.inputMaterial} label="Rif" onChange={handleChange} value={consolaSeleccionada && consolaSeleccionada.Rif}/>
-        <br /><br />
+          <TextField name="ID_Cliente" className={styles.inputMaterial} type='number' label="ID Cliente" onChange={handleChange}  value={consolaSeleccionada && consolaSeleccionada.Id_Cliente}/>
+          <br/>
+          <TextField name="Cliente" className={styles.inputMaterial} label="Cliente" onChange={handleChange} value={consolaSeleccionada && consolaSeleccionada.Cliente}/>
+          <br/>
+          <TextField name="Direccion" className={styles.inputMaterial} label="Direccion" onChange={handleChange} value={consolaSeleccionada && consolaSeleccionada.Direccion}/>
+          <br/>
+          <TextField name="Telefono" className={styles.inputMaterial} label="Teléfono" onChange={handleChange} value={consolaSeleccionada && consolaSeleccionada.Telefono}/>
+          <br/>
+          <TextField name="Rif" className={styles.inputMaterial} label="Rif" onChange={handleChange} value={consolaSeleccionada && consolaSeleccionada.Rif}/>
+          <br/>
         </div>
         <div style={{width:'40%'}} className='grupoEdit'>
         <TextField name="Persona_Contacto" className={styles.inputMaterial} type='text' label="Contacto" onChange={handleChange} value={consolaSeleccionada && consolaSeleccionada.Persona_Contacto}/>

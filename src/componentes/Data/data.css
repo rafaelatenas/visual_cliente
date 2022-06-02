@@ -12,7 +12,7 @@
     border-top-right-radius: 1.5em;
     border-bottom-right-radius: 1.5em;
     align-items: center;
-  }
+}
 .atras{
     position: fixed;
     min-width: 50px;
@@ -26,6 +26,9 @@
 }
 .css-kk1bwy-MuiButtonBase-root-MuiMenuItem-root{
     padding: 0 !important;
+}
+.MuiListItemText-root:first-child{
+    text-align: center;
 }
 .MuiTypography-body1{
     font-size: .75em !important;
@@ -93,9 +96,13 @@
     height: 100% !important;
     overflow-y: scroll !important;
 }
-li.MuiListItem-root.MuiListItem-gutters {
+.MuiListItem-root.MuiListItem-gutters {
     width: auto !important;
     padding: 2% !important;
+}
+li.MuiMenuItem-root.MuiMenuItem-gutters.MuiButtonBase-root.css-kk1bwy-MuiButtonBase-root-MuiMenuItem-root {
+    width: 100%;
+    height: auto;
 }
 
 @media screen and (min-width: 992px) {

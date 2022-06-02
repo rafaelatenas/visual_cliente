@@ -266,7 +266,7 @@ const id = openo ? 'simple-popover' : undefined;
       const value =event.target.value;
       setSelectedSubregiones(value);
     };
-    
+    const [totalVnzla, setTotalVnzla]=React.useState(false)
     const isAllRegion = data.length > 0 && selectedOptions1.length === data.length;
     const OptionSubRegion = SubRegion.map((item)=>(
       <MenuItem key={item.id} value={item.id}>
@@ -275,6 +275,7 @@ const id = openo ? 'simple-popover' : undefined;
       </MenuItem>
     ))
     const OptionRegiones = region.map((item) => {
+      console.log(item.id===0)
       if(item.id!==0){
         return(
             <MenuItem key={item.id} value={item.id}>
@@ -332,34 +333,32 @@ const id = openo ? 'simple-popover' : undefined;
 
     /*Mis Selecciones*/
     const [chipData, setChipData] = React.useState([{
-      nombre:'',
-      id:''
+      
     }]);
     console.log(chipData)
-    const [periodos, setPeriodos] = React.useState({})
+    const [ids, setIds] = React.useState({})
     const [disable, setDisable] = React.useState(true)
     const handleDelete = (chipToDelete) => () => {
       setChipData((chips) => (chips.nombre !== chipToDelete.key));
     };
-    let ids;
-    console.log(selectedOptions1)
-    if(selectedOptions1.length === data.length){
-      let result = selectedOptions1.reduce((acc,cur) => {
-        let {id} = cur;
-        let ex = acc.find(x => x.id === id);
-          if(!ex){ex = id;acc.push(ex);}
-          return acc;
-      }, [])
-      ids={id:result.concat(selectedOptions2,selectedOptions3).join('*')}
-      console.log(ids)
-    }else{
-      ids={id:selectedOptions1.concat(selectedOptions2,selectedOptions3).join('*')}
-      console.log(ids)
-    }
-    const handleChip=(e,ids)=>{
+    
+    const handleChip=(e)=>{
+      let ids;
       const {name, value}=e.target;
-      setChipData({[name]: value,
-      id:ids.id})
+      if(selectedOptions1.length === data.length){
+        let result = selectedOptions1.reduce((acc,cur) => {
+          let {id} = cur;
+          let ex = acc.find(x => x.id === id);
+            if(!ex){ex = id;acc.push(ex);}
+            return acc;
+        }, [])
+        ids=result.concat(selectedOptions2,selectedOptions3).join('*')
+        setChipData({[name]: value,id:ids})
+      }else{
+        ids=selectedOptions1.concat(selectedOptions2,selectedOptions3).join('*')
+        setChipData({[name]: value,id:ids})
+      }
+
     }
     const GuardarSelecciones =()=>{
       abrirCerrarModalSelect()
@@ -434,9 +433,9 @@ const id = openo ? 'simple-popover' : undefined;
           <Stack style={{width:'70%', height:'100%', justifyContent:'center'}}>
             <Tooltip title={localStorage.getItem('Login')} arrow placement="right">
               <Chip
-              avatar={<Avatar>R</Avatar>}
-              label={localStorage.getItem('Login')}
-              variant="outlined"
+                avatar={<Avatar>R</Avatar>}
+                label={localStorage.getItem('Login')}
+                variant="outlined"
               ></Chip>
             </Tooltip>
           </Stack>
@@ -809,10 +808,14 @@ const id = openo ? 'simple-popover' : undefined;
                         renderValue={(selected) => (
                           <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
                               {selected.map((value) =>{ 
+                                console.log(selected)
+                                
                                 for (let h = 0; h < region.length; h++) {
                                 const element = region[h];
-                                  if(element.id === value){
+                                  if(element.id === value && value !== 0){
                                     return(<Chip style={{fontSize:'.7em'}} key={value} label={element.nombre}/>)
+                                  }else if (value === 0) {
+                                  return(<Chip style={{fontSize:'.7em'}} key={value} label={element.nombre}/>)
                                   }
                                 }
                               })}
