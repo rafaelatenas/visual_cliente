@@ -5,11 +5,11 @@ import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content'
 import { makeStyles } from '@material-ui/core/styles';
 import { Modal, Button, TextField} from '@material-ui/core';
-import { Edit , Delete, Check, Close} from '@material-ui/icons';
+import { Edit , Delete, Check, Close, ErrorOutline} from '@material-ui/icons';
 import { DataGrid, GridToolbarDensitySelector,GridToolbarContainer, GridToolbarExportContainer, GridToolbarExport} from '@mui/x-data-grid';
 import { writeXLSX, writeFile } from 'xlsx';
 import * as XLSX from 'xlsx/xlsx.mjs';
-import { Tooltip } from '@mui/material';
+import { Stack, Tooltip } from '@mui/material';
 
 //* Componentes de Estilos *//
 const useStyles = makeStyles((theme) => ({
@@ -283,12 +283,13 @@ const styles= useStyles();
   )
 /*Cuerpo del Modal de Borrado*/
   const bodyEliminar=(
-    <div style={{textAlign:'center', display:'flex', justifyContent:'center', flexDirection:'column'}} className={styles.modal}>
+    <div style={{alignItems:'center',textAlign:'center', display:'flex', justifyContent:'space-around', flexDirection:'column',height:'35%'}} className={styles.modal}>
+      <ErrorOutline style={{ fontSize: '7.5em'}}></ErrorOutline>
       <p>¿Estás seguro que deseas eliminar al Usuario: <b>{consolaDelete && consolaDelete.usuario}</b>?</p>
-      <div align="right">
-        <Button id={consolaDelete.id_usuario} color="secondary" onClick={()=>peticionDelete(consolaDelete.id_usuario)}>Sí</Button>
-        <Button onClick={()=>abrirCerrarModalEliminar()}>No</Button>
-      </div>
+      <Stack direction="row" spacing={2} style={{justifyContent:'flex-end'}} >
+        <Button id={consolaDelete.id_usuario} variant="contained" color="secondary" onClick={()=>peticionDelete(consolaDelete.id_usuario)}>Sí</Button>
+        <Button onClick={()=>abrirCerrarModalEliminar()} variant="contained" color="primary">No</Button>
+      </Stack>
     </div>
   )
 /*Funcion Descargar => Descarga Ordenando por Filas y Columnas*/  
@@ -377,7 +378,7 @@ const styles= useStyles();
 
   return (
     <div className="App">
-      <div style={{ display:'flex', height:'100%',width:'100%'}}>
+      <div style={{ display:'flex', maxHeight:'1200px', minHeight:'300px', height:'100%',width:'100%'}}>
         <div style={{flexGrow:4}}>
           <DataGrid
             columns={colums}
