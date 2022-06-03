@@ -2,7 +2,7 @@ import * as React from 'react';
 import './data.css'
 import { styled, useTheme } from '@mui/material/styles';
 import { Box,Drawer,CssBaseline,Toolbar, List,Typography,Divider,IconButton, ListItem, ListItemText, Input } from '@material-ui/core';
-import { Menu,ExpandMore, ArrowBack, Save} from '@material-ui/icons';
+import { Menu,ExpandMore, ArrowBack} from '@material-ui/icons';
 import { Accordion, AccordionDetails, AccordionSummary, Avatar, Chip,  MenuItem, Stack, Tooltip } from '@mui/material';
 import { Paper, Button, TextField, FormControl, Select, InputLabel, Checkbox} from '@mui/material';
 import Header from '../componentes_data/header'
@@ -157,7 +157,6 @@ export default function DATA(){
   const classes = useStyles();
   const [data, setData]=useState([]);
   const [selectedOptions1, setSelectedOptions1] = useState([]);
-  const [ChipPeriodo, setChipPeriodo] = useState([]);
 
   /*Canales*/
   const [canal, setCanal]=useState([]);
@@ -413,7 +412,6 @@ export default function DATA(){
       nombre:'',
       id:''
     });
-    const [disable, setDisable] = React.useState(true)
     const handleDelete = (chipToDelete) => () => {
       setChipData((chips) => (chips.nombre !== chipToDelete.key));
     };
@@ -505,7 +503,6 @@ export default function DATA(){
       trimestres:false,
       semestres:false
     })
-console.log(botonreporte.semanas)
     let icon;
   return (
     <Box sx={{ display: 'flex' }}>
