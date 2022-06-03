@@ -445,7 +445,7 @@ export default function DATA(){
       selectedOptions2:false,
       selectedOptions3:false
     });
-    const abrirCerrarModalSelect=()=>{
+    const comprobarCombos =()=>{
       switch (true) {
         case selectedOptions1.length === 0:
           setIsSelected({selectedOptions1:true})
@@ -477,6 +477,10 @@ export default function DATA(){
           break;
       }
     }
+    const abrirCerrarModalSelect=()=>{
+      comprobarCombos()
+    }
+    
     const bodyMySelect=(
       <div style={{width:'25%', height:'40%', justifyContent:'space-around'}} className={styles.modal}>
         <h1 style={{textAlign:'center'}}>Crear Filtro de Selección</h1>
@@ -956,7 +960,7 @@ export default function DATA(){
               </article>
               <Stack direction="row" className={styles.buttons}>
                 <button id='save' style={{width:'35%'}} variant="contained" onClick={abrirCerrarModalSelect}>Guardar</button>
-                <button id='process' style={{width:'35%'}} variant="contained">Procesar</button>
+                <button id='process' style={{width:'35%'}} variant="contained" onClick={comprobarCombos}>Procesar</button>
               </Stack>
               
           </section>
