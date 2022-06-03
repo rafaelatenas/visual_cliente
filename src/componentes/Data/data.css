@@ -30,6 +30,13 @@
 .MuiListItemText-root:first-child{
     text-align: center;
 }
+.MuiListItemText-root{
+    width: 100%;
+}
+.grupoEditar .MuiFormControl-root.MuiTextField-root.css-1u3bzj6-MuiFormControl-root-MuiTextField-root{
+    height: 100% !important;
+    overflow: visible;
+}
 .MuiTypography-body1{
     font-size: .75em !important;
 }
@@ -55,8 +62,10 @@
 .MuiAccordionSummary-content.Mui-expanded.MuiAccordionSummary-contentGutters.css-o4b71y-MuiAccordionSummary-content {
     margin: 0 !important;
 }
-.divPopover{
-    background: transparent !important;
+li.MuiListItem-root.MuiListItem-gutters {
+    padding: 2%;
+    width: auto;
+    height: 100%;
 }
 
 .buttonPopover{
@@ -96,10 +105,7 @@
     height: 100% !important;
     overflow-y: scroll !important;
 }
-.MuiListItem-root.MuiListItem-gutters {
-    width: auto !important;
-    padding: 2% !important;
-}
+
 li.MuiMenuItem-root.MuiMenuItem-gutters.MuiButtonBase-root.css-kk1bwy-MuiButtonBase-root-MuiMenuItem-root {
     width: 100%;
     height: auto;
@@ -153,22 +159,34 @@ li.MuiMenuItem-root.MuiMenuItem-gutters.MuiButtonBase-root.css-kk1bwy-MuiButtonB
         width: 65%;
         font-size: 17px;
     }
+    #save{
+        border: none;
+        border-radius: 1em;
+        background: #2FAC6A;
+        height: 100%;
+        font-size: 17px;
+    }
     #process {
-        grid-row: 3/4;
-        grid-column: 2/3;
         border: none;
         border-radius: 1em;
         background: #F6B232;
-        height: 40%;
-        width: 65%;
+        height: 100%;
         font-size: 17px;
     }
-    #process a {
+    #save,
+    #process {
         color: #fff;
         text-decoration: none;
     }
-    #process a:hover {
+    #save:hover{
+        color: #2FAC6A;
+    }
+    #process:hover {
         color: #F6B232;
+    }
+    #save:hover{
+        background: #fff;
+        border: solid 2px #2FAC6A;
     }
     #process:hover {
         background: #fff;
@@ -316,8 +334,8 @@ li.MuiMenuItem-root.MuiMenuItem-gutters.MuiButtonBase-root.css-kk1bwy-MuiButtonB
         left: -30%;
         top: 0%;
     }
-    #process {
-        font-size: 24px
+    #process, #save {
+        font-size: 1.7em
     }
     #tittle-services-options {
         font-size: 28px;

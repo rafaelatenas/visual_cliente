@@ -15,6 +15,8 @@ import { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import {Modal} from '@material-ui/core';
 import axios from 'axios';
+import Swal from 'sweetalert2';
+import withReactContent from 'sweetalert2-react-content'
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -29,7 +31,7 @@ const MenuProps = {
 const useStyles = makeStyles((theme) => ({
   modal: {
     position: 'absolute',
-    width: '40%',
+    width: '30%',
     height: '40%',
     padding:'2%',
     border: '1.3px solid #000',
@@ -37,11 +39,42 @@ const useStyles = makeStyles((theme) => ({
     top: '50%',
     left: '50%',
     transform: 'translate(-50%, -50%)',
-    borderRadius: '1em'
+    borderRadius: '1em',
+    display:'inline-flex',
+    flexDirection:'column',
+    justifyContent:'space-evenly',
+    alignItems:'center'
+  },
+  agrupar:{
+    display: 'flex',
+    width: '100%',
+    height:'40%',
+    justifyContent: 'space-between',
+    flexDirection:'column',
+    overflow:'visible'
   },
   inputMaterial:{
-    width: '95%'
-  }}))
+    width: '95%',
+    height:'100%'
+  },
+  list:{
+    width:'80%',
+    display:'inline-flex',
+    flexDirection:'column'
+  },
+  listItem:{
+    padding:'5% 0', justifyContent:'center',width:'auto'
+  },
+  popOver:{
+    width:'90%', borderRadius:'1.5em', background:'transparent'
+  },
+  buttons:{
+    position: 'absolute', top: '90%', right: '3%', width: '30%', justifyContent:'space-around',height:'5%'
+  },
+  botonReportes:{
+    color:'#fff !important', borderRadius:'1.5em !important', width:'90% !important', margin:'4% 0 2% !important', padding:'10% !important'
+  }
+}))
 
 var ID_Cliente = sessionStorage.getItem('Id_Cliente')
 
@@ -76,7 +109,20 @@ const DrawerHeader = styled('div')(({ theme }) => ({
   width:'100%'
 }));
 
-export default function DATA() {
+const MySwal = withReactContent(Swal)
+const toast = MySwal.mixin({
+  toast: true,
+  position: 'top-end',
+  showConfirmButton: false,
+  timer: 3000,
+  timerProgressBar: true,
+  didOpen: (toast) => {
+      toast.addEventListener('mouseenter', Swal.stopTimer)
+      toast.addEventListener('mouseleave', Swal.resumeTimer)
+  }
+});
+
+export default function DATA(){
   const styles= useStyles();
   const theme = useTheme();
   /*Control del Drawer*/
@@ -89,6 +135,10 @@ export default function DATA() {
   };
   /* Elementos de Menú*/
   const [anchorEl, setAnchorEl] = React.useState(null);
+  const [showMenuItem, setShowMenuItem] = React.useState({
+    periodo:false,
+    canal:false,
+  });
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -98,33 +148,33 @@ export default function DATA() {
     setAnchorEl(null);
   };
 
-/* Periodos y DataSemanal*/
-const [tiempoReporte, settiempoReporte] = React.useState([]);
-const seleccionarPeriodo=(parametro)=>{
-    settiempoReporte(parametro)
-}
-const classes = useStyles();
-const [data, setData]=useState([]);
-const [selectedOptions1, setSelectedOptions1] = useState([]);
-const [ChipPeriodo, setChipPeriodo] = useState([]);
+  /* Periodos y DataSemanal*/
+  const [tiempoReporte, settiempoReporte] = React.useState([]);
+  const seleccionarPeriodo=(parametro)=>{
+      settiempoReporte(parametro)
+  }
 
-/*Canales*/
-const [canal, setCanal]=useState([]);
-const [selectedOptions2, setSelectedOptions2] = useState([]);
-/*Regiones*/
-const [region, setRegion]=useState([]);
-const [selectedOptions3, setSelectedOptions3] = useState([]);
-console.log(selectedOptions3)
-  /*SubRegionres*/
-  const [selectedSubregiones, setSelectedSubregiones] = useState([]);
+  const classes = useStyles();
+  const [data, setData]=useState([]);
+  const [selectedOptions1, setSelectedOptions1] = useState([]);
+  const [ChipPeriodo, setChipPeriodo] = useState([]);
 
-const openo = Boolean(anchorEl);
-const id = openo ? 'simple-popover' : undefined;
+  /*Canales*/
+  const [canal, setCanal]=useState([]);
+  const [selectedOptions2, setSelectedOptions2] = useState([]);
+  /*Regiones*/
+  const [region, setRegion]=useState([]);
+  const [selectedOptions3, setSelectedOptions3] = useState([]);
+    /*SubRegionres*/
+    const [selectedSubregiones, setSelectedSubregiones] = useState([]);
 
+  const openo = Boolean(anchorEl);
+  const id = openo ? 'simple-popover' : undefined;
 
   var token=localStorage.getItem('token');
   /*Funciones de Listar PERÍODOS 😄*/
   const peticionSemanas=async()=>{
+    setBotonreporte({semanas:true})
     await axios.get( process.env.REACT_APP_API_ENDPOINT+'ListarSemana',{
       headers: {'Authorization': `Bearer ${token}`},
     })
@@ -140,6 +190,7 @@ const id = openo ? 'simple-popover' : undefined;
   }
     
   const peticionMeses=async()=>{
+    setBotonreporte({meses:true})
     await axios.get( process.env.REACT_APP_API_ENDPOINT+'ListarPeriodo',{
       headers: {'Authorization': `Bearer ${token}`},
     })
@@ -162,6 +213,23 @@ const id = openo ? 'simple-popover' : undefined;
       <ListItemText primary={option.nombre}/>
     </MenuItem>
   ))
+
+  const controladorAll = ()=>{
+    switch (true) {
+      case data.length===0:
+        setShowMenuItem({periodo:false})
+        break;
+      case tiempoReporte==='Trimestres':
+        setShowMenuItem({periodo:false})
+        break;
+      case tiempoReporte==='Semestres':
+        setShowMenuItem({periodo:false})
+        break;
+      default:
+        setShowMenuItem({periodo:true})
+        break;
+    }
+  }
     /*Control de Select PERÍODOS.*/
   const [op, setOp] = React.useState(false);
   const handleClosee = () => {
@@ -172,6 +240,7 @@ const id = openo ? 'simple-popover' : undefined;
   };
   const handleOpen = () => {
     setOp(true);
+    controladorAll()
   };
 
   /*Función onChange y Select ALL del combo Períodos*/
@@ -225,15 +294,25 @@ const id = openo ? 'simple-popover' : undefined;
     }
     const OpenCanal = () => {
       setOpe(true);
+      controladorMiCadena()
     };
 
+    const controladorMiCadena =()=>{
+      switch (true) {
+        case canal.length === 0:
+            setShowMenuItem({canal:false})
+          break;
+        default:
+          setShowMenuItem({canal:true})
+          break;
+      }
+    }
   /*Funciones de Listar REGIONES 😄*/
 
     /*Funcion onChange del combo Regiones */
     const handleRegiones = (event) => {
       const value =event.target.value;
       setSelectedOptions3(value);
-      console.log(value)
     };
     
     const [openRegiones, setOpenRegiones] = React.useState(false);
@@ -266,8 +345,8 @@ const id = openo ? 'simple-popover' : undefined;
       const value =event.target.value;
       setSelectedSubregiones(value);
     };
-    const [totalVnzla, setTotalVnzla]=React.useState(false)
-    const isAllRegion = data.length > 0 && selectedOptions1.length === data.length;
+   // const [totalVnzla, setTotalVnzla]=React.useState(false)
+   // const isAllRegion = data.length > 0 && selectedOptions1.length === data.length;
     const OptionSubRegion = SubRegion.map((item)=>(
       <MenuItem key={item.id} value={item.id}>
         <Checkbox checked={selectedOptions2.indexOf(item.id) > -1} />
@@ -275,7 +354,6 @@ const id = openo ? 'simple-popover' : undefined;
       </MenuItem>
     ))
     const OptionRegiones = region.map((item) => {
-      console.log(item.id===0)
       if(item.id!==0){
         return(
             <MenuItem key={item.id} value={item.id}>
@@ -312,7 +390,6 @@ const id = openo ? 'simple-popover' : undefined;
           <Divider style={{width:'100%',position: 'absolute',top:'97%', height:'3%', background:'#00000061'}}/>
         </MenuItem>
       )
-      
     })
   
     /* Funcion de Peticion Regiones. Solo se hará la llamada de esta función según el controlador del select*/
@@ -332,11 +409,10 @@ const id = openo ? 'simple-popover' : undefined;
     }
 
     /*Mis Selecciones*/
-    const [chipData, setChipData] = React.useState([{
-      
-    }]);
-    console.log(chipData)
-    const [ids, setIds] = React.useState({})
+    const [chipData, setChipData] = React.useState({
+      nombre:'',
+      id:''
+    });
     const [disable, setDisable] = React.useState(true)
     const handleDelete = (chipToDelete) => () => {
       setChipData((chips) => (chips.nombre !== chipToDelete.key));
@@ -362,22 +438,58 @@ const id = openo ? 'simple-popover' : undefined;
     }
     const GuardarSelecciones =()=>{
       abrirCerrarModalSelect()
+      setChipData({nombre:[]})
     }
+    
     const [modalSelect, setModalSelect]=useState(false);
+    const [isSelected, setIsSelected]=useState({
+      selectedOptions1:false,
+      selectedOptions2:false,
+      selectedOptions3:false
+    });
     const abrirCerrarModalSelect=()=>{
-      setModalSelect(!modalSelect);
+      switch (true) {
+        case selectedOptions1.length === 0:
+          setIsSelected({selectedOptions1:true})
+          toast.fire({
+            icon: 'error',
+            title: 'No ha Seleccionado un Período',
+            confirmButtonText: `Ok`,
+          })
+          break;
+        case selectedOptions2.length === 0:
+          setIsSelected({selectedOptions2:true})
+          toast.fire({
+            icon: 'error',
+            title: 'No ha Seleccionado un Canal',
+            confirmButtonText: `Ok`,
+          })
+          break;
+        case selectedOptions3.length === 0:
+          setIsSelected({selectedOptions3:true})
+          toast.fire({
+            icon: 'error',
+            title: 'No ha Seleccionado una Región',
+            confirmButtonText: `Ok`,
+          })
+          break;
+        default:
+          setModalSelect(!modalSelect);
+          setIsSelected({selectedOptions1:false, selectedOptions2:false, selectedOptions3:false})
+          break;
+      }
     }
     const bodyMySelect=(
-      <div style={{width:'40%'}} className={styles.modal}>
-        <h2 style={{textAlign:'center'}}>Crear Filtro de Selección</h2>
-        <div style={{display: 'flex', width: '100%', alignItems: 'center', justifyContent: 'space-around'}} className='agruparEdit'>
-          <div style={{width:'40%'}} className='grupoEdit'>
+      <div style={{width:'25%', height:'40%', justifyContent:'space-around'}} className={styles.modal}>
+        <h1 style={{textAlign:'center'}}>Crear Filtro de Selección</h1>
+        <div className={styles.agrupar}>
+          <div style={{width:'100%', overflow:'visible'}} className='grupoEditar'>
             <TextField name="nombre" className={styles.inputMaterial} type='text' onChange={handleChip} value={chipData && chipData.nombre} label="Nombre del Filtro" placeholder='Escriba el nombre de sus Selecciones'/>
           </div>
-          <div align="bottom">
-            <Button color="primary" onClick={()=>GuardarSelecciones()}>Guardar</Button>
-            <Button onClick={()=>abrirCerrarModalSelect()}>Cancelar</Button>
-          </div>
+          <Stack direction="row" justifyContent={'flex-end'} spacing={2}>
+            <Button style={{background:"#2FAC6A"}} variant="contained" onClick={()=>GuardarSelecciones()}>Guardar</Button>
+            <Button variant="contained"  onClick={()=>abrirCerrarModalSelect()}>Cancelar</Button>
+          </Stack>
         </div>
       </div>
     )
@@ -386,6 +498,14 @@ const id = openo ? 'simple-popover' : undefined;
         setSelectedOptions1([])
       }
     }
+
+    const [botonreporte, setBotonreporte]=useState({
+      semanas:false,
+      meses:false,
+      trimestres:false,
+      semestres:false
+    })
+console.log(botonreporte.semanas)
     let icon;
   return (
     <Box sx={{ display: 'flex' }}>
@@ -453,28 +573,26 @@ const id = openo ? 'simple-popover' : undefined;
             <Typography style={{margin:'0'}}>Mis Selecciones</Typography>
           </AccordionSummary>
           <AccordionDetails style={{overfolwY:'scroll'}}>
-            <Paper
-              sx={{display: 'flex', justifyContent: 'center', flexWrap: 'wrap', listStyle: 'none', p:' 0 0 5%', m: 0}}
-              component="ul"
-            >
-                  <ListItem style={{width:'auto',paddingLeft:'1%',paddingRight:'1%'}} key={chipData.nombre}>
-                    <Chip style={{background:'#F6B232', color:'#fff'}}
+            <Paper sx={{display: 'flex', justifyContent: 'center', flexWrap: 'wrap', listStyle: 'none', p:' 0 0 5%', m: 0}} component="ul">
+              <ListItem style={{width:'auto',paddingLeft:'1%',paddingRight:'1%'}} key={chipData.nombre}>
+                <Chip style={{background:'#F6B232', color:'#fff'}}
                       icon={icon}
                       label={chipData.nombre}
-                      onDelete={handleDelete(chipData)}
-                    />
-                  </ListItem>
+                  onDelete={handleDelete(chipData)}
+                />
+              </ListItem>
             </Paper>
           </AccordionDetails>
         </Accordion>
         <Divider style={{width:'90%', background: 'rgb(0 0 0 / 38%)'}}/>
-        <List style={{width:'80%', display:'inline-flex', flexDirection:'column'}}>
-          <ListItem style={{padding:'5% 0', justifyContent:'center'}}>
-            <div className='divPopover' style={{width:'90%', borderRadius:'1.5em'}}>
+        <List className={styles.list}>
+          <ListItem className={styles.listItem}>
+            <div className={styles.popOver}>
             <Button className='buttonPopover' style={{width:'100%', borderRadius:'1.5em'}} aria-describedby={id} variant="contained" onClick={handleClick}>
               WOP
             </Button>
               <Popover
+                style={{width:'100%'}}
                 id={id}
                 open={openo}
                 anchorEl={anchorEl}
@@ -484,22 +602,22 @@ const id = openo ? 'simple-popover' : undefined;
                   horizontal: 'center',
                 }}
               >
-                <ListItem button>
+                <ListItem>
                   <Link href='./home' style={{textDecoration:'none'}}>
                     <ListItemText>WOP</ListItemText>
                   </Link>
                 </ListItem>
-                <ListItem button>
+                <ListItem>
                   <Link href='./home' style={{textDecoration:'none'}}>
                     <ListItemText>WOP</ListItemText>
                   </Link>
                 </ListItem>
-                <ListItem button>
+                <ListItem>
                   <Link href='./home' style={{textDecoration:'none'}}>
                     <ListItemText>WOP</ListItemText>
                   </Link>
                 </ListItem>
-                <ListItem button>
+                <ListItem>
                   <Link href='./home' style={{textDecoration:'none'}}>
                     <ListItemText>WOP</ListItemText>
                   </Link>
@@ -508,9 +626,9 @@ const id = openo ? 'simple-popover' : undefined;
             </div>
           </ListItem>
 
-          <ListItem style={{padding:'5% 0', justifyContent:'center'}}>
-            <div className='divPopover' style={{width:'90%', borderRadius:'1.5em'}}>
-            <Button className='buttonPopover' style={{width:'100%', borderRadius:'1.5em'}} aria-describedby={id} variant="contained" onClick={handleClick}>Retail Scanning</Button>
+          <ListItem className={styles.listItem}>
+            <div className={styles.popOver}>
+              <Button className='buttonPopover' style={{width:'100%', borderRadius:'1.5em'}} aria-describedby={id} variant="contained" onClick={handleClick}>Retail Scanning</Button>
               <Popover
                 id={id}
                 open={openo}
@@ -521,22 +639,22 @@ const id = openo ? 'simple-popover' : undefined;
                   horizontal: 'center',
                 }}
               >
-                <ListItem button>
+                <ListItem>
                   <Link href='./home' style={{textDecoration:'none'}}>
                     <ListItemText>WOP</ListItemText>
                   </Link>
                 </ListItem>
-                <ListItem button>
+                <ListItem>
                   <Link href='./home' style={{textDecoration:'none'}}>
                     <ListItemText>WOP</ListItemText>
                   </Link>
                 </ListItem>
-                <ListItem button>
+                <ListItem>
                   <Link href='./home' style={{textDecoration:'none'}}>
                     <ListItemText>WOP</ListItemText>
                   </Link>
                 </ListItem>
-                <ListItem button>
+                <ListItem>
                   <Link href='./home' style={{textDecoration:'none'}}>
                     <ListItemText>WOP</ListItemText>
                   </Link>
@@ -545,9 +663,9 @@ const id = openo ? 'simple-popover' : undefined;
             </div>
           </ListItem>
 
-          <ListItem style={{padding:'5% 0', justifyContent:'center'}}>
-            <div className='divPopover' style={{width:'90%', borderRadius:'1.5em'}}>
-            <Button className='buttonPopover' style={{width:'100%', borderRadius:'1.5em'}} aria-describedby={id} variant="contained" onClick={handleClick}>Home Pantry</Button>
+          <ListItem className={styles.listItem}>
+            <div className={styles.popOver}>
+              <Button className='buttonPopover' style={{width:'100%', borderRadius:'1.5em'}} aria-describedby={id} variant="contained" onClick={handleClick}>Home Pantry</Button>
               <Popover
                 id={id}
                 open={openo}
@@ -558,22 +676,22 @@ const id = openo ? 'simple-popover' : undefined;
                   horizontal: 'center',
                 }}
               >
-                <ListItem button>
+                <ListItem>
                   <Link href='./home' style={{textDecoration:'none'}}>
                     <ListItemText>WOP</ListItemText>
                   </Link>
                 </ListItem>
-                <ListItem button>
+                <ListItem>
                   <Link href='./home' style={{textDecoration:'none'}}>
                     <ListItemText>WOP</ListItemText>
                   </Link>
                 </ListItem>
-                <ListItem button>
+                <ListItem>
                   <Link href='./home' style={{textDecoration:'none'}}>
                     <ListItemText>WOP</ListItemText>
                   </Link>
                 </ListItem>
-                <ListItem button>
+                <ListItem>
                   <Link href='./home' style={{textDecoration:'none'}}>
                     <ListItemText>WOP</ListItemText>
                   </Link>
@@ -582,8 +700,8 @@ const id = openo ? 'simple-popover' : undefined;
             </div>
           </ListItem>
 
-          <ListItem style={{padding:'5% 0', justifyContent:'center'}}>
-            <div className='divPopover' style={{width:'90%', borderRadius:'1.5em'}}>
+          <ListItem className={styles.listItem}>
+            <div className={styles.popOver}>
             <Button className='buttonPopover' style={{width:'100%', borderRadius:'1.5em'}} aria-describedby={id} variant="contained" onClick={handleClick}>CI</Button>
               <Popover
                 id={id}
@@ -595,22 +713,22 @@ const id = openo ? 'simple-popover' : undefined;
                   horizontal: 'center',
                 }}
               >
-                <ListItem button>
+                <ListItem>
                   <Link href='./home' style={{textDecoration:'none'}}>
                     <ListItemText>WOP</ListItemText>
                   </Link>
                 </ListItem>
-                <ListItem button>
+                <ListItem>
                   <Link href='./home' style={{textDecoration:'none'}}>
                     <ListItemText>WOP</ListItemText>
                   </Link>
                 </ListItem>
-                <ListItem button>
+                <ListItem>
                   <Link href='./home' style={{textDecoration:'none'}}>
                     <ListItemText>WOP</ListItemText>
                   </Link>
                 </ListItem>
-                <ListItem button>
+                <ListItem>
                   <Link href='./home' style={{textDecoration:'none'}}>
                     <ListItemText>WOP</ListItemText>
                   </Link>
@@ -619,8 +737,8 @@ const id = openo ? 'simple-popover' : undefined;
             </div>
           </ListItem>
 
-          <ListItem style={{padding:'5% 0', justifyContent:'center'}}>
-            <div className='divPopover' style={{width:'90%', borderRadius:'1.5em'}}>
+          <ListItem className={styles.listItem}>
+            <div className={styles.popOver}>
             <Button className='buttonPopover' style={{width:'100%', borderRadius:'1.5em'}} aria-describedby={id} variant="contained" onClick={handleClick}>Execution</Button>
               <Popover
                 id={id}
@@ -629,70 +747,67 @@ const id = openo ? 'simple-popover' : undefined;
                 onClose={handleClose}
                 anchorOrigin={{vertical: 'bottom',horizontal: 'center',}}
               >
-                <ListItem button>
+                <ListItem>
                   <Link href='./home' style={{textDecoration:'none'}}>
                     <ListItemText>WOP</ListItemText>
                   </Link>
                 </ListItem>
-                <ListItem button>
+                <ListItem>
                   <Link href='./home' style={{textDecoration:'none'}}>
                     <ListItemText>WOP</ListItemText>
                   </Link>
                 </ListItem>
-                <ListItem button>
+                <ListItem>
                   <Link href='./home' style={{textDecoration:'none'}}>
                     <ListItemText>WOP</ListItemText>
                   </Link>
                 </ListItem>
-                <ListItem button>
+                <ListItem>
                   <Link href='./home' style={{textDecoration:'none'}}>
                     <ListItemText>WOP</ListItemText>
                   </Link>
                 </ListItem>
               </Popover>
             </div>
-          
           </ListItem>
 
-          <ListItem style={{padding:'5% 0', justifyContent:'center'}}>
+          <ListItem className={styles.listItem}>
             <Link className='buttonPopover' href='./' style={{textAlign:'center' ,textDecoration:'none', width:'90%', borderRadius:'1.5em', padding:'1% 0'}}>
               <ListItemText>SALIR</ListItemText>
             </Link>
-          
           </ListItem>
         </List>
       </Drawer>
       
       <Card className='reporte' style={{borderRadius:'1.5em'}}>
-          <CardHeader style={{padding:'10% 0 5%', color:'#03508f', fontSize:'1em'}} title="REPORTE"/>
-          <Divider style={{width:'70%', background: 'rgb(0 0 0 / 38%)'}}/>
-          <CardActions style={{display:'flex', padding:'0', flexDirection:'column', width:'80%'}}>
-            <Button className='botonreporte' onClick={()=>{
+        <CardHeader style={{padding:'10% 0 5%', color:'#03508f', fontSize:'1em'}} title="REPORTE"/>
+        <Divider style={{width:'70%', background: 'rgb(0 0 0 / 38%)'}}/>
+        <CardActions style={{display:'flex', padding:'0', flexDirection:'column', width:'80%'}}>
+          <Button style={{ background: botonreporte.semanas? '#F6B232': '#03508f'}} onClick={()=>{
               var parametro = 'Semanas'
               seleccionarPeriodo(parametro)
               peticionSemanas()
               DeletePeriodo()
-              }} style={{color:'#fff',background:'#03508f', borderRadius:'1.5em', width:'90%', margin:'4% 0 2%', padding:'10%'}}>SEMANAL</Button>
-              <Button className='botonreporte' onClick={()=>{
+            }} className={styles.botonReportes}>SEMANAL</Button>
+          <Button className={styles.botonReportes} onClick={()=>{
               var parametro = 'Meses'
               seleccionarPeriodo(parametro)
               peticionMeses()
               DeletePeriodo()
-              }} style={{color:'#fff',background:'#03508f', borderRadius:'1.5em', width:'90%', margin:'4% 0 2%', padding:'10%'}}>MENSUAL</Button>
-              <Button className='botonreporte' onClick={()=>{
+            }} style={{ background: botonreporte.meses? '#F6B232': '#03508f'}}>MENSUAL</Button>
+          <Button className={styles.botonReportes} onClick={()=>{
               var parametro = 'Trimestres'
               seleccionarPeriodo(parametro)
               peticionMeses()
               DeletePeriodo()
-              }
-              } style={{color:'#fff',background:'#03508f', borderRadius:'1.5em', width:'90%', margin:'4% 0 2%', padding:'10%'}}>TRIMESTRAL</Button>
-              <Button className='botonreporte' onClick={()=>{
+            }} style={{ background: botonreporte.trimestres? '#F6B232': '#03508f'}}>TRIMESTRAL</Button>
+          <Button className={styles.botonReportes} onClick={()=>{
               var parametro = 'Semestres'
               seleccionarPeriodo(parametro)
               peticionMeses()
               DeletePeriodo()
-              }} style={{color:'#fff',background:'#03508f', borderRadius:'1.5em', width:'90%', margin:'4% 0 2%', padding:'10%'}}>SEMESTRAL</Button>
-          </CardActions>
+            }} style={{ background: botonreporte.semestres? '#F6B232': '#03508f'}}>SEMESTRAL</Button>
+        </CardActions>
       </Card>
       <Modal
         open={modalSelect}
@@ -707,7 +822,7 @@ const id = openo ? 'simple-popover' : undefined;
                 <div className="cards-of-data">
                   <Box style={{border:'.1em solid rgb(87 87 86/11%)',background:'#f7f4f4', borderRadius:'1.5em', width:'15%', height:'90%', display:'flex', flexDirection:'column', alignItems:'center'}}>
                     <InputLabel style={{width:'auto', padding:'10% 0 5%'}}>PERÍODOS</InputLabel>
-                    <FormControl sx={{width: '100%'}} className={classes.formControl}>
+                    <FormControl sx={{width: '100%'}} className={classes.formControl} error={isSelected.selectedOptions1}>
                       <InputLabel style={{background: 'rgb(247, 244, 244)', width:'auto'}} id="mutiple-select-label">{tiempoReporte}</InputLabel>
                       <Select
                         labelId="mutiple-select-label"
@@ -717,7 +832,7 @@ const id = openo ? 'simple-popover' : undefined;
                         onChange={handlePeriodos}
                         onClose={handleClosee}
                         onOpen={handleOpen}
-                        renderValue={(selected) =>{ console.log(selected)
+                        renderValue={(selected) =>{
                           if(selected.length>=3 && selected.length<data.length){
                             return(<ListItemText sx={{fontSize:'1em'}} primary={`${selected.length} Opciones Marcadas`}/>)
                           }else if(selected.length === data.length){
@@ -739,13 +854,13 @@ const id = openo ? 'simple-popover' : undefined;
                         }}
                         MenuProps={MenuProps}
                       >
-                        <MenuItem value="all" classes={{root: isAllSelectedede ? classes.selectedAll : ""}}>
-                          <ListItem>
-                            <Checkbox
-                              classes={{ indeterminate: classes.indeterminateColor }}
-                              checked={isAllSelectedede}
-                              indeterminate={ selectedOptions1.length > 0 && selectedOptions1.length < data.length}
-                            />
+                        <MenuItem value="all" classes={{root: isAllSelectedede ? classes.selectedAll : ""}} style={{ display: showMenuItem.periodo ? "flex" : "none" }}>
+                        <ListItem>
+                          <Checkbox
+                            classes={{ indeterminate: classes.indeterminateColor }}
+                            checked={isAllSelectedede}
+                            indeterminate={ selectedOptions1.length > 0 && selectedOptions1.length < data.length}
+                          />
                           </ListItem>
                           <ListItemText primary="Marcar Todo" classes={{ primary: classes.selectAllText }}/>
                         </MenuItem>
@@ -756,7 +871,7 @@ const id = openo ? 'simple-popover' : undefined;
                   
                   <Box style={{border:'.1em solid rgb(87 87 86/11%)',background:'#f7f4f4', borderRadius:'1.5em', width:'15%', height:'90%', display:'flex', flexDirection:'column', alignItems:'center'}}>
                     <InputLabel style={{width:'auto', padding:'10% 0 5%'}}>CANALES</InputLabel>
-                    <FormControl sx={{width: '100%'}} className={classes.formControl}>
+                    <FormControl sx={{width: '100%'}} className={classes.formControl} error={isSelected.selectedOptions2}>
                       <InputLabel style={{background: 'rgb(247, 244, 244)', width:'auto'}} id="mutiple-select-label">Canales</InputLabel>
                       <Select
                         labelId="mutiple-select-label"
@@ -782,7 +897,7 @@ const id = openo ? 'simple-popover' : undefined;
                         )}
                         MenuProps={MenuProps}
                       >
-                        <MenuItem value={parseInt(ID_Cliente)}>
+                        <MenuItem value={parseInt(ID_Cliente)} style={{ display: showMenuItem.canal ? "flex" : "none" }}>
                           <ListItem>
                             <Checkbox style={{display:'block', padding:'0'}} checked={selectedOptions2.indexOf(parseInt(ID_Cliente)) > -1}/>
                           </ListItem>
@@ -795,7 +910,7 @@ const id = openo ? 'simple-popover' : undefined;
 
                   <Box style={{border:'.1em solid rgb(87 87 86/11%)',background:'#f7f4f4', borderRadius:'1.5em', width:'15%', height:'90%', display:'flex', flexDirection:'column', alignItems:'center'}}>
                   <InputLabel style={{width:'auto', padding:'10% 0 5%'}}>REGIONES</InputLabel>
-                  <FormControl sx={{width: '100%'}} className={classes.formControl}>
+                  <FormControl sx={{width: '100%'}} className={classes.formControl} error={isSelected.selectedOptions3}>
                       <InputLabel style={{background: 'rgb(247, 244, 244)', width:'auto'}} id="mutiple-select-label">Regiones</InputLabel>
                       <Select
                         labelId="mutiple-select-label"
@@ -826,27 +941,6 @@ const id = openo ? 'simple-popover' : undefined;
                         {OptionRegiones}
                       </Select>
                     </FormControl>
-                    {/* <FormControl style={{overflow:'visible'}} sx={{width: '100%'}}>
-                    <InputLabel style={{overflow:'visible'}} id="demo-simple-select-label">Regiones</InputLabel>
-                      <Select 
-                        multiple
-                        value={selectedOptions3} 
-                        onChange={handleRegiones}
-                        labelId="demo-multiple-checkbox-label"
-                        id="demo-multiple-checkbox"
-                        input={<OutlinedInput label="Tag"/>}
-                          renderValue={(selected) => (
-                            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-                              {selected.map((value) => (
-                                <Chip style={{fontSize:'.7em'}} key={value} label={value}/>
-                              ))} 
-                            </Box>
-                          )}
-                        MenuProps={MenuProps}
-                        >
-                          {OptionRegiones}
-                      </Select>
-                    </FormControl>   */}
                   </Box>
 
                   <Box style={{border:'.1em solid rgb(87 87 86/11%)',background:'#f7f4f4', borderRadius:'1.5em', width:'15%', height:'90%', display:'flex', flexDirection:'column', alignItems:'center'}}>
@@ -863,8 +957,11 @@ const id = openo ? 'simple-popover' : undefined;
 
                 </div>
               </article>
-              <button onClick={abrirCerrarModalSelect}><Save/>Guardar</button>
-              <button id="process">Procesar</button>
+              <Stack direction="row" className={styles.buttons}>
+                <button id='save' style={{width:'35%'}} variant="contained" onClick={abrirCerrarModalSelect}>Guardar</button>
+                <button id='process' style={{width:'35%'}} variant="contained">Procesar</button>
+              </Stack>
+              
           </section>
         </div>
       </Main>
