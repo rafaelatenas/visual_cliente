@@ -375,11 +375,9 @@ iframe#iframeWOP *{
         height: 100%;  
     }
     .union :last-child{
-        width: 50%;
-        height: 50%;
+        width: 100%;
+        height:100%;
         position: absolute;
-        top: 64%;
-        left: 62%;
     }
     .contenedoropcionesUsuario{
         width: 10% ;
@@ -760,10 +758,8 @@ iframe#iframeWOP *{
     }
     #texto_modal {
         position: absolute;
-        top: 10%;
-        left: 10%;
-        width: 80%;
-        height: 80%;
+        width: 100%;
+        height: 100%;
         display: flex;
         align-items: center;
         justify-content: center;

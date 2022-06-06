@@ -17,6 +17,7 @@ import {Modal} from '@material-ui/core';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content'
+import ago from '../../landing/Images/ats_logo.png'
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -33,6 +34,7 @@ const useStyles = makeStyles((theme) => ({
     position: 'absolute',
     width: '30%',
     height: '40%',
+    minHeight:'300px',
     padding:'2%',
     border: '1.3px solid #000',
     background: '#ffefd5',
@@ -498,6 +500,8 @@ export default function DATA(){
     const DeletePeriodo =()=>{ 
       if(selectedOptions1 !== []){
         setSelectedOptions1([])
+        setSelectedOptions2([])
+        setSelectedOptions3([])
       }
     }
 
@@ -526,7 +530,8 @@ export default function DATA(){
           <Tooltip title={localStorage.getItem('Login')} arrow placement="right">
             <Chip 
               style={{background:'#fff', color:'#03508f'}}
-              avatar={<Avatar>R</Avatar>}
+              //avatar='../imagenImagesats_logo.png'
+              avatar={<Avatar>{ago}</Avatar>}
               label={localStorage.getItem('Login')}
               variant="outlined"
             ></Chip>
@@ -924,8 +929,6 @@ export default function DATA(){
                         renderValue={(selected) => (
                           <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
                               {selected.map((value) =>{ 
-                                console.log(selected)
-                                
                                 for (let h = 0; h < region.length; h++) {
                                 const element = region[h];
                                   if(element.id === value && value !== 0){
@@ -935,7 +938,7 @@ export default function DATA(){
                                   }
                                 }
                               })}
-                            </Box>
+                          </Box>
                         )}
                         MenuProps={MenuProps}
                       >
@@ -962,14 +965,13 @@ export default function DATA(){
                 <button id='save' style={{width:'35%'}} variant="contained" onClick={abrirCerrarModalSelect}>Guardar</button>
                 <button id='process' style={{width:'35%'}} variant="contained" onClick={comprobarCombos}>Procesar</button>
               </Stack>
-              
           </section>
         </div>
       </Main>
       <Button className='atras'
         style={{background: 'transparent',position:'fixed',border:'0.2em solid #fff',minWidth:'50px', borderRadius:'50%'}} 
         variant="contained" href='./Home'>
-          <ArrowBack style={{fontSize:'2.5em'}}></ArrowBack>
+          <ArrowBack style={{fontSize:'2.5em', fill:'#fff'}}></ArrowBack>
       </Button>
     </Box>
   );

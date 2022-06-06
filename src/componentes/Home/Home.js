@@ -10,6 +10,7 @@ import { Button } from '@mui/material';
 import Carousel from './carrusel';
 import './home.css';
 import './movil';
+import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 
 class Home extends React.Component {
     componentDidMount(){
@@ -242,6 +243,7 @@ class Home extends React.Component {
     }
     PowerBi=(e)=>{
         var modal = document.getElementById('modal');
+        var texto_modal = document.getElementById('texto_modal')
         modal.style.display='block'
         console.log(window)
         let iframe = '';
@@ -257,8 +259,9 @@ class Home extends React.Component {
         }
         console.dir(modal)
 
-        modal.innerHTML = iframe;
+        texto_modal.innerHTML = iframe;
     }
+    
 	render() {
 		return(
             <>
@@ -267,17 +270,14 @@ class Home extends React.Component {
                         <img className='logo-atenas' src={logo_atenas} alt="Logo Atenas"></img>
                         <img className='Logo-atenas' src={atenas_logo} alt="Logo Atenas"></img>
                         <div id="opciones_usuario" className='opcionesUsuario'>
-                            <Button className='union'>
-                                <img src={user} alt="Opciones de Usuario"></img>
-                                <img src={gear} alt="Opciones de Usuario"></img>
-                            </Button>
+                            <Button className='union' startIcon={<ManageAccountsIcon style={{fill:'#575756', fontSize:'2em', width:'auto', minHeight:'28px', flexShrink:'initial'}}/>}></Button>
                         </div>
                         <div id="contenedoropciones" className="contenedoropcionesUsuario">
-                            <Button startIcon={<ExitToApp style={{fill:'#575756', fontSize:'2.5em'}}/>} style={{display:'flex',width: '70%', height:'auto', alignItems:'center'}}>
-                                <Link to={"/"}>Salir</Link>
+                            <Button startIcon={<ExitToApp style={{fill:'#575756', fontSize:'2em', width:'auto', minHeight:'28px', flexShrink:'initial'}}/>} style={{display:'flex',width: '90%', height:'auto', alignItems:'center'}}>
+                                <Link style={{fontSize:'.8em'}} to={"/"}>Salir</Link>
                             </Button>
-                            <Button startIcon={<Settings style={{fill:'#575756', fontSize:'2.5em'}}/>} style={{display:'flex',width: '70%', height:'auto',alignItems:'center'}}>
-                                <Link to={"CambiarC/CambiarC"}>Contraseña</Link>
+                            <Button startIcon={<Settings style={{fill:'#575756', fontSize:'2em', width:'auto', minHeight:'28px', flexShrink:'initial'}}/>} style={{display:'flex',width: '90%', height:'auto',alignItems:'center'}}>
+                                <Link style={{fontSize:'.8em'}} to={"CambiarC/CambiarC"}>Contraseña</Link>
                             </Button>
                         </div>
                             

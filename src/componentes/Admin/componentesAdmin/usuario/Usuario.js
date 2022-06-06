@@ -73,7 +73,7 @@ class Usuario extends React.Component{
         <section id="pantalla" className="contenedor-opciones">
 
           <article className="boton crear" style={{display:'inline-flex',alignItems:'center'}}>
-            <Stack style={{flexDirection:'row', alignItems:'center',width:'16%', justifyContent:'space-evenly'}}>
+            <Stack style={{flexDirection:'row', alignItems:'center',width:'20%', justifyContent:'space-evenly'}}>
               <PersonAdd style={{fontSize:"2.5em"}}/>Crear Nuevo Usuario
             </Stack>
           </article>
@@ -82,7 +82,7 @@ class Usuario extends React.Component{
           </aside>
 
           <article id="consulta" className="boton consultar" style={{display:'inline-flex',alignItems:'center'}}>
-            <Stack style={{flexDirection:'row', alignItems:'center',width:'15%', justifyContent:'space-evenly'}}>
+            <Stack style={{flexDirection:'row', alignItems:'center',width:'20%', justifyContent:'space-evenly'}}>
               <RecentActorsOutlined style={{fontSize:"2.5em"}}/>Lista de Usuarios
             </Stack>
           </article>

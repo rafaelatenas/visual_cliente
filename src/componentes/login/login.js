@@ -8,7 +8,7 @@ import { TextField, FormControl, InputLabel, OutlinedInput} from '@mui/material'
 import { Visibility, VisibilityOff} from '@material-ui/icons';
 import { IconButton, Button} from '@mui/material';
 import ReCAPTCHA from 'react-google-recaptcha';
-const RECAPTCHA_SERVER_KEY =process.env.REACT_APP_SECRET_KEY
+
 const recaptchaRef = React.createRef();
 
 class Login extends React.Component {
@@ -21,8 +21,7 @@ class Login extends React.Component {
         emailValid: false,
         passwordValid: false,
         formValid: false,
-        expired: false,
-        humanKey:''
+        ValidToken: false,
       }
     }
 
@@ -84,7 +83,12 @@ class Login extends React.Component {
       });
       e.preventDefault();
       const {Email,Password}=this.state;
-      var datosEnviar={email:Email,password:Password} 
+      var responseKey = recaptchaRef.current.getValue();
+      var datosEnviar={
+        email:Email,
+        password:Password,
+        captcha:responseKey
+      } 
 
       axios.post(process.env.REACT_APP_API_ENDPOINT+"login",datosEnviar).then(result => {
         var nombre=result.data.NombresUsuarios;
@@ -121,36 +125,27 @@ class Login extends React.Component {
     }
     /* Validación Google */
     handleChange = value => {
-      console.log("Captcha value:", value);
-      this.setState({humanKey: value});
-      // if value is null recaptcha expired
-      if (value === null) {
-        this.setState({ expired: "true" })
-      }else{
-        //this.isHuman()
+      if (value !== null) {
+        this.isHuman()
       }
     }
-
-    onFormSubmit=(e)=>{
-      e.preventDefault();
-      var responseKey = recaptchaRef.current.getValue();
-      var responseID = recaptchaRef.current.getWidgetId();
-      this.isHuman(responseKey,responseID)
-    }
-
-    isHuman=async(responseKey,responseID)=>{
-      let headersList = {
-        "Access-Control-Allow-Origin":"*",
-        Accept: "application/json",
-        "Content-Type": "application/x-www-form-urlencoded; charset=utf-8"
-      }
-      let reqOptions = {
-        url: process.env.REACT_APP_PUBLIC_URL+`secret=${RECAPTCHA_SERVER_KEY}&response=${responseKey}&remoteip=${responseID}`,
-        method: "POST",
-        headers: headersList,
-      }
-      axios.request(reqOptions).then(function (response) {
-        console.log(response.data)
+    isHuman=async()=>{
+      var responseKey = {captcha: recaptchaRef.current.getValue()};
+      axios.post(process.env.REACT_APP_API_ENDPOINT+"ValidationCaptcha",responseKey)
+      .then(result => {
+        console.log(result)
+        switch (result.data.success) {
+          case true:
+            this.setState({ValidToken:true})
+            break;
+          case false:
+            this.setState({ValidToken:false})
+            break;
+          default:
+            break;
+        }
+      }).catch(err => {
+        console.log(err)
       })
     }
 
@@ -170,7 +165,7 @@ class Login extends React.Component {
                 }
               />
             </FormControl>
-            <Button variant="outlined" disabled={!this.state.formValid} onClick={this.enviarDatos}>Confirmar</Button>
+            <Button variant="outlined" disabled={!this.state.ValidToken} onClick={this.enviarDatos}>Confirmar</Button>
           </FormControl>
         </div>
         <ReCAPTCHA 
