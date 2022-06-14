@@ -139,7 +139,7 @@ export default function DATA(){
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [showMenuItem, setShowMenuItem] = React.useState({
     periodo:false,
-    canal:false,
+    producto:false,
   });
 
   const handleClick = (event) => {
@@ -168,6 +168,9 @@ export default function DATA(){
   const [selectedOptions3, setSelectedOptions3] = useState([]);
     /*SubRegionres*/
     const [selectedSubregiones, setSelectedSubregiones] = useState([]);
+  /*Regiones*/
+  const [producto, setProducto]=useState([]);
+  const [selectedOptions4, setSelectedOptions4] = useState([]);
 
   const openo = Boolean(anchorEl);
   const id = openo ? 'simple-popover' : undefined;
@@ -319,11 +322,12 @@ export default function DATA(){
     const [openRegiones, setOpenRegiones] = React.useState(false);
     const OpenRegion = () => {
       setOpenRegiones(true);
+      peticionProductos()
     };
     const CloseRegion = () => {
       setOpenRegiones(false);
     };
-
+    
       /*Funcion onChange del combo SubRegiones */
     const [SubRegion, setSubRegion]= React.useState([])
     const peticionSubRegiones=async(value)=>{
@@ -400,6 +404,41 @@ export default function DATA(){
       })
       .then(response=>{
         setRegion(response.data.data);
+        console.log(response.data)
+        console.log(response.data.data)
+      }).catch(error=>{
+        console.log(error.response.data.message);
+        console.log(error.response.status);
+        console.log(error.response.headers); 
+      })
+    }
+    /*Funciones de Listar Productos 😄*/
+    /*Funcion onChange del combo Productos*/
+
+    const handleProductos = (event) => {
+      const value =event.target.value;
+      setSelectedOptions4(value);
+    }; 
+    /*Control de Select Productos.*/
+    const [Abrir, setAbrir] = React.useState(false);
+    const CloseProducto =()=>{
+      setAbrir(false);
+    }
+    const AbrirProducto = () => {
+      setAbrir(true);
+    };
+    const OptionCategorias = producto.map((item) => (
+      <MenuItem key={item.id} value={item.id}>
+        <Checkbox checked={selectedOptions4.indexOf(item.id) > -1} />
+        <ListItemText sx={{fontSize:'1em'}} primary={item.nombre} />
+      </MenuItem>
+    ))
+    const peticionProductos=async()=>{
+      await axios.get( process.env.REACT_APP_API_ENDPOINT+'ListarCategoria',{
+        headers: {'Authorization': `Bearer ${token}`},
+      })
+      .then(response=>{
+        setProducto(response.data.data);
         console.log(response.data)
         console.log(response.data.data)
       }).catch(error=>{
@@ -948,8 +987,33 @@ export default function DATA(){
                   </Box>
 
                   <Box style={{border:'.1em solid rgb(87 87 86/11%)',background:'#f7f4f4', borderRadius:'1.5em', width:'15%', height:'90%', display:'flex', flexDirection:'column', alignItems:'center'}}>
-                    <FormControl sx={{ m: 1, width: 300 }}>
-                      <InputLabel style={{width:'auto'}}>PRODUCTOS</InputLabel>
+                    <InputLabel style={{width:'auto', padding:'10% 0 5%'}}>CANALES</InputLabel>
+                    <FormControl sx={{width: '100%'}} className={classes.formControl} error={isSelected.selectedOptions2}>
+                      <InputLabel style={{background: 'rgb(247, 244, 244)', width:'auto'}} id="mutiple-select-label">Canales</InputLabel>
+                      <Select
+                        labelId="mutiple-select-label"
+                        multiple
+                        open={Abrir}
+                        onClose={AbrirProducto}
+                        onOpen={CloseProducto}
+                        value={selectedOptions4}
+                        onChange={handleProductos}
+                        renderValue={(selected) => (
+                          <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                              {selected.map((value) =>{ 
+                                for (let h = 0; h < producto.length; h++) {
+                                const element = producto[h];
+                                  if(element.id === value){
+                                    return(<Chip style={{fontSize:'.7em'}} key={value} label={element.nombre}/>)
+                                  }
+                                }
+                              })}
+                          </Box>
+                        )}
+                        MenuProps={MenuProps}
+                      >
+                        {OptionCategorias}
+                      </Select>
                     </FormControl>
                   </Box>
 
