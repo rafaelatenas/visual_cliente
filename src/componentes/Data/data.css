@@ -133,10 +133,10 @@ li.MuiMenuItem-root.MuiMenuItem-gutters.MuiButtonBase-root.css-kk1bwy-MuiButtonB
         grid-row: 2/3;
         display: flex;
         align-items: center;
-        justify-content: center;
+        justify-content: space-around;
         overflow: visible;
         height: 100%;
-        width: 95%;
+        width: 97%;
     }
     .cards-of-data {
         width: 95%;
