@@ -1,19 +1,17 @@
 import * as React from 'react';
 import './data.css'
-import { styled, useTheme } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
 import { Box,CssBaseline, ListItemText} from '@material-ui/core';
 import {ArrowBack} from '@material-ui/icons';
 import { MenuItem, Stack, Button, TextField,  Checkbox } from '@mui/material';
-import Header from '../componentes_data/header'
 import { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import {Modal} from '@material-ui/core';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content'
-import {DrawerComponent, BotonUsuario, CardComponents} from '../componentes_data/Components';
+import {DrawerComponent, BotonUsuario, CardComponents, HeaderComponent} from '../componentes_data/Components';
 import { SelectCanales, SelectCategorias, SelectFabricantes, SelectMarcas, SelectPeriodos, SelectRegiones } from '../componentes_data/Selects';
-
 
 const MySwal = withReactContent(Swal)
 const toast = MySwal.mixin({
@@ -115,7 +113,6 @@ export default function DATA(){
         console.log(error.response.headers);
       })
     }
-  /*Control de Select PERÍODOS.*/
     const [openPeriodo, setOpenPeriodo] = React.useState(false);
     const handleClosePeriodo = () => {
       setOpenPeriodo(false);
@@ -510,7 +507,7 @@ export default function DATA(){
        <Main open={open}>
          <div className="Contenedordata">
            <section className="container-of-table">
-             <Header/>
+            <HeaderComponent/>
                <article className="table-of-data">
                 <SelectPeriodos
                   tiempoReporte={tiempoReporte}
@@ -655,7 +652,7 @@ const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })(
         easing: theme.transitions.easing.easeOut,
         duration: theme.transitions.duration.enteringScreen,
       }),
-      marginLeft:`${drawerWidth-5}%` ,
+      marginLeft:`${drawerWidth-10}%` ,
     }),
   }),
 );

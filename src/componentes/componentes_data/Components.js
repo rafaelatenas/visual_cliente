@@ -4,6 +4,7 @@ import { ExpandMore , Menu} from "@mui/icons-material"
 import {Stack} from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { makeStyles } from "@material-ui/styles";
+import logoatenas from '../../landing/Images/ats_logo-atenas.png'
 import React from "react";
 
 let icon;
@@ -82,10 +83,10 @@ export function DrawerComponent(open){
                                 horizontal: 'center',
                             }}
                         >
-                            <ListItem>
-                            <Link href='./home' style={{textDecoration:'none'}}>
-                                <ListItemText>WOP</ListItemText>
-                            </Link>
+                            <ListItem style={{width:'100%',height:'10%'}}>
+                                <Link href='./home' style={{textDecoration:'none'}}>
+                                    <ListItemText>WOP</ListItemText>
+                                </Link>
                             </ListItem>
                             <ListItem>
                             <Link href='./home' style={{textDecoration:'none'}}>
@@ -194,24 +195,24 @@ export function DrawerComponent(open){
                         }}
                     >
                         <ListItem>
-                        <Link href='./home' style={{textDecoration:'none'}}>
-                            <ListItemText>WOP</ListItemText>
-                        </Link>
+                            <Link href='./home' style={{textDecoration:'none'}}>
+                                <ListItemText>WOP</ListItemText>
+                            </Link>
                         </ListItem>
                         <ListItem>
-                        <Link href='./home' style={{textDecoration:'none'}}>
-                            <ListItemText>WOP</ListItemText>
-                        </Link>
+                            <Link href='./home' style={{textDecoration:'none'}}>
+                                <ListItemText>WOP</ListItemText>
+                            </Link>
                         </ListItem>
                         <ListItem>
-                        <Link href='./home' style={{textDecoration:'none'}}>
-                            <ListItemText>WOP</ListItemText>
-                        </Link>
+                            <Link href='./home' style={{textDecoration:'none'}}>
+                                <ListItemText>WOP</ListItemText>
+                            </Link>
                         </ListItem>
                         <ListItem>
-                        <Link href='./home' style={{textDecoration:'none'}}>
-                            <ListItemText>WOP</ListItemText>
-                        </Link>
+                            <Link href='./home' style={{textDecoration:'none'}}>
+                                <ListItemText>WOP</ListItemText>
+                            </Link>
                         </ListItem>
                     </Popover>
                     </div>
@@ -320,6 +321,13 @@ export function CardComponents(peticionSemanas){
                 }} style={{ background: peticionSemanas.botonreporte.semestres? '#F6B232': '#03508f'}}>SEMESTRAL</Button>
             </CardActions>
         </Card>
+    )
+}
+export function HeaderComponent(){
+    return(
+        <div style={{ width: '25%', height: '100%'}}>
+            <img style={{ width: '90%', height: '100%',gridColumn: '2/3'}} src={logoatenas} alt="Atenas Logo"></img>
+        </div>
     )
 }
 const drawerWidth = 15;
