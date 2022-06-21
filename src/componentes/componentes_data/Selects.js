@@ -1,4 +1,4 @@
-import { Box, InputLabel, FormControl, Chip, Select, MenuItem, ListItem, Checkbox, ListItemText } from "@mui/material"
+import { Box, InputLabel, FormControl, Chip, Select, MenuItem, ListItem, Checkbox, ListItemText, TextField, ListSubheader } from "@mui/material"
 import { makeStyles } from "@material-ui/styles";
 
 export function SelectPeriodos(data){
@@ -45,7 +45,7 @@ export function SelectPeriodos(data){
                         }
                     }}
                     MenuProps={MenuProps}
-                >
+                ><ListSubheader><TextField></TextField></ListSubheader>
                     <MenuItem value="all" classes={{root: data.isAllSelectPeriodo ? classes.selectedAll : ""}} style={{ display: data.showMenuItem.periodo ? "flex" : "none" }}>
                         <ListItem>
                             <Checkbox
@@ -101,7 +101,9 @@ export function SelectCanales(canal){
                       )}
                     MenuProps={MenuProps}
                 >
+                    <ListSubheader><TextField></TextField></ListSubheader>
                     <MenuItem value={parseInt(ID_Cliente)}>
+                        
                         <ListItem>
                             <Checkbox style={{display:'block', padding:'0'}} checked={canal.selectedOptions2.indexOf(parseInt(ID_Cliente)) > -1}/>
                         </ListItem>

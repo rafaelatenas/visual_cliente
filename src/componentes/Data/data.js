@@ -75,6 +75,7 @@ export default function DATA(){
     const seleccionarPeriodo=(parametro)=>{
       settiempoReporte(parametro)
       setAlert(false)
+      handleDrawerClose()
     }
 
     const [data, setData]=useState([]);
@@ -147,7 +148,7 @@ export default function DATA(){
       if(selectedOptions2.length>=1){
         setSelectedOptions2([]); setSelectedOptions3([]); setSelectedOptions4([]); setSelectedOptions5([]); setSelectedOptions6([])
       }
-      if(data.length === 0){
+      if(tiempoReporte.length === 0 ){
         setOpen(true);
         setOpenPeriodo(false);
         setAlert(true)
