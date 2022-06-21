@@ -105,3 +105,6 @@
 .menu ul li a:hover {
     color: #fff;
 }
+.css-1poimk-MuiPaper-root-MuiMenu-paper-MuiPaper-root-MuiPopover-paper {
+    width: 15%;
+}

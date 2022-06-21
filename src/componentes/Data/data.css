@@ -18,7 +18,7 @@
     min-width: 50px;
     min-height: 50px;
     top: 90%;
-    left: 1%;
+    left: .5%;
     width: 1em;
     height: 1em;
     border: 0.2em solid #fff;
@@ -44,17 +44,7 @@
     overflow: visible !important;
     margin-top: 2%;
 }
-.reporte{
-    border-radius: 1.5em;
-    width: 14%;
-    height: 35%;
-    position: fixed;
-    top: 50%;
-    margin: 0px 1%;
-    display: flex;
-    align-items: center;
-    flex-direction: column;
-}
+
 .MuiAccordionDetails-root.css-15v22id-MuiAccordionDetails-root {
     padding: 0 !important;
 }
@@ -66,6 +56,7 @@ li.MuiListItem-root.MuiListItem-gutters {
     padding: 2%;
     width: auto;
     height: 100%;
+    align-items: center !important;
 }
 
 .buttonPopover{
@@ -104,11 +95,6 @@ li.MuiListItem-root.MuiListItem-gutters {
 .MuiCollapse-root.MuiCollapse-vertical.MuiCollapse-entered.css-pwcg7p-MuiCollapse-root {
     height: 100% !important;
     overflow-y: scroll !important;
-}
-
-li.MuiMenuItem-root.MuiMenuItem-gutters.MuiButtonBase-root.css-kk1bwy-MuiButtonBase-root-MuiMenuItem-root {
-    width: 100%;
-    height: auto;
 }
 
 @media screen and (min-width: 992px) {

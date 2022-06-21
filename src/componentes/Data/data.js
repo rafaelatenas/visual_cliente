@@ -1,7 +1,7 @@
 import * as React from 'react';
 import './data.css'
 import { styled } from '@mui/material/styles';
-import { Box,CssBaseline, ListItemText} from '@material-ui/core';
+import { Box,CssBaseline, ListItemText, IconButton} from '@material-ui/core';
 import {ArrowBack} from '@material-ui/icons';
 import { MenuItem, Stack, Button, TextField,  Checkbox } from '@mui/material';
 import { useState } from 'react';
@@ -12,6 +12,9 @@ import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content'
 import {DrawerComponent, BotonUsuario, CardComponents, HeaderComponent} from '../componentes_data/Components';
 import { SelectCanales, SelectCategorias, SelectFabricantes, SelectMarcas, SelectPeriodos, SelectRegiones } from '../componentes_data/Selects';
+import Alert from '@mui/material/Alert';
+import Collapse from '@mui/material/Collapse';
+
 
 const MySwal = withReactContent(Swal)
 const toast = MySwal.mixin({
@@ -30,6 +33,24 @@ export default function DATA(){
   var token=localStorage.getItem('token');
 
   /*Control del ComponetDrawer*/
+  const [alert, setAlert] = React.useState(false);
+  const alerta =
+      <Box className={styles.Collapse} style={{display: alert ? 'block': 'none'}}>
+        <Alert 
+          severity="error" variant="filled"
+            action={
+              <IconButton
+                aria-label="close"
+                color="inherit"
+                size="small"
+                onClick={() => {setAlert(false);}}
+              >Ok
+              </IconButton>
+            }
+          >Debe Selecionar un Reporte</Alert>
+      </Box>
+    
+
   const [open, setOpen] = React.useState(false);
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -53,6 +74,7 @@ export default function DATA(){
     const [tiempoReporte, settiempoReporte] = React.useState([]);
     const seleccionarPeriodo=(parametro)=>{
       settiempoReporte(parametro)
+      setAlert(false)
     }
 
     const [data, setData]=useState([]);
@@ -121,10 +143,17 @@ export default function DATA(){
       }
     };
     const handleOpenPeriodo = () => {
-      setOpenPeriodo(true);
       controladorAll();
       if(selectedOptions2.length>=1){
         setSelectedOptions2([]); setSelectedOptions3([]); setSelectedOptions4([]); setSelectedOptions5([]); setSelectedOptions6([])
+      }
+      if(data.length === 0){
+        setOpen(true);
+        setOpenPeriodo(false);
+        setAlert(true)
+      }else{
+        setOpenPeriodo(true);
+        setAlert(false)
       }
     };
     const handlePeriodos = (event) => {
@@ -479,6 +508,7 @@ export default function DATA(){
           handleDrawerOpen={handleDrawerOpen}
           open={open}
         />
+        
       <DrawerComponent
         open={open}
         key={chipData.nombre}
@@ -491,20 +521,21 @@ export default function DATA(){
         handleClose={handleClose}
         handleDelete={handleDelete}
         chipData={chipData}
-      />
-      <CardComponents
         peticionSemanas={peticionSemanas}
         botonreporte={botonreporte}
         seleccionarPeriodo={seleccionarPeriodo}
         DeletePeriodo={DeletePeriodo}
         peticionMeses={peticionMeses}
-      />
+      >
+        
+      </DrawerComponent>
        <Modal
          open={modalSelect}
          onClose={abrirCerrarModalSelect}
          >{bodyMySelect}
        </Modal>
        <Main open={open}>
+        {alerta}
          <div className="Contenedordata">
            <section className="container-of-table">
             <HeaderComponent/>
@@ -633,6 +664,9 @@ const useStyles = makeStyles((theme) => ({
   },
   botonReportes:{
     color:'#fff !important', borderRadius:'1.5em !important', width:'90% !important', margin:'4% 0 2% !important', padding:'10% !important'
+  },
+  Collapse:{
+    position:'absolute', width:'30%',height:'auto', top:'15%', left:'15%', zIndex:'100000'
   }
 }))
 
@@ -652,7 +686,7 @@ const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })(
         easing: theme.transitions.easing.easeOut,
         duration: theme.transitions.duration.enteringScreen,
       }),
-      marginLeft:`${drawerWidth-10}%` ,
+      marginLeft:`${drawerWidth + 2}%` ,
     }),
   }),
 );

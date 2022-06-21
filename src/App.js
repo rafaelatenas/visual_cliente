@@ -9,6 +9,7 @@ import DataReport from './componentes/Data/data';
 import Home from './componentes/Home/Home'
 import Login from './componentes/login/login'
 import ActivarUsuario from './componentes/ActivarUsuario/activarUsuario';
+import VisualizarData from './componentes/Data/VisualizarData';
 
 function App() {
   return (  
@@ -23,6 +24,7 @@ function App() {
             <Route exact path="management/panel" element={<Admin/>}/>
             <Route exact path='/management/panel/createUser' element={<Usuario/>}/>
             <Route exact path='/management/panel/createPerfil' element={<Perfiles/>}/>
+            <Route exact path='data/dataTable' element={<VisualizarData/>}/>
         </Routes>
     </BrowserRouter>  
   );
