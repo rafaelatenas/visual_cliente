@@ -160,7 +160,7 @@ export default function DATA(){
     const handlePeriodos = (event) => {
       const value = event.target.value;
       if (value[value.length - 1] === "all") {
-        setSelectedOptions1(selectedOptions1.length === data.length ? [] : data);
+        setSelectedOptions1(selectedOptions1.length === data.length ? [] : render);
         return;
       }
       setSelectedOptions1(value);
@@ -390,7 +390,7 @@ export default function DATA(){
     const handleChip=(e)=>{
       let ids;
       const {name, value}=e.target;
-      if(selectedOptions1.length === data.length){
+      if(selectedOptions1.length === render.length){
         let result = selectedOptions1.reduce((acc,cur) => {
           let {id} = cur;
           let ex = acc.find(x => x.id === id);
@@ -399,9 +399,11 @@ export default function DATA(){
         }, [])
         ids=result.concat(selectedOptions2,selectedOptions3).join('*')
         setChipData({[name]: value,id:ids})
+        console.log(ids)
       }else{
         ids=selectedOptions1.concat(selectedOptions2,selectedOptions3).join('*')
         setChipData({[name]: value,id:ids})
+        console.log(ids)
       }
     }
     const GuardarSelecciones =()=>{
@@ -479,6 +481,19 @@ export default function DATA(){
       trimestres:false,
       semestres:false
     })
+  /*Controles de Search*/
+    const [focus, setFocus] = React.useState(false);
+    const [render, setRender] = React.useState(false);
+    const [searchText, setSearchText] = React.useState({
+      periodo:''
+    })
+    const handleChangeSearch=(e)=>{
+      const name= e.target.name
+      const value= e.target.value
+      setSearchText({[name]:value})
+      setFocus(true)
+    }
+    console.log(render)
   /*Controles de Select All*/
     const [showMenuItem, setShowMenuItem] = React.useState({
       periodo:false,
@@ -500,8 +515,10 @@ export default function DATA(){
           break;
       }
     }
-    const isAllSelectPeriodo = data.length > 0 && selectedOptions1.length === data.length;
+    const isAllSelectPeriodo = data.length > 0 && selectedOptions1.length === render.length;
+    console.log(isAllSelectPeriodo)
     const isAllSelectCategoria = Categoria.length > 0 && selectedOptions4.length === Categoria.length;
+  console.log(chipData)
   return (
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />
@@ -552,6 +569,13 @@ export default function DATA(){
                   data={data}
                   isAllSelectPeriodo={isAllSelectPeriodo}
                   showMenuItem={showMenuItem}
+                  handleChangeSearch={handleChangeSearch}
+                  focus={focus}
+                  searchText={searchText.periodo}
+                  setRender={setRender}
+                  setSearchText={setSearchText}
+                  setFocus={setFocus}
+                  render={render}
                 />
                 <SelectCanales
                   selectedOptions2={selectedOptions2}

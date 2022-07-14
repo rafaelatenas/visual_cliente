@@ -1,8 +1,24 @@
-import { Box, InputLabel, FormControl, Chip, Select, MenuItem, ListItem, Checkbox, ListItemText, TextField, ListSubheader } from "@mui/material"
+import { Box, InputLabel, FormControl, Chip, Select, MenuItem, ListItem, Checkbox, ListItemText, TextField, ListSubheader, InputAdornment } from "@mui/material"
 import { makeStyles } from "@material-ui/styles";
+import { Search } from "@material-ui/icons";
+import React from "react";
+import { useState, useMemo } from "react";
+
+const containsText = (text, searchText) =>text.toString().toLowerCase().indexOf(searchText.toString().toLowerCase()) >-1;
 
 export function SelectPeriodos(data){
     const classes = useStyles();
+    const handleChangeSearch=(e)=>{
+        data.setFocus(true)
+        const name= e.target.name
+        const value= e.target.value
+        data.setSearchText({[name]:value})
+    }
+    const displayedOptions = useMemo(
+        () => data.data.filter((option) => containsText(option.nombre, data.searchText)),
+        [data.searchText]
+    );
+    
     const OptionPeriodo = data.data.map((option) => (
         <MenuItem key={option.id} value={(option.id)}>
             <ListItem>
@@ -11,6 +27,30 @@ export function SelectPeriodos(data){
             <ListItemText primary={option.nombre}/>
         </MenuItem>
     ))
+    
+    const OptionPeriodoSearch = displayedOptions.map((option) => (
+        console.dir(data.selectedOptions1.indexOf(option)),
+        <MenuItem key={option.id} value={option.id}>
+            <ListItem>
+                <Checkbox checked={(data.selectedOptions1.indexOf(option) > -1)} />
+            </ListItem>
+            <ListItemText primary={option.nombre}/>
+        </MenuItem>
+    ))
+    
+    const OptionRender = useMemo(
+        ()=>{
+            if(data.focus === true){
+                data.setRender(displayedOptions)
+                return OptionPeriodoSearch;
+            }else{
+                data.setRender(data.data)
+                return OptionPeriodo
+            }
+        }
+    )
+    
+
     return(
         <Box style={{border:'.1em solid rgb(87 87 86/11%)',background:'#f7f4f4', borderRadius:'1.5em', width:'15%', height:'90%', display:'flex', flexDirection:'column', alignItems:'center'}}>
             <InputLabel style={{width:'auto', padding:'10% 0 5%'}}>PERÍODOS</InputLabel>
@@ -25,9 +65,9 @@ export function SelectPeriodos(data){
                     onClose={data.handleClosePeriodo}
                     onOpen={data.handleOpenPeriodo}
                     renderValue={(selected) =>{
-                        if(selected.length>=3 && selected.length<data.data.length){
+                        if(selected.length>=3 && selected.length<data.render.length){
                             return(<ListItemText sx={{fontSize:'1em'}} primary={`${selected.length} Opciones Marcadas`}/>)
-                        }else if(selected.length === data.data.length){
+                        }else if(selected.length === data.render.length){
                             return(<ListItemText sx={{fontSize:'1em'}} primary={`Todas Marcadas (${selected.length})`}/>)
                         }else if(selected.length<3){
                             return(
@@ -45,18 +85,41 @@ export function SelectPeriodos(data){
                         }
                     }}
                     MenuProps={MenuProps}
-                ><ListSubheader><TextField></TextField></ListSubheader>
+                >
+                    <ListSubheader>
+                        <TextField
+                        name="periodo"
+                        size="small"
+                        autoFocus={data.focus}
+                        InputProps={{
+                            startAdornment: (
+                            <InputAdornment position="start">
+                                <Search />
+                            </InputAdornment>
+                            )
+                        }}
+                        onChange={(e) => handleChangeSearch(e)}
+                        //onClick={data.setFocus(true)}
+                        onKeyDown={(e) => {
+                            if (e.key !== "Escape") {
+                            // Prevents autoselecting item while typing (default Select behaviour)
+                            e.stopPropagation();
+                            }
+                        }}
+                        />
+                        
+                    </ListSubheader>
                     <MenuItem value="all" classes={{root: data.isAllSelectPeriodo ? classes.selectedAll : ""}} style={{ display: data.showMenuItem.periodo ? "flex" : "none" }}>
                         <ListItem>
                             <Checkbox
                                 classes={{ indeterminate: classes.indeterminateColor }}
                                 checked={data.isAllSelectPeriodo}
-                                indeterminate={ data.selectedOptions1.length > 0 && data.selectedOptions1.length < data.data.length}
+                                indeterminate={ data.selectedOptions1.length > 0 && data.selectedOptions1.length < OptionRender.length }
                             />
                         </ListItem>
                         <ListItemText primary="Marcar Todo" classes={{ primary: classes.selectAllText }}/>
                     </MenuItem >
-                    {OptionPeriodo}
+                    {OptionRender}
                 </Select>
             </FormControl>
         </Box>
@@ -101,7 +164,7 @@ export function SelectCanales(canal){
                       )}
                     MenuProps={MenuProps}
                 >
-                    <ListSubheader><TextField></TextField></ListSubheader>
+                    
                     <MenuItem value={parseInt(ID_Cliente)}>
                         
                         <ListItem>
