@@ -1,17 +1,19 @@
 /* eslint-disable react/no-direct-mutation-state */
 import React from 'react';
-import './login.css';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content'
-import { TextField, FormControl, InputLabel, OutlinedInput} from '@mui/material';
+import { TextField, FormControl, InputLabel, OutlinedInput, Box, FormHelperText} from '@mui/material';
 import { Visibility, VisibilityOff} from '@material-ui/icons';
 import { IconButton, Button} from '@mui/material';
 import ReCAPTCHA from 'react-google-recaptcha';
-
+import './login.css'
 const recaptchaRef = React.createRef();
+const a = document.getElementById('card-login')
+console.dir(a)
 
 class Login extends React.Component {
+
     constructor (props) {
       super(props);
       this.state = {
@@ -24,7 +26,6 @@ class Login extends React.Component {
         ValidToken: false,
       }
     }
-
     validateField(fieldName, value) {
     let fieldValidationErrors = this.state.formErrors;
     let emailValid = this.state.emailValid;
@@ -33,11 +34,13 @@ class Login extends React.Component {
     switch(fieldName) {
       case 'Email':
         emailValid = value.match(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i);
-        fieldValidationErrors.Email = emailValid ? '' : ' es invalido';
+        fieldValidationErrors.Email = emailValid ? '' : 'Correo invalido';
+        this.setState({formErrors: {Email: fieldValidationErrors.Email}})
         break;
       case 'Password':
         passwordValid = value.length >= 6;
-        fieldValidationErrors.Password = passwordValid ? '': ' es demasiado corto';
+        fieldValidationErrors.Password = passwordValid ? '': 'Clave demasiado corta';
+        this.setState({formErrors: {Password: fieldValidationErrors.Password}})
         break;
       default:
         break;
@@ -60,11 +63,9 @@ class Login extends React.Component {
       const value = e.target.value;
       this.setState({[name]: value},() => { this.validateField(name, value) });
     } 
-
     handleClickShowPassword = () => {
       this.setState({showPassword: !this.state.showPassword}) 
     };
-            
     handleMouseDownPassword = () => {
       this.setState({showPassword: this.state.showPassword})
     };
@@ -151,30 +152,59 @@ class Login extends React.Component {
 
 	render() {
     return (
-      <section className='contenedorActivacion'>
-        <div className='activarUs'>
-          <FormControl>
-            <TextField style={{top:'15%',overflow:'visible', borderRadius:'2em', background:'#fff'}} id="input-textfield1" label="Correo" type='text' name='Email' value={this.state.Email} onChange={this.handleUserInput}/>
-            <FormControl style={{height:'auto',overflow:'visible',width: '100%',top:'35%'}}>
-              <InputLabel htmlFor="outlined-adornment-password">Contraseña</InputLabel>
-              <OutlinedInput id="outlined-adornment-password" type={this.state.showPassword ? 'text' : 'password'} name='Password' value={this.state.Password} onChange={this.handleUserInput}
-                endAdornment={
-                <IconButton aria-label="toggle password visibility" onClick={this.handleClickShowPassword} onMouseDown={this.handleMouseDownPassword} edge="end">
-                  {this.state.showPassword ? <VisibilityOff/> : <Visibility/>}
-                </IconButton>
-                }
+      <section className="login">
+        <Box id='card-login' className="card-login">
+          <FormControl className="Form">
+            <TextField error={this.state.formErrors.Email === ''? false: true} style={this.state.formErrors.Email === ''? {height:'15%'}: {height:'20%'}} helperText={this.state.formErrors.Email} className='email' 
+              variant="outlined" label="Correo" type='text' name='Email' value={this.state.Email} onChange={this.handleUserInput}/>
+            <FormControl error={this.state.formErrors.Password === ''? false: true} style={this.state.formErrors.Password === ''? {height:'15%'}: {height:'20%'}} className='password'>
+              <InputLabel  style={{ zIndex:'30',background:'transparent'}} htmlFor="outlined-adornment-password">Contraseña</InputLabel>
+              <OutlinedInput id="outlined-adornment-password" type={this.state.showPassword?  'text' : 'password'} name='Password' value={this.state.Password} onChange={this.handleUserInput}
+                // endAdornment={
+                // <IconButton style={{width:'10%',height:'100%'}} aria-label="toggle password visibility" onClick={this.handleClickShowPassword}  edge="end">
+                //   {this.state.showPassword ? <VisibilityOff/> : <Visibility/>}
+                // </IconButton>
+                // }
               />
+              <FormHelperText>{this.state.formErrors.Password}</FormHelperText>
             </FormControl>
-            <Button variant="outlined" disabled={!this.state.ValidToken} onClick={this.enviarDatos}>Confirmar</Button>
+              
+            <Button className="button" variant="outlined" disabled={!this.state.ValidToken} onClick={this.enviarDatos}>Confirmar</Button>
           </FormControl>
-        </div>
+            
+        </Box>
         <ReCAPTCHA 
+          className="recaptcha"
           onChange={this.handleChange}
           sitekey={process.env.REACT_APP_PUBLIC_KEY}
           badge='bottomleft'
           ref={recaptchaRef}
-        />
+          />
       </section>
+      // <section className='contenedorActivacion'>
+      //   <div className='activarUs'>
+      //     <FormControl>
+      //       <TextField style={{top:'15%',overflow:'visible', borderRadius:'2em', background:'#fff'}} id="input-textfield1" label="Correo" type='text' name='Email' value={this.state.Email} onChange={this.handleUserInput}/>
+      //       <FormControl style={{height:'auto',overflow:'visible',width: '100%',top:'35%'}}>
+      //         <InputLabel htmlFor="outlined-adornment-password">Contraseña</InputLabel>
+      //         <OutlinedInput id="outlined-adornment-password" type={this.state.showPassword ? 'text' : 'password'} name='Password' value={this.state.Password} onChange={this.handleUserInput}
+      //           // endAdornment={
+      //           // <IconButton aria-label="toggle password visibility" onClick={this.handleClickShowPassword} onMouseDown={this.handleMouseDownPassword} edge="end">
+      //           //   {this.state.showPassword ? <VisibilityOff/> : <Visibility/>}
+      //           // </IconButton>
+      //           // }
+      //         />
+      //       </FormControl>
+      //       <Button variant="outlined" disabled={!this.state.ValidToken} onClick={this.enviarDatos}>Confirmar</Button>
+      //     </FormControl>
+      //   </div>
+      //   <ReCAPTCHA 
+      //     onChange={this.handleChange}
+      //     sitekey={process.env.REACT_APP_PUBLIC_KEY}
+      //     badge='bottomleft'
+      //     ref={recaptchaRef}
+      //   />
+      // </section>
     )
   };
 }

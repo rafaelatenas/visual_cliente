@@ -9,7 +9,6 @@ import logo_atenas from '../../landing/Images/ats_logo-elise-blanca.png';
 import { Button } from '@mui/material';
 import Carousel from './carrusel';
 import './home.css';
-import './movil';
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 
 class Home extends React.Component {

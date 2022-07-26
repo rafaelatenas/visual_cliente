@@ -5,7 +5,7 @@ main {
     align-items: center;
     justify-content: center;
 }  */
-
+/* 
 .contenedorcard{
     display: flex;
     flex-direction: column;
@@ -46,16 +46,16 @@ main {
 
 /* modificacion */
 
-.form-body {
+/*.form-body {
     height: 70%;
     width: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: space-between;
-}
+} */
 
-.form-group {
+/* .form-group {
     width: 100%;
     background: #ffff;
     border-radius: 2em;
@@ -94,9 +94,9 @@ main {
     height: 60%;
     border-radius: 2em;
     border: none;
-}
+} */
 
-.log-in {
+/* .log-in {
     background: #F6B232;
     font-family: 'Lucida Sans Demibold Roman', sans-serif;
     font-size: 16px;
@@ -105,23 +105,23 @@ main {
 .log-in:hover {
     cursor: pointer;
     background: #e49b15;
-}
+} */
 
-.log-in a {
+/* .log-in a {
     font-family: 'Lucida Sans Demibold Roman', sans-serif;
     padding: 5% 30%;
     color: #ffff;
     text-decoration: none;
-}
+} */
 
-@media screen and (min-width: 400px) {
+/* @media screen and (min-width: 400px) {
     .card {
         height: 420px;
         width: 400px;
     }
-}
+} */
 
-@media screen and (min-width: 1367px) {
+/* @media screen and (min-width: 1367px) {
     .card {
         height: 75%;
         width: 30%;
@@ -140,9 +140,9 @@ main {
     .log-in {
         font-size: 30px;
     }
-}
+} */
 
-@media screen and (min-width: 2000px) {
+/* @media screen and (min-width: 2000px) {
     .card-login {
         top: 25%;
         width: 80%;
@@ -154,5 +154,142 @@ main {
     .form-control {
         font-size: 24px;
         padding: 0 20px;
+    }
+} */
+
+.login{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+.card-login{
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    flex-direction: column;
+    background-image: url(../../landing/Images/logo-cuadro.png);
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: center;
+    margin-bottom: 1%;
+}
+.email, .password{
+    height: auto;
+    overflow: visible;
+}
+.email div, .password div{
+    width: 100%;
+    height: 100%;
+    border-radius: 2em;
+    background-color: #fff;
+}
+.adorment{
+    height: 100%;
+    width: auto;
+}
+
+/* breackpoint movil */
+@media screen and (max-width: 649px) {
+    .card-login{
+        width: 100%;
+        height: 75%;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-direction: column;
+        max-width: 500px;
+        }
+    .Form{
+        width:95%;
+        height:80%;
+        align-items:center;
+        justify-content:space-evenly
+    }
+    .email, .password{
+        width: 90%;
+    }
+    .button{
+        width: 50%;
+    }
+    /*Styles Recaptcha*/
+    #rc-imageselect, .g-recaptcha {
+        display: inline; 
+    }
+         
+    #rc-imageselect{
+        max-width: 100%;
+    }
+         
+    .g-recaptcha>div>div{
+        width: 100% !important;
+        height: 78px;
+        transform:scale(0.77); 
+        --webkit-transform:scale(0.77);
+        text-align: center;
+        position: relative;
+    }
+
+}
+/* breackpoint tablet */
+@media screen and (min-width: 650px) and (max-width: 949px) {
+    .card-login{
+        width: 60%;
+        height: 75%;
+        /* display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-direction: column;
+        min-width: 630px; */
+        }
+        .Form{
+            width:50%;
+            height:60%;
+            min-width: 270px !important;
+            align-items:center;
+            justify-content:space-evenly !important;
+        }
+        .email, .password{
+            width: 90%;
+            height: 15%;
+        }
+        .button{
+            width: 50%;
+            border-radius: 2em !important;
+            background-color: #fff !important;
+        }
+}
+/* breackpoint desktop */
+@media screen and (min-width: 950px) {
+    .card-login{
+    width: 40%;
+    height: 75%;
+    /* display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    flex-direction: column; */
+    }
+    .Form{
+        width:65%;
+        height:65%;
+        align-items:center;
+        justify-content:space-evenly !important;
+    }
+    .email, .password{
+        width: 90%;
+        height: 15%;
+    }
+    .email div, .password div{
+        width: 100%;
+        height: 100%;
+        border-radius: 2em;
+        background-color: #fff;
+    }
+    .button{
+        width: 50%;
+        border-radius: 2em !important;
+        background-color: #fff !important;
     }
 }
