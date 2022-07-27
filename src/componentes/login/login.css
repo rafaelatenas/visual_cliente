@@ -48,15 +48,17 @@
         height: 75%;
         display: flex;
         align-items: center;
-        justify-content: space-between;
+        justify-content: flex-end;
         flex-direction: column;
         min-width: 250px;
-        }
+        background-size: 100% 80%;
+    }
     .Form{
-        width:95%;
-        height:80%;
-        align-items:center;
-        justify-content:space-evenly
+        width: 85%;
+        height: 57%;
+        align-items: center;
+        justify-content: space-evenly;
+        top: -10%;
     }
     .email, .password{
         width: 90%;
@@ -85,11 +87,6 @@
     .card-login{
         width: 60%;
         height: 75%;
-        /* display: flex;
-        align-items: center;
-        justify-content: space-between;
-        flex-direction: column;
-        min-width: 630px; */
         }
         .Form{
             width:50%;
@@ -97,6 +94,7 @@
             min-width: 270px !important;
             align-items:center;
             justify-content:space-evenly !important;
+            
         }
         .email, .password{
             width: 90%;
