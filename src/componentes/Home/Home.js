@@ -6,12 +6,13 @@ import gear from '../../landing/favicon/gear-solid.svg';
 import user from '../../landing/favicon/user-solid.svg';
 import atenas_logo from '../../landing/Images/ats_logo-blanco-elises-.png';
 import logo_atenas from '../../landing/Images/ats_logo-elise-blanca.png';
-import { Button } from '@mui/material';
+import { Button, Container } from '@mui/material';
 import Carousel from './carrusel';
 import './home.css';
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 
 class Home extends React.Component {
+    
     componentDidMount(){
         var elements_menu = [
             0,
@@ -263,7 +264,7 @@ class Home extends React.Component {
     
 	render() {
 		return(
-            <>
+            <Container className='containerBox'>
                 <header>
                     <div className='components-header'>
                         <img className='logo-atenas' src={logo_atenas} alt="Logo Atenas"></img>
@@ -370,7 +371,10 @@ class Home extends React.Component {
                         <Carousel/>
                     </div>
                 </footer>
-            </>
+            </Container>
+            
+                
+            
         )
     }
 }
